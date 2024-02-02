@@ -26,4 +26,8 @@ let help = (req, res) => {
     console.log("produuct");
     res.render('user/help')
   }
-  module.exports = {homePage,contact,about,product,productdetail,cart,help}
+let wishlist = (req, res) => {
+    console.log("produuct");
+    res.render('user/wishlist')
+  }
+  module.exports = {homePage,contact,about,product,productdetail,cart,help,wishlist}

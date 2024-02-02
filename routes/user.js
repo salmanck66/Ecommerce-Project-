@@ -9,5 +9,6 @@ router.get('/product',userControllers.product)
 router.get('/productdetail',userControllers.productdetail)
 router.get('/cart',userControllers.cart)
 router.get('/help',userControllers.help)
+router.get('/wishlist',userControllers.wishlist)
 
 module.exports=router;
