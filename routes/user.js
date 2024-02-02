@@ -11,5 +11,7 @@ router.get('/cart',userControllers.cart)
 router.get('/help',userControllers.help)
 router.get('/wishlist',userControllers.wishlist)
 router.get('/userprofile',userControllers.userprofile)
+router.get('/checkout',userControllers.checkout)
+router.get('/ordercomplete',userControllers.ordercomplete)
 
 module.exports=router;

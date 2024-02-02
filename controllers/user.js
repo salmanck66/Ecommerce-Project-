@@ -34,4 +34,12 @@ let userprofile = (req, res) => {
     console.log("userprofile");
     res.render('user/userprofile')
   }
-  module.exports = {homePage,contact,about,product,productdetail,cart,help,wishlist,userprofile}
+let checkout = (req, res) => {
+    console.log("checkout");
+    res.render('user/checkout')
+  }
+let ordercomplete = (req, res) => {
+    console.log("ordercomplete");
+    res.render('user/ordercomplete')
+  }
+  module.exports = {homePage,contact,about,product,productdetail,cart,help,wishlist,userprofile,checkout,ordercomplete}
