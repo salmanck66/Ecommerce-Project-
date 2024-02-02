@@ -10,5 +10,6 @@ router.get('/productdetail',userControllers.productdetail)
 router.get('/cart',userControllers.cart)
 router.get('/help',userControllers.help)
 router.get('/wishlist',userControllers.wishlist)
+router.get('/userprofile',userControllers.userprofile)
 
 module.exports=router;

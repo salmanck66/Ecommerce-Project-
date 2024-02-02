@@ -23,11 +23,15 @@ let cart = (req, res) => {
     res.render('user/cart')
   }
 let help = (req, res) => {
-    console.log("produuct");
+    console.log("help");
     res.render('user/help')
   }
 let wishlist = (req, res) => {
     console.log("produuct");
     res.render('user/wishlist')
   }
-  module.exports = {homePage,contact,about,product,productdetail,cart,help,wishlist}
+let userprofile = (req, res) => {
+    console.log("userprofile");
+    res.render('user/userprofile')
+  }
+  module.exports = {homePage,contact,about,product,productdetail,cart,help,wishlist,userprofile}
