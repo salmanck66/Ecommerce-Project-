@@ -7,5 +7,7 @@ router.get('/contact',userControllers.contact)
 router.get('/about',userControllers.about)
 router.get('/product',userControllers.product)
 router.get('/productdetail',userControllers.productdetail)
+router.get('/cart',userControllers.cart)
+router.get('/help',userControllers.help)
 
 module.exports=router;

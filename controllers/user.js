@@ -1,5 +1,5 @@
 let homePage = (req, res) => {
-    console.log("User home");
+    console.log("home");
     res.render('user/index')
   }
 let contact = (req, res) => {
@@ -7,15 +7,23 @@ let contact = (req, res) => {
     res.render('user/contact', { layout: 'layout' });
   }
 let about = (req, res) => {
-    console.log("contact");
+    console.log("about");
     res.render('user/about')
   }
 let product = (req, res) => {
-    console.log("produuct");
+    console.log("product");
     res.render('user/product')
   }
 let productdetail = (req, res) => {
-    console.log("produuct");
+    console.log("product-detail");
     res.render('user/product-detail')
   }
-  module.exports = {homePage,contact,about,product,productdetail}
+let cart = (req, res) => {
+    console.log("cart");
+    res.render('user/cart')
+  }
+let help = (req, res) => {
+    console.log("produuct");
+    res.render('user/help')
+  }
+  module.exports = {homePage,contact,about,product,productdetail,cart,help}
