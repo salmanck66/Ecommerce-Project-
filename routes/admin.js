@@ -4,6 +4,6 @@ const adminControllers=require('../controllers/admin')
 
 router.get('/admin',adminControllers.logIn)
 router.get('/forget',adminControllers.Forget)
-router.get('/dashbord',adminControllers.homePage)
+router.get('/dashboard',adminControllers.homePage)
 
 module.exports=router;

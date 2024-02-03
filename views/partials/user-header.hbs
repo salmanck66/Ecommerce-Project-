@@ -1,5 +1,5 @@
 	<!-- Header -->
-	<header>
+	<header style="">
 		<!-- Header desktop -->
 		<div class="container-menu-desktop">
 			<!-- Topbar -->
@@ -20,9 +20,10 @@
 						<a href="userprofile" class="flex-c-m trans-04 p-lr-25">
 							My Account
 						</a>
-						<a href="#" class="flex-c-m trans-04 p-lr-25 pl-5">
-							Login / Signup
-						</a>
+						<a href="#" class="flex-c-m trans-04 p-lr-25 pl-5" data-toggle="modal" data-target="#loginModal">
+    					Login / Signup
+		</a>
+
 					</div>
 				</div>
 			</div>
@@ -37,7 +38,7 @@
 
 					<!-- Menu desktop -->
 					<div class="menu-desktop">
-						<ul class="main-menu">
+						<ul class="main-menu" style="">
 							<li class="active-menu">
 								<a href="/">Home</a>
 							</li>
@@ -188,21 +189,6 @@
 			</ul>
 		</div>
 
-		<!-- Modal Search -->
-		<div class="modal-search-header flex-c-m trans-04 js-hide-modal-search">
-			<div class="container-search-header">
-				<button class="flex-c-m btn-hide-modal-search trans-04 js-hide-modal-search">
-					<img src="images/icons/icon-close2.png" alt="CLOSE">
-				</button>
-
-				<form class="wrap-search-header flex-w p-l-15">
-					<button class="flex-c-m trans-04">
-						<i class="zmdi zmdi-search"></i>
-					</button>
-					<input class="plh3" type="text" name="search" placeholder="Search...">
-				</form>
-			</div>
-		</div>
 	</header>
 	
 	<!-- Cart -->
@@ -289,4 +275,4 @@
 			</div>
 		</div>
 	</div>
-
+	

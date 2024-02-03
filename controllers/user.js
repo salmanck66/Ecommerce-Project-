@@ -42,4 +42,20 @@ let ordercomplete = (req, res) => {
     console.log("ordercomplete");
     res.render('user/ordercomplete')
   }
-  module.exports = {homePage,contact,about,product,productdetail,cart,help,wishlist,userprofile,checkout,ordercomplete}
+let login = (req, res) => {
+    console.log("login");
+    res.render('user/login',{layout:false})
+  }
+let signup = (req, res) => {
+    console.log("signup");
+    res.render('user/signup',{layout:false})
+  }
+let forgetpass = (req, res) => {
+    console.log("forgetpass");
+    res.render('user/forget',{layout:false})
+  }
+let invoice = (req, res) => {
+    console.log("invoice");
+    res.render('user/invoice')
+  }
+  module.exports = {homePage,contact,about,product,productdetail,cart,help,wishlist,userprofile,checkout,ordercomplete,login,signup,forgetpass,invoice}
