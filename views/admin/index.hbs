@@ -77,7 +77,7 @@
 				<span class="num">8</span>
 			</a>
 			<a href="#" class="profile">
-				<img src="img/people.png">
+				
 			</a>
 		</nav>
 		<!-- NAVBAR --> --}}
@@ -138,52 +138,57 @@
 					<table>
 						<thead>
 							<tr>
-								<th>User</th>
+								<th>Order ID</th>
+								<th>Custmer Name</th>
 								<th>Date Order</th>
-								<th>Status</th>
+								<th>Action</th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
-								<td>
-									<img src="img/people.png">
-									<p>John Doe</p>
-								</td>
-								<td>01-10-2021</td>
-								<td><span class="status completed">Completed</span></td>
-							</tr>
-							<tr>
-								<td>
-									<img src="img/people.png">
-									<p>John Doe</p>
-								</td>
-								<td>01-10-2021</td>
-								<td><span class="status pending">Pending</span></td>
-							</tr>
-							<tr>
-								<td>
-									<img src="img/people.png">
-									<p>John Doe</p>
-								</td>
-								<td>01-10-2021</td>
-								<td><span class="status process">Process</span></td>
-							</tr>
-							<tr>
-								<td>
-									<img src="img/people.png">
-									<p>John Doe</p>
-								</td>
-								<td>01-10-2021</td>
-								<td><span class="status pending">Pending</span></td>
-							</tr>
-							<tr>
-								<td>
-									<img src="img/people.png">
-									<p>John Doe</p>
-								</td>
-								<td>01-10-2021</td>
-								<td><span class="status completed">Completed</span></td>
-							</tr>
+			<tr>
+    			<td>OD1535</td>
+    				<td>
+    			    
+     			   <p>John Doe</p>
+ 			   </td>
+    			<td>01-10-2021</td>
+    		<td><button type="button" class="btn btn-outline-secondary">View order</button></td>
+			</tr>
+			<tr>
+    			<td>OD1535</td>
+    				<td>
+     			   <p>John Doe</p>
+ 			   </td>
+    			<td>01-10-2021</td>
+    		<td><button type="button" class="btn btn-outline-secondary">View order</button></td>
+			</tr>
+			<tr>
+    			<td>OD1535</td>
+    				<td>
+     			   <p>John Doe</p>
+ 			   </td>
+    			<td>01-10-2021</td>
+    		<td><button type="button" class="btn btn-outline-secondary">View order</button></td>
+			</tr>
+			<tr>
+    			<td>OD1535</td>
+    				<td>
+     			   <p>John Doe</p>
+ 			   </td>
+    			<td>01-10-2021</td>
+    		<td><button type="button" class="btn btn-outline-secondary">View order</button></td>
+			</tr>
+
+<!-- Missing OrderID in the third row -->
+<tr>
+    <td>OD6489</td> <!-- Randomly generated OrderID -->
+    <td>
+        
+        <p>John Doe</p>
+    </td>
+    <td>01-10-2021</td>
+    <td><button type="button" class="btn btn-outline-secondary">View order</button></td>
+</tr>
 						</tbody>
 					</table>
 				</div>
@@ -195,25 +200,16 @@
 					</div>
 					<ul class="todo-list">
 						<li class="completed">
-							<p>Todo List</p>
-							<i class='bx bx-dots-vertical-rounded' ></i>
+							
+							<canvas id="monthlySalesChart"></canvas>
 						</li>
 						<li class="completed">
 							<p>Todo List</p>
-							<i class='bx bx-dots-vertical-rounded' ></i>
+							<canvas id="categorySalesChart"></canvas>
+							
+
 						</li>
-						<li class="not-completed">
-							<p>Todo List</p>
-							<i class='bx bx-dots-vertical-rounded' ></i>
-						</li>
-						<li class="completed">
-							<p>Todo List</p>
-							<i class='bx bx-dots-vertical-rounded' ></i>
-						</li>
-						<li class="not-completed">
-							<p>Todo List</p>
-							<i class='bx bx-dots-vertical-rounded' ></i>
-						</li>
+
 					</ul>
 				</div>
 			</div>
@@ -221,5 +217,51 @@
 		<!-- MAIN -->
 	</section>
 	<!-- CONTENT -->
+
+	<script>
+		const categorySalesData = {
+    labels: ['Category 1', 'Category 2', 'Category 3'], // Replace with your category labels
+    datasets: [{
+        label: 'Category-wise Sales',
+        data: [300, 450, 600], // Replace with your sales data for each category
+        backgroundColor: [
+            'rgba(255, 99, 132, 0.5)',
+            'rgba(54, 162, 235, 0.5)',
+            'rgba(255, 206, 86, 0.5)'
+        ],
+        borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)'
+        ],
+        borderWidth: 1
+    }]
+};
+
+const monthlySalesData = {
+    labels: ['January', 'February', 'March', 'April', 'May', 'June'], // Replace with your month labels
+    datasets: [{
+        label: 'Monthly Sales',
+        data: [1000, 1200, 1500, 1800, 2000, 2200], // Replace with your sales data for each month
+        backgroundColor: 'rgba(255, 159, 64, 0.5)', // Color for bars
+        borderColor: 'rgba(255, 159, 64, 1)',
+        borderWidth: 1
+    }]
+};
+
+// Render pie chart
+const categorySalesChart = new Chart(document.getElementById('categorySalesChart'), {
+    type: 'pie',
+    data: categorySalesData,
+    options: {}
+});
+
+// Render bar chart
+const monthlySalesChart = new Chart(document.getElementById('monthlySalesChart'), {
+    type: 'bar', // Change the type to bar
+    data: monthlySalesData,
+    options: {}
+});
+	</script>
 	
 
