@@ -1,0 +1,63 @@
+<!-- MAIN CONTENT -->
+<main>
+    <div class="container-fluid order-management">
+        <div class="d-flex justify-content-between align-content-center align-items-center">
+            <div>
+                <ul class="breadcrumb">
+						<li>
+							<a href="/dashboard">Dashboard</a>
+						</li>
+						<li><i class='bx bx-chevron-right' ></i></li>
+						<li>
+							<a class="active" href="#">Order Management</a>
+						</li>
+					</ul>
+            </div>
+            
+            <i class='bx bx-sort-down' ></i>
+        </div>
+        
+        <!-- Add your order management content here -->
+        <!-- For example, order list, filters, search, etc. -->
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer Name</th>
+                        <th>Order Date</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Sample order rows -->
+                    <tr>
+                        <td>OD001</td>
+                        <td>John Doe</td>
+                        <td>2024-02-03</td>
+                        <td>Processing</td>
+                        <td>
+                            <button class="btn btn-primary">View Order</button>
+                            <button class="btn btn-success">Ship Order</button>
+                            <button class="btn btn-danger">Reject Order</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>OD002</td>
+                        <td>Jane Smith</td>
+                        <td>2024-02-03</td>
+                        <td>Shipped</td>
+                        <td>
+                            <button class="btn btn-primary">View Order</button>
+                            <button class="btn btn-success">Ship Order</button>
+                            <button class="btn btn-danger">Reject Order</button>
+                        </td>
+                    </tr>
+                    <!-- Add more order rows as needed -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+<!-- MAIN CONTENT -->
