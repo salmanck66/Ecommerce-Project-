@@ -1,0 +1,98 @@
+<!-- PRODUCT ADDING PAGE -->
+<section class="container product-adding-page mt-5">
+    <div class="row">
+        <div class="col-lg-6">
+            <!-- Product Name -->
+            <div class="mb-3">
+                <label for="productName" class="form-label">Product Name</label>
+                <input type="text" class="form-control" id="productName" placeholder="Enter product name">
+            </div>
+            <!-- Product Media -->
+            <div class="mb-3">
+                <label for="productMedia" class="form-label">Product Media</label>
+                <input type="file" class="form-control" id="productMedia">
+            </div>
+            <!-- Pricing -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="price" class="form-label">Price</label>
+                        <input type="number" class="form-control" id="price" placeholder="Enter price">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="discountedPrice" class="form-label">Discounted Price</label>
+                        <input type="number" class="form-control" id="discountedPrice" placeholder="Enter discounted price">
+                    </div>
+                </div>
+            </div>
+            <!-- Size -->
+            <div class="mb-3">
+                <label for="size" class="form-label">Size</label>
+                <select class="form-select" id="size">
+                    <option selected>Select size</option>
+                    <option value="S">S</option>
+                    <option value="M">M</option>
+                    <option value="L">L</option>
+                    <option value="XL">XL</option>
+                    <option value="XXL">XXL</option>
+                </select>
+                <button type="button" class="btn btn-primary mt-2">Add</button>
+            </div>
+            <!-- Variants -->
+            <div class="mb-3">
+                <label for="variants" class="form-label">Varient</label>
+                <select class="form-select" id="variants">
+                    <option selected>Select variant</option>
+                    <option value="Home">Home</option>
+                    <option value="Away">Away</option>
+                    <option value="Third">Third</option>
+                    <option value="Fourth">Fourth</option>
+                    <option value="Special Edition">Special Edition</option>
+                    <option value="Goalkeeper">Goalkeeper</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="variants" class="form-label">Link Varients</label>
+                <input type="text" placeholder="Search">
+                 <button type="button" class="btn btn-primary mt-2">Add</button>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <!-- Product Description -->
+            <div class="mb-3">
+                <label for="productDescription" class="form-label">Product Description</label>
+                <textarea class="form-control" id="productDescription" rows="4" placeholder="Enter product description"></textarea>
+            </div>
+            <!-- Advanced Description -->
+            <div class="mb-3">
+                <label for="advancedDescription" class="form-label">Advanced Description</label>
+                <textarea class="form-control" id="advancedDescription" rows="4" placeholder="Enter advanced description"></textarea>
+            </div>
+            <!-- Product Category -->
+            <div class="mb-3">
+                <label for="productCategory" class="form-label">Product Category</label>
+                <select class="form-select" id="productCategory">
+                    <option selected>Select category</option>
+                    <option value="1">Category 1</option>
+                    <option value="2">Category 2</option>
+                    <!-- Add more category options as needed -->
+                </select>
+            </div>
+            <!-- Product Subcategory -->
+            <div class="mb-3">
+                <label for="productSubcategory" class="form-label">Product Subcategory</label>
+                <select class="form-select" id="productSubcategory">
+                    <option selected>Select subcategory</option>
+                    <option value="1">Subcategory 1</option>
+                    <option value="2">Subcategory 2</option>
+                    <!-- Add more subcategory options as needed -->
+                </select>
+            </div>
+            <!-- Submit Button -->
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary mx-auto d-block mt-3">Add Product</button>
+</section>
+<!-- PRODUCT ADDING PAGE -->

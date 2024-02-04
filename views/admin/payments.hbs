@@ -1,0 +1,91 @@
+<!-- PAYMENT SECTION -->
+<section class="container payment-section mt-5">
+    <h2 class="mb-4">Payment Management</h2>
+
+ 
+    <!-- All Payments -->
+    <div class="all-payments">
+        <h3>All Payments</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Payment ID</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Mode</th>
+                    <th scope="col">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Sample payment rows -->
+                <tr>
+                    <th scope="row">1</th>
+                    <td>$100.00</td>
+                    <td>Credit Card</td>
+                    <td>Success</td>
+                </tr>
+                <!-- Add more payment rows as needed -->
+            </tbody>
+        </table>
+    </div>
+</section>
+<!-- PAYMENT SECTION -->
+<!-- PAYMENT OPTIONS SECTION -->
+<section class="container payment-options mt-5">
+    <h2 class="mb-4">Payment Options</h2>
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Debit/Credit Cards</h5>
+                    <button type="button" class="btn btn-success enable-payment-btn">Enable</button>
+                    <button type="button" class="btn btn-danger disable-payment-btn disabled">Disable</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Internet Banking</h5>
+                    
+                    <button type="button" class="btn btn-success enable-payment-btn disabled">Enable</button>
+                    <button type="button" class="btn btn-danger disable-payment-btn">Disable</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">UPI</h5>
+                    
+                    <button type="button" class="btn btn-success enable-payment-btn disabled">Enable</button>
+                    <button type="button" class="btn btn-danger disable-payment-btn">Disable</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">COD</h5>
+                    
+                    <button type="button" class="btn btn-success enable-payment-btn disabled">Enable</button>
+                    <button type="button" class="btn btn-danger disable-payment-btn">Disable</button>
+                </div>
+            </div>
+        </div>
+        <!-- Repeat similar blocks for UPI transfer, COD, etc. -->
+    </div>
+</section>
+<!-- PAYMENT OPTIONS SECTION -->
+<script>
+    allSideMenu.forEach(item=> {
+	const li = item.parentElement;
+
+	item.addEventListener('click', function () {
+		allSideMenu.forEach(i=> {
+			i.parentElement.classList.remove('active');
+		})
+		li.classList.add('active');
+	})
+});
+</script>

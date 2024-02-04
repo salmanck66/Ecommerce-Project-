@@ -1,0 +1,72 @@
+<!-- ADMIN SETTINGS SECTION -->
+<section class="container admin-settings mt-5">
+    <h2 class="mb-4">Admin Settings</h2>
+
+    <!-- General Settings -->
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">General Settings</h5>
+            <p class="card-text">Configure general settings for your e-commerce page.</p>
+            <!-- General settings form -->
+            <form>
+                <div class="mb-3">
+                    <label for="siteName" class="form-label">Site Name</label>
+                    <input type="text" class="form-control" id="siteName" placeholder="Enter site name">
+                </div>
+                <div class="mb-3">
+                    <label for="currency" class="form-label">Currency</label>
+                    <select class="form-select" id="currency">
+                        <option value="USD">USD</option>
+                        <option value="EUR">EUR</option>
+                        <!-- Add more currency options as needed -->
+                    </select>
+                </div>
+                <!-- Add more general settings fields as needed -->
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Payment Settings -->
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">Payment Settings</h5>
+            <p class="card-text">Configure payment settings for your e-commerce page.</p>
+            <!-- Payment settings form -->
+            <form>
+                <div class="mb-3">
+                    <label for="paymentGateway" class="form-label">Payment Gateway</label>
+                    <select class="form-select" id="paymentGateway">
+                        <option value="paypal">PayPal</option>
+                        <option value="stripe">Stripe</option>
+                        <!-- Add more payment gateway options as needed -->
+                    </select>
+                </div>
+                <!-- Add more payment settings fields as needed -->
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Shipping Settings -->
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Shipping Settings</h5>
+            <p class="card-text">Configure shipping settings for your e-commerce page.</p>
+            <!-- Shipping settings form -->
+            <form>
+                <div class="mb-3">
+                    <label for="shippingMethod" class="form-label">Shipping Method</label>
+                    <select class="form-select" id="shippingMethod">
+                        <option value="standard">Standard Shipping</option>
+                        <option value="express">Express Shipping</option>
+                        <!-- Add more shipping method options as needed -->
+                    </select>
+                </div>
+                <!-- Add more shipping settings fields as needed -->
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </form>
+        </div>
+    </div>
+</section>
+<!-- ADMIN SETTINGS SECTION -->

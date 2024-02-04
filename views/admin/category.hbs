@@ -1,0 +1,53 @@
+<!-- CATEGORY MANAGEMENT SECTION -->
+<section class="container category-management mt-5 mb-5">
+    <h2 class="mb-4">Category Management</h2>
+
+    <!-- Existing Categories -->
+    <div class="existing-categories mb-4">
+        <h3>Existing Categories</h3>
+        <ul class="list-group">
+            <!-- Sample existing category -->
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                Category 1
+                <button class="btn btn-danger">Remove</button>
+            </li>
+            <!-- Add more existing categories here -->
+        </ul>
+    </div>
+
+    <!-- Add New Category Form -->
+    <div class="add-new-category">
+        <h3>Add New Category</h3>
+        <form>
+            <div class="mb-3">
+                <label for="categoryName" class="form-label">Category Name</label>
+                <input type="text" class="form-control" id="categoryName" placeholder="Enter category name">
+            </div>
+            <div class="mb-3">
+                <label for="categoryImage" class="form-label">Category Image</label>
+                <input type="file" class="form-control" id="categoryImage">
+            </div>
+            <button type="submit" class="btn btn-primary">Add Category</button>
+        </form>
+    </div>
+
+    <!-- Add Subcategory Form -->
+    <div class="add-subcategory mt-4">
+        <h3>Add Subcategory</h3>
+        <form>
+            <div class="mb-3">
+                <label for="subcategoryName" class="form-label">Subcategory Name</label>
+                <input type="text" class="form-control" id="subcategoryName" placeholder="Enter subcategory name">
+            </div>
+            <div class="mb-3">
+                <label for="parentCategory" class="form-label">Parent Category</label>
+                <select class="form-select" id="parentCategory">
+                    <option selected>Select parent category</option>
+                    <!-- Populate parent category options dynamically -->
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Subcategory</button>
+        </form>
+    </div>
+</section>
+<!-- CATEGORY MANAGEMENT SECTION -->

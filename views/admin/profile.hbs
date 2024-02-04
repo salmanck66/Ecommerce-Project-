@@ -1,0 +1,78 @@
+<!-- PROFILE PAGE -->
+<section class="container profile-page mt-5">
+    <h2 class="mb-4">Admin Profile</h2>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">Admin Details</h5>
+            <div class="mb-3">
+                <label for="fullName" class="form-label">Full Name</label>
+                <input type="text" class="form-control" id="fullName" value="John Doe" readonly>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" class="form-control" id="email" value="johndoe@example.com" readonly>
+            </div>
+            <div class="mb-3">
+                <label for="phone" class="form-label">Phone Number</label>
+                <input type="tel" class="form-control" id="phone" value="123-456-7890" readonly>
+            </div>
+            <!-- Add more admin details as needed -->
+            <button type="button" class="btn btn-primary" onclick="editProfile()">Edit Profile</button>
+        </div>
+    </div>
+
+    <div id="editProfileForm" style="display: none;">
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Edit Profile</h5>
+                <form>
+                    <div class="mb-3">
+                        <label for="editFullName" class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="editFullName" value="John Doe">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editEmail" class="form-label">Email Address</label>
+                        <input type="email" class="form-control" id="editEmail" value="johndoe@example.com">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editPhone" class="form-label">Phone Number</label>
+                        <input type="tel" class="form-control" id="editPhone" value="123-456-7890">
+                    </div>
+                    <!-- Add more fields for editing profile -->
+                    <button type="button" class="btn btn-success" onclick="saveProfile()">Save</button>
+                    <button type="button" class="btn btn-secondary" onclick="cancelEdit()">Cancel</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- PROFILE PAGE -->
+<script>
+    // Function to switch between viewing and editing profile
+function editProfile() {
+    var detailsSection = document.querySelector('.card.mb-3');
+    var editForm = document.getElementById('editProfileForm');
+    detailsSection.style.display = 'none';
+    editForm.style.display = 'block';
+}
+
+// Function to cancel editing profile
+function cancelEdit() {
+    var detailsSection = document.querySelector('.card.mb-3');
+    var editForm = document.getElementById('editProfileForm');
+    detailsSection.style.display = 'block';
+    editForm.style.display = 'none';
+}
+
+// Function to save edited profile
+function saveProfile() {
+    var fullName = document.getElementById('editFullName').value;
+    var email = document.getElementById('editEmail').value;
+    var phone = document.getElementById('editPhone').value;
+
+    // Perform saving logic (e.g., send data to server)
+    console.log("Saving profile changes...");
+}
+
+</script>
