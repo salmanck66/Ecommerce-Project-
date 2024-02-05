@@ -4,6 +4,7 @@ const app = express()
 const {parsed:config} = require('dotenv').config()
 global.config = config
 const path = require('path');
+const session = require('express-session')
 const userRouter=require('./routes/user')
 const adminRouter=require('./routes/admin')
 var hbs =require('express-handlebars')

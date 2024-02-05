@@ -1,6 +1,7 @@
 const express=require('express')
 const router=express.Router()
 const userControllers=require('../controllers/user')
+const {userLogined} = require('../middleware/jwt')
 
 router.get('/',userControllers.homePage)
 router.get('/contact',userControllers.contact)
@@ -18,7 +19,9 @@ router.get('/signup',userControllers.signup)
 router.get('/forget',userControllers.forgetpass)
 router.get('/invoice',userControllers.invoice)
 
-router.post('/signup',userControllers.signup);
-router.post('/signin', userControllers.signin);
+router.post('/signup',userControllers.signUpPostPage);
+router.post('/login', userControllers.loginPostPage);
+
+router.get('/logout',userControllers.logoutPage)
 
 module.exports=router;

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jcclub Admin| Forget Password</title>
+    <title>Jcclub | Singup</title>
     <link rel="stylesheet" href="https://unpkg.com/bootstrap@5.3.2/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://unpkg.com/bs-brain@2.0.3/components/logins/login-6/assets/css/login-6.css">
 <style>
@@ -34,25 +34,31 @@
                       </div>
                     </div>
                   </div>
-                  <form action="#!">
+                  <form action="signup" method="post">
                     <div class="row gy-1 overflow-hidden">
-                        <div class="col-12">
+                        <div class="col-6">
                             <div class="form-floating mb-3">
-                              <input type="text" class="form-control" name="name" id="name" placeholder="name@example.com" required>
-                              <label for="name" class="form-label">Name </label>
+                              <input type="text" class="form-control" name="firstName" id="firstName" placeholder="firstName" required>
+                              <label for="firstName" class="form-label">First Name</label>
                             </div>
-                          </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-floating mb-3">
+                              <input type="text" class="form-control" name="lastName" id="lastName" placeholder="lastName" required>
+                              <label for="lastName" class="form-label">Last Name</label>
+                            </div>
+                        </div>
                         <div class="col-12">
                             <div class="form-floating mb-3">
-                              <input type="email" class="form-control" name="email" id="email" placeholder="Optional" >
-                              <label for="email" class="form-label">Email </label>
+                              <input type="email" class="form-control" name="mail" id="mail" placeholder="Optional" >
+                              <label for="mail" class="form-label">Email </label>
                             </div>
                           </div>
                         
                         <div class="col-12">
                             <div class="form-floating mb-3">
-                              <input type="tel" class="form-control" name="phno" id="phno" placeholder="Phone Number" required>
-                              <label for="phno" class="form-label">Phone Number </label>
+                              <input type="tel" class="form-control" name="phoneNumber" id="phoneNumber" placeholder="Phone Number" required>
+                              <label for="phoneNumber" class="form-label">Phone Number</label>
                             </div>
                           </div>
 
@@ -60,12 +66,6 @@
                             <div class="form-floating mb-3">
                               <input type="password" class="form-control" name="password" id="password" placeholder="E" required>
                               <label for="password" class="form-label">Password </label>
-                            </div>
-                          </div>
-                          <div class="col-12">
-                            <div class="form-floating mb-3">
-                              <input type="text" class="form-control" name="name" id="name" placeholder="name@example.com" required>
-                              <label for="email" class="form-label">Confirm Password </label>
                             </div>
                           </div>
 
