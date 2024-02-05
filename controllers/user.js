@@ -42,7 +42,7 @@ let ordercomplete = (req, res) => {
     console.log("ordercomplete");
     res.render('user/ordercomplete')
   }
-let login = (req, res) => {
+let signin = (req, res) => {
     console.log("login");
     res.render('user/login',{layout:false})
   }
@@ -58,4 +58,4 @@ let invoice = (req, res) => {
     console.log("invoice");
     res.render('user/invoice')
   }
-  module.exports = {homePage,contact,about,product,productdetail,cart,help,wishlist,userprofile,checkout,ordercomplete,login,signup,forgetpass,invoice}
+  module.exports = {homePage,contact,about,product,productdetail,cart,help,wishlist,userprofile,checkout,ordercomplete,signin,signup,forgetpass,invoice}

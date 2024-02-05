@@ -13,11 +13,12 @@ router.get('/wishlist',userControllers.wishlist)
 router.get('/userprofile',userControllers.userprofile)
 router.get('/checkout',userControllers.checkout)
 router.get('/ordercomplete',userControllers.ordercomplete)
-router.get('/login',userControllers.login)
+router.get('/login',userControllers.signin)
 router.get('/signup',userControllers.signup)
 router.get('/forget',userControllers.forgetpass)
 router.get('/invoice',userControllers.invoice)
 
-
+router.post('/signup',userControllers.signup);
+router.post('/signin', userControllers.signin);
 
 module.exports=router;

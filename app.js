@@ -1,8 +1,8 @@
 const express = require('express');
 const app = express()
 // const morgan = require("morgan") 
-require('dotenv/config')
-const PORT =  process.env.PORT
+const {parsed:config} = require('dotenv').config()
+global.config = config
 const path = require('path');
 const userRouter=require('./routes/user')
 const adminRouter=require('./routes/admin')
@@ -10,6 +10,7 @@ var hbs =require('express-handlebars')
 var jwt =require('jsonwebtoken')
 const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access')
 const mongoose = require('mongoose');
+
 
 
 app.engine('hbs',
@@ -32,7 +33,21 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/',userRouter)
 app.use('/',adminRouter)
 
-app.listen(PORT,()=>
+
+mongoose.connect(config.CONNECTION_STRING,{
+  dbName:'eshop'
+})
+.then((data)=>
+{ 
+  console.log("DB Connected");
+}).catch((err)=>
+{
+  console.log(err);
+})
+
+
+
+app.listen(config.PORT,()=>
 {
     console.log("Sever is listening");
 })
