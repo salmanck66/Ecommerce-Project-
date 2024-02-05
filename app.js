@@ -1,11 +1,16 @@
 const express = require('express');
 const app = express()
-const PORT =  3000
+// const morgan = require("morgan") 
+require('dotenv/config')
+const PORT =  process.env.PORT
 const path = require('path');
 const userRouter=require('./routes/user')
 const adminRouter=require('./routes/admin')
 var hbs =require('express-handlebars')
+var jwt =require('jsonwebtoken')
 const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access')
+const mongoose = require('mongoose');
+
 
 app.engine('hbs',
   hbs.engine({
@@ -19,11 +24,7 @@ app.engine('hbs',
 app.set('view engine', 'hbs');
 app.set('views', './views');
 
-
-
-
-
-
+// app.use(morgan('tiny'))
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json())
 app.use(express.static(path.join(__dirname, 'public')));  
