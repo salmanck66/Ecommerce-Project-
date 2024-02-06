@@ -87,11 +87,32 @@ let loginPostPage = async (req, res) => {
 }
 
 
-let homePage = (req, res) => {
-    console.log("home");
-    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-    res.render('user/index')
+// let homePage = (req, res) => {
+//     console.log("home");
+//     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+//     res.render('user/index',{user:"salman"})
+//   }
+
+let homePage = async (req, res) => {
+
+    console.log("Home page");
+    if (req.cookies.jwt) {
+      let tokenExracted = await verifyUser(req.cookies.jwt) //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
+      var userName = tokenExracted.userName
+
+    }
+    if(userName)
+    {
+      return res.render('user/index', { userName,  user: true, home: true })
+    }
+    else{
+      res.render('user/index')
+    }
+     
+    
   }
+
+
 let payment = (req, res) => {
     console.log("home");
     res.render('user/payments')
