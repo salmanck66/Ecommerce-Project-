@@ -20,12 +20,24 @@
 						<a href="userprofile" class="flex-c-m trans-04 p-lr-25">
 							My Account
 						</a>
+
+
+						{{#if userName}}
+						<a href="login" class="flex-c-m trans-04 p-lr-25 pl-5">
+    					{{userName}}
+						</a>
+						{{else}}
 						<a href="login" class="flex-c-m trans-04 p-lr-25 pl-5">
     					Login / Signup
 						</a>
+						{{/if}}
+
+						
 						<a href="logout" class="flex-c-m trans-04 p-lr-25 pl-5">
     					Logout
 						</a>
+
+
 
 					</div>
 				</div>

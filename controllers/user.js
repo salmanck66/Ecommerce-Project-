@@ -2,25 +2,39 @@ const { signUser, verifyUser } = require('../middleware/jwt')
 const helpers = require('../helpers/userhelper')
 
 
-let logoutPage = (req, res) => {
-  res.clearCookie('jwt');
-  req.session.destroy();
-  console.log("session and cookies are cleared");
-  res.redirect('/')
-}
+
 
 
 let loginGetPage = async (req, res) => {
   console.log("User login page");
-  if (req.cookies.jwt) {
-    let tokenExracted = await verifyUser(req.cookies.jwt) //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
-    if (tokenExracted.role === 'user') {
-      // console.log(tokenExracted);
-      return res.redirect('/')
-    }
+  try {
+      if (req.cookies.jwt) {
+          let tokenExracted = await verifyUser(req.cookies.jwt);
+          if (tokenExracted.role === 'user') {
+              return res.redirect('/');
+          }
+      }
+      res.render('user/login', { layout: false }); // Assuming layout is set to false for login page
+  } catch (error) {
+      console.error("Error retrieving user from JWT:", error);
+      res.render('error', { print: error });
   }
-  res.render('user/login')
+};
+
+let logoutPage = (req, res) => {
+  if (req.session) {
+      req.session.destroy();
+      console.log("session and cookies are cleared");
+  }
+  res.clearCookie('jwt');
+  res.redirect('/');
 }
+
+let ResetPassword = (req, res) => {
+  res.render('user/forget',{layout:false})
+}
+
+
 
 let signUpPostPage = async (req, res) => {
   try {
@@ -30,7 +44,7 @@ let signUpPostPage = async (req, res) => {
     let resolved = await helpers.signupHelper(req.body);
     if (resolved.mailExist) {
       console.log("mail already exist");
-      res.status(200).render('user/signup', { mailError: 'Email Already Exists', firstName: req.body.firstName, lastName: req.body.lastName, mail: req.body.mail, phoneNumber: req.body.phoneNumber, password: req.body.password, confirmPassword: req.body.confirmPassword })
+      res.status(200).render('user/signup', {layout:false, mailError: 'Email Already Exists', firstName: req.body.firstName, lastName: req.body.lastName, mail: req.body.mail, phoneNumber: req.body.phoneNumber, password: req.body.password, confirmPassword: req.body.confirmPassword })
     } else {
       console.log(resolved.user, 'user registration completed and stored in database');
       return res.redirect('/login?registered=true')
@@ -75,8 +89,15 @@ let loginPostPage = async (req, res) => {
 
 let homePage = (req, res) => {
     console.log("home");
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
     res.render('user/index')
   }
+let payment = (req, res) => {
+    console.log("home");
+    res.render('user/payments')
+  }
+
+
 let contact = (req, res) => {
     console.log("contact");
     res.render('user/contact', { layout: 'layout' });
@@ -119,8 +140,11 @@ let ordercomplete = (req, res) => {
   }
 let signin = (req, res) => {
     console.log("login");
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
     res.render('user/login',{layout:false})
   }
+
+  
 let signup = (req, res) => {
     console.log("signup");
     res.render('user/signup',{layout:false})
@@ -133,4 +157,4 @@ let invoice = (req, res) => {
     console.log("invoice");
     res.render('user/invoice')
   }
-  module.exports = {homePage,contact,about,product,productdetail,cart,help,wishlist,userprofile,checkout,ordercomplete,signin,signup,forgetpass,invoice,signUpPostPage,loginPostPage,loginGetPage,logoutPage}
+  module.exports = {payment,ResetPassword,homePage,contact,about,product,productdetail,cart,help,wishlist,userprofile,checkout,ordercomplete,signin,signup,forgetpass,invoice,signUpPostPage,loginPostPage,loginGetPage,logoutPage}

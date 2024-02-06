@@ -11,6 +11,8 @@ var hbs =require('express-handlebars')
 var jwt =require('jsonwebtoken')
 const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access')
 const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
+
 
 
 
@@ -23,13 +25,21 @@ app.engine('hbs',
   partialsDir: path.join(__dirname, '/views/partials/')
 }));
 
+app.use(session({   //FOR GOOGLE VERIFICATION
+  secret: 'hihello',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false }
+}));
+
 app.set('view engine', 'hbs');
 app.set('views', './views');
-
+app.use(cookieParser()); 
 // app.use(morgan('tiny'))
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json())
 app.use(express.static(path.join(__dirname, 'public')));  
+
 
 app.use('/',userRouter)
 app.use('/',adminRouter)
