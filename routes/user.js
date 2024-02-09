@@ -14,12 +14,11 @@ router.get('/help',userControllers.help)
 router.get('/wishlist',authMiddleware,userControllers.wishlist)
 router.get('/userprofile',authMiddleware,userControllers.userprofile)
 router.get('/checkout',authMiddleware,userControllers.checkout)
-router.get('/paymetn',authMiddleware,userControllers.payment)
 router.get('/ordercomplete',authMiddleware,userControllers.ordercomplete)
-router.get('/login',userControllers.signin)
+router.get('/login',userControllers.loginGetPage)
 router.get('/signup',userControllers.signup)
 router.get('/forget',userControllers.forgetpass)
-router.get('/invoice',userControllers.invoice)
+router.get('/invoice',authMiddleware,userControllers.invoice)
 
 router.post('/signup',userControllers.signUpPostPage);
 router.post('/login', userControllers.loginPostPage);

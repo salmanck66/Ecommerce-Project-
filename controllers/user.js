@@ -159,11 +159,11 @@ let ordercomplete = (req, res) => {
     console.log("ordercomplete");
     res.render('user/ordercomplete')
   }
-let signin = (req, res) => {
-    console.log("login");
-    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-    res.render('user/login',{layout:false})
-  }
+// let signin = (req, res) => {
+//     console.log("login");
+//     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+//     res.render('user/login',{layout:false})
+//   }
 
   
 let signup = (req, res) => {
@@ -178,4 +178,4 @@ let invoice = (req, res) => {
     console.log("invoice");
     res.render('user/invoice')
   }
-  module.exports = {payment,ResetPassword,homePage,contact,about,product,productdetail,cart,help,wishlist,userprofile,checkout,ordercomplete,signin,signup,forgetpass,invoice,signUpPostPage,loginPostPage,loginGetPage,logoutPage}
+  module.exports = {payment,ResetPassword,homePage,contact,about,product,productdetail,cart,help,wishlist,userprofile,checkout,ordercomplete,signup,forgetpass,invoice,signUpPostPage,loginPostPage,loginGetPage,logoutPage}

@@ -5,20 +5,15 @@
     <!-- Existing Categories -->
     <div class="existing-categories mb-4">
         <h3>Existing Categories</h3>
-        <ul class="list-group">
-            <!-- Sample existing category -->
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                Category 1
-                <button class="btn btn-danger">Remove</button>
-            </li>
-            <!-- Add more existing categories here -->
+        <ul class="list-group" id="existingCategoriesList">
+            <!-- Existing categories will be dynamically populated here -->
         </ul>
     </div>
 
     <!-- Add New Category Form -->
     <div class="add-new-category">
         <h3>Add New Category</h3>
-        <form>
+        <form id="addCategoryForm">
             <div class="mb-3">
                 <label for="categoryName" class="form-label">Category Name</label>
                 <input type="text" class="form-control" id="categoryName" placeholder="Enter category name">
@@ -34,7 +29,7 @@
     <!-- Add Subcategory Form -->
     <div class="add-subcategory mt-4">
         <h3>Add Subcategory</h3>
-        <form>
+        <form id="addSubcategoryForm">
             <div class="mb-3">
                 <label for="subcategoryName" class="form-label">Subcategory Name</label>
                 <input type="text" class="form-control" id="subcategoryName" placeholder="Enter subcategory name">
@@ -42,8 +37,8 @@
             <div class="mb-3">
                 <label for="parentCategory" class="form-label">Parent Category</label>
                 <select class="form-select" id="parentCategory">
-                    <option selected>Select parent category</option>
-                    <!-- Populate parent category options dynamically -->
+                    <option value="" selected>Select parent category</option>
+                    <!-- Parent categories will be dynamically populated here -->
                 </select>
             </div>
             <button type="submit" class="btn btn-primary">Add Subcategory</button>
@@ -51,3 +46,50 @@
     </div>
 </section>
 <!-- CATEGORY MANAGEMENT SECTION -->
+
+<!-- Script to handle dynamic population of existing categories and parent category options -->
+<script>
+    // Function to populate existing categories
+    function populateExistingCategories(categories) {
+        const existingCategoriesList = document.getElementById('existingCategoriesList');
+        existingCategoriesList.innerHTML = '';
+        categories.forEach(category => {
+            const listItem = document.createElement('li');
+            listItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
+            listItem.textContent = category.name;
+            const removeButton = document.createElement('button');
+            removeButton.classList.add('btn', 'btn-danger');
+            removeButton.textContent = 'Remove';
+            // Add event listener to remove category when clicked
+            removeButton.addEventListener('click', () => {
+                // Implement remove category functionality here
+                console.log('Remove category:', category._id);
+            });
+            listItem.appendChild(removeButton);
+            existingCategoriesList.appendChild(listItem);
+        });
+    }
+
+    // Function to populate parent category options
+    function populateParentCategories(categories) {
+        const parentCategorySelect = document.getElementById('parentCategory');
+        parentCategorySelect.innerHTML = '<option value="" selected>Select parent category</option>';
+        categories.forEach(category => {
+            const option = document.createElement('option');
+            option.value = category._id;
+            option.textContent = category.name;
+            parentCategorySelect.appendChild(option);
+        });
+    }
+
+    // Example data for testing
+    const categoriesData = [
+        { _id: 'category_id_1', name: 'Category 3' },
+        { _id: 'category_id_2', name: 'Category 2' }
+        // Add more categories if needed
+    ];
+
+    // Populate existing categories and parent category options
+    populateExistingCategories(categoriesData);
+    populateParentCategories(categoriesData);
+</script>

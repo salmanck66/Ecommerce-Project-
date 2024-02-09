@@ -15,4 +15,7 @@ router.get('/payments',adminControllers.payments)
 router.get('/settings',adminControllers.settings)
 router.get('/profile',adminControllers.profile)
 
+router.post('/add-product',adminControllers.postaddproduct)
+router.post('/add-product',adminControllers.postcategory)
+
 module.exports=router;

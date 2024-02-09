@@ -48,4 +48,13 @@ let profile = (req, res) => {
     res.render('admin/profile',{layout:"adminLayout.hbs"})
   }
 
-  module.exports = {homePage,logIn,Forget,order,productm,addproduct,coupon,categories,banner,payments,settings,profile}
+let postaddproduct = (req,res)=>
+{
+  res.json(req.body)
+}
+let postcategory = (req,res)=>
+{
+  res.json(req.body)
+}
+
+module.exports = {postcategory,postaddproduct,homePage,logIn,Forget,order,productm,addproduct,coupon,categories,banner,payments,settings,profile}
