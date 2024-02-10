@@ -1,6 +1,10 @@
 const express=require('express')
 const router=express.Router()
 const adminControllers=require('../controllers/admin')
+const cloudinary = require('../utils/cloudinery')
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
+const Category = require('../models/category');
 
 router.get('/admin',adminControllers.logIn)
 router.get('/forget',adminControllers.Forget)
@@ -16,6 +20,6 @@ router.get('/settings',adminControllers.settings)
 router.get('/profile',adminControllers.profile)
 
 router.post('/add-product',adminControllers.postaddproduct)
-router.post('/add-product',adminControllers.postcategory)
+router.post('/add-category',upload.single('categoryImage'),adminControllers.postcategory)
 
 module.exports=router;

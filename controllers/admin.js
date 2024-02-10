@@ -1,3 +1,7 @@
+const cloudinary = require('../utils/cloudinery');
+const Category = require('../models/category')
+const mongoose = require('mongoose');
+
 let homePage = (req, res) => {
     console.log("admin dashbord page");
     res.render('admin/index',{layout:"adminLayout.hbs"})
@@ -52,9 +56,28 @@ let postaddproduct = (req,res)=>
 {
   res.json(req.body)
 }
-let postcategory = (req,res)=>
-{
-  res.json(req.body)
-}
+let postcategory = async (req, res) => {
+  try {
+    console.log("entered post category");
+    // Upload image to Cloudinary
+    const result = await cloudinary.uploader.upload(req.file.path);
+    console.log("got image");
+
+    // Create new category with image URL
+    const newCategory = new Category({
+      _id: new mongoose.Types.ObjectId(), // Set a new ObjectId for _id
+      name: req.body.categoryName,
+      imageUrl: result.secure_url // URL of the uploaded image on Cloudinary
+    });
+
+    // Save new category to the database
+    await newCategory.save();
+
+    res.status(201).send('Category added successfully.');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+};
 
 module.exports = {postcategory,postaddproduct,homePage,logIn,Forget,order,productm,addproduct,coupon,categories,banner,payments,settings,profile}

@@ -1,4 +1,9 @@
 const mongoose = require('mongoose');
+const subcategorySchema = new mongoose.Schema({
+    _id: mongoose.Schema.Types.ObjectId,
+    name: String
+});
+
 const categorySchema = new mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     name: String,
@@ -6,10 +11,6 @@ const categorySchema = new mongoose.Schema({
     subcategories: [subcategorySchema]
 });
 
-const subcategorySchema = new mongoose.Schema({
-    _id: mongoose.Schema.Types.ObjectId,
-    name: String
-});
 
 const Category = mongoose.model('Category', categorySchema);
 
