@@ -12,8 +12,8 @@
                 <div class="card-body">
                     <p class="card-text">{{this.name}}</p>
                     <div class="d-flex justify-content-between">
-                        <button type="button" class="btn btn-dark" onclick="editCat('{{this._id}}','{{this.name}}','{{this.imageUrl}}'>Edit</button>
-                        <button type="button" class="btn btn-dark" >Delete</button>
+                        <button type="button" class="btn btn-dark" >Edit</button>
+                        <button type="button" class="btn btn-dark" onclick=deleteCat({{this._id}})>Delete</button>
                     </div>
                     
                 </div>
@@ -61,3 +61,44 @@
     </div>
 </section>
 <!-- CATEGORY MANAGEMENT SECTION -->
+<script>
+    function deleteCat(catId) {
+    event.preventDefault();
+    //  alert(subCatId)
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You won\'t be able to revert this!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#da1d1d',
+      cancelButtonColor: '#26e204',
+      confirmButtonText: 'Yes, Delete it!',
+      customClass: {
+    popup: 'custom-swal-popup',//MY CSS
+  }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios.delete('/admin/deleteCategory', {
+          data: { categoryId: catId }
+        })
+
+          .then(response => {
+            if (response.data.success) {
+              document.cookie = "alertDefined=" + JSON.stringify(response.data.success); //CREATED A COOKIE NAMED ALRTDEFINED AND IT SEND AS THE DOCUMENTS IN THE FORM OF STRING
+              window.location.reload()
+            } else {
+              console.error("cant delete right now")
+              alert("please try after sometime")
+              window.location.href = "/admin/ViewCategory"
+            }
+          })
+          .catch(error => {
+            console.error("Error deleting the category:", error);
+            alert("Error in deleting the category. Please try again later.");
+          })
+      }
+    })
+
+  }
+</script>

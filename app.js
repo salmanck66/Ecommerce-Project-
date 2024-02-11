@@ -12,6 +12,7 @@ var jwt =require('jsonwebtoken')
 const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access')
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
+const multer = require('./middleware/multer');
 
 
 
