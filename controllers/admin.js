@@ -31,9 +31,10 @@ let coupon = (req, res) => {
     console.log("admin coupn management");
     res.render('admin/coupons',{layout:"adminLayout.hbs"})
   }
-let categories = (req, res) => {
+let categories = async (req, res) => {
+    const categories  = await Category.find()
     console.log("admin categories management");
-    res.render('admin/category',{layout:"adminLayout.hbs"})
+    res.status(200).render('admin/category',{data:categories,layout:"adminLayout.hbs"})
   }
 let banner = (req, res) => {
     console.log("admin banner management");
@@ -73,7 +74,7 @@ let postcategory = async (req, res) => {
     // Save new category to the database
     await newCategory.save();
 
-    res.status(201).send('Category added successfully.');
+    res.status(201).redirect('/category');
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal Server Error');

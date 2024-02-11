@@ -5,9 +5,21 @@
     <!-- Existing Categories -->
     <div class="existing-categories mb-4">
         <h3>Existing Categories</h3>
-        <ul class="list-group" id="existingCategoriesList">
-            <!-- Existing categories will be dynamically populated here -->
-        </ul>
+        <div id="existingCategoriesList" class="d-flex">
+            {{#each data}}
+            <div class="card m-1" style="width: 12rem;">
+                <img src="{{this.imageUrl}}" class="card-img-top" alt="image">
+                <div class="card-body">
+                    <p class="card-text">{{this.name}}</p>
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-dark" onclick="editCat('{{this._id}}','{{this.name}}','{{this.imageUrl}}'>Edit</button>
+                        <button type="button" class="btn btn-dark" >Delete</button>
+                    </div>
+                    
+                </div>
+            </div>
+            {{/each}}
+        </div>
     </div>
 
     <!-- Add New Category Form -->
@@ -37,6 +49,9 @@
             <div class="mb-3">
                 <label for="parentCategory" class="form-label">Parent Category</label>
                 <select class="form-select" id="parentCategory">
+                    {{#each data}}
+                    <option value="{{data.name}}" selected>{{this.name}}</option>
+                    {{/each}}
                     <option value="" selected>Select parent category</option>
                     <!-- Parent categories will be dynamically populated here -->
                 </select>
@@ -46,50 +61,3 @@
     </div>
 </section>
 <!-- CATEGORY MANAGEMENT SECTION -->
-
-<!-- Script to handle dynamic population of existing categories and parent category options -->
-<script>
-    // Function to populate existing categories
-    function populateExistingCategories(categories) {
-        const existingCategoriesList = document.getElementById('existingCategoriesList');
-        existingCategoriesList.innerHTML = '';
-        categories.forEach(category => {
-            const listItem = document.createElement('li');
-            listItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
-            listItem.textContent = category.name;
-            const removeButton = document.createElement('button');
-            removeButton.classList.add('btn', 'btn-danger');
-            removeButton.textContent = 'Remove';
-            // Add event listener to remove category when clicked
-            removeButton.addEventListener('click', () => {
-                // Implement remove category functionality here
-                console.log('Remove category:', category._id);
-            });
-            listItem.appendChild(removeButton);
-            existingCategoriesList.appendChild(listItem);
-        });
-    }
-
-    // Function to populate parent category options
-    function populateParentCategories(categories) {
-        const parentCategorySelect = document.getElementById('parentCategory');
-        parentCategorySelect.innerHTML = '<option value="" selected>Select parent category</option>';
-        categories.forEach(category => {
-            const option = document.createElement('option');
-            option.value = category._id;
-            option.textContent = category.name;
-            parentCategorySelect.appendChild(option);
-        });
-    }
-
-    // Example data for testing
-    const categoriesData = [
-        { _id: 'category_id_1', name: 'Category 3' },
-        { _id: 'category_id_2', name: 'Category 2' }
-        // Add more categories if needed
-    ];
-
-    // Populate existing categories and parent category options
-    populateExistingCategories(categoriesData);
-    populateParentCategories(categoriesData);
-</script>
