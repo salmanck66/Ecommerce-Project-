@@ -12,8 +12,11 @@
                 <div class="card-body">
                     <p class="card-text">{{this.name}}</p>
                     <div class="d-flex justify-content-between">
-                        <button type="button" class="btn btn-dark" >Edit</button>
                         <button type="button" class="btn btn-dark" onclick="deleteCat('{{this._id}}')">Delete</button>
+                        <button type="button" class="btn btn-dark update-category-button" 
+    data-bs-toggle="modal" data-bs-target="#exampleModal" 
+    data-bs-whatever="{{this._id}}">Update</button>
+
                     </div>
                     
                 </div>
@@ -41,25 +44,68 @@
     <!-- Add Subcategory Form -->
     <div class="add-subcategory mt-4">
         <h3>Add Subcategory</h3>
-        <form id="addSubcategoryForm">
+        <form id="addSubcategoryForm" action="add-subcategory" method="post">
             <div class="mb-3">
                 <label for="subcategoryName" class="form-label">Subcategory Name</label>
-                <input type="text" class="form-control" id="subcategoryName" placeholder="Enter subcategory name">
+                <input type="text" class="form-control" id="subcategoryName" name="subCategoryName" placeholder="Enter subcategory name">
             </div>
             <div class="mb-3">
                 <label for="parentCategory" class="form-label">Parent Category</label>
-                <select class="form-select" id="parentCategory">
+                <select class="form-select" id="parentCategory" name="parentCategory">
                     {{#each data}}
-                    <option value="{{data.name}}" selected>{{this.name}}</option>
+                    <option value="{{this._id}}" >{{this.name}}</option>
                     {{/each}}
-                    <option value="" selected>Select parent category</option>
-                    <!-- Parent categories will be dynamically populated here -->
+                   
                 </select>
             </div>
             <button type="submit" class="btn btn-primary">Add Subcategory</button>
         </form>
-    </div>
+    </div> 
+
+    {{!-- <div class="add-subcategory mt-4">
+    <h3>Add Subcategory</h3>
+    <form id="addSubcategoryForm" action="add-subcategory" method="post">
+        <div class="mb-3">
+            <label for="subcategoryName" class="form-label">Subcategory Name</label>
+            <input type="text" class="form-control" id="subcategoryName" name="subCategoryName" placeholder="Enter subcategory name">
+
+        </div>
+        <button type="submit" class="btn btn-primary">Add Subcategory</button>
+    </form>
+</div> --}}
 </section>
+
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Update Category</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="updateCategoryForm" action="" method="post" >
+                    <div class="mb-3">
+                        <label for="updateCategoryName" class="form-label">Category Name</label>
+                        <input type="text" class="form-control" id="updateCategoryName" name="updateCategoryName" placeholder="Enter category name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="updateCategoryImage" class="form-label">Category Image</label>
+                        <input type="file" class="form-control" id="updateCategoryImage" name="updateCategoryImage">
+                    </div>
+                    <input type="hidden" id="categoryId">
+                </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="updateCategory()">Update</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <!-- CATEGORY MANAGEMENT SECTION -->
 <script>
     async function deleteCat(catId) {
@@ -95,4 +141,40 @@
             }
         });
     }
+    function updateCategory() {
+    // Get the values from the form fields
+    const categoryId = document.getElementById('categoryId').value;
+    const categoryName = document.getElementById('updateCategoryName').value;
+    const categoryImage = document.getElementById('updateCategoryImage').files[0]; // Assuming single file upload
+
+    // Create a FormData object to send data to the server
+    const formData = new FormData();
+    formData.append('categoryName', categoryName);
+    formData.append('categoryImage', categoryImage);
+
+    // Make a fetch request to update the category
+    fetch(`/category/${categoryId}`, {
+        method: 'PUT',
+        body: formData
+    })
+    .then(response => {
+        if (response.ok) {
+            // Category updated successfully, reload the page or perform any other action
+            location.reload();
+        } else {
+            // Handle error responses
+            console.error('Error updating category:', response.statusText);
+            // Display an error message to the user
+            alert('Failed to update category. Please try again.');
+        }
+    })
+    .catch(error => {
+        console.error('Error updating category:', error);
+        // Display an error message to the user
+        alert('An unexpected error occurred. Please try again later.');
+    });
+}
+
+
+
 </script>

@@ -20,7 +20,11 @@ router.get('/settings',adminControllers.settings)
 router.get('/profile',adminControllers.profile)
 
 router.post('/add-product',adminControllers.postaddproduct)
+
 router.post('/add-category',upload.single('categoryImage'),adminControllers.postcategory)
 router.delete('/category/:id',adminControllers.deletecat)
+router.put('/category/:id',adminControllers.updatecat)
+
+router.post('/add-subcategory',adminControllers.addSubcategory)
 
 module.exports=router;

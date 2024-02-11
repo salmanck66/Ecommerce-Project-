@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express()
+handlebars = require("./helpers/hbs")
 // const morgan = require("morgan") 
 const {parsed:config} = require('dotenv').config()
 global.config = config

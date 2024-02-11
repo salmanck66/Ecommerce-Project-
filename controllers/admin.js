@@ -1,5 +1,7 @@
 const cloudinary = require('../utils/cloudinery');
 const Category = require('../models/category')
+const SubCategory = require('../models/subcategory')
+
 const mongoose = require('mongoose');
 
 let homePage = (req, res) => {
@@ -98,5 +100,59 @@ let deletecat = async (req, res) => {
   }
 }
 
+let updatecat = async (req, res) => {
+  try {
+    const categoryId = req.params.id;
+    const { updateCategoryName, updateCategoryImage } = req.body; // Destructure the updated category name and image from the request body
 
-module.exports = {deletecat,postcategory,postaddproduct,homePage,logIn,Forget,order,productm,addproduct,coupon,categories,banner,payments,settings,profile}
+    // If there's no category name provided, return an error
+    if (!updateCategoryName) {
+      return res.status(400).json({ message: 'Category name is required for update' });
+    }
+
+    let imageUrl; // Variable to store the updated image URL
+
+    // Check if there's an updated image sent from the client
+    if (updateCategoryImage) {
+      // Upload the updated image to Cloudinary
+      const result = await cloudinary.uploader.upload(updateCategoryImage.path);
+      imageUrl = result.secure_url; // Store the secure URL of the uploaded image
+    }
+
+    // Prepare the update data based on whether there's an updated image or not
+    const updateData = { name: updateCategoryName };
+    if (imageUrl) {
+      updateData.imageUrl = imageUrl;
+    }
+
+    // Find the category by ID and update it with the new data
+    const updatedCategory = await Category.findByIdAndUpdate(categoryId, updateData, { new: true });
+
+    if (!updatedCategory) {
+      return res.status(404).json({ message: 'Category not found' });
+    }
+
+    res.json({ message: 'Category updated successfully', updatedCategory });
+  } catch (error) {
+    console.error('Error updating category:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+let addSubcategory = async (req, res) => {
+  try {
+    const newSubCategory = new SubCategory({
+      subCategoryName: req.body.subCategoryName,
+      parentCategory:req.body.parentCategory
+    });
+    await newSubCategory.save();
+    res.status(201).redirect('/category'); // Redirect to the appropriate route
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+}
+
+
+
+module.exports = {addSubcategory,deletecat,postcategory,postaddproduct,homePage,logIn,Forget,order,productm,addproduct,coupon,categories,banner,payments,settings,profile,updatecat}
