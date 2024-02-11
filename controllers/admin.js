@@ -80,5 +80,23 @@ let postcategory = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
+let deletecat = async (req, res) => {
+  try {
+      const categoryId = req.params.id;
 
-module.exports = {postcategory,postaddproduct,homePage,logIn,Forget,order,productm,addproduct,coupon,categories,banner,payments,settings,profile}
+      // Find category by ID and delete it
+      const deletedCategory = await Category.findByIdAndDelete(categoryId);
+
+      if (!deletedCategory) {
+          return res.status(404).json({ message: 'Category not found' });
+      }
+
+      res.json({ message: 'Category deleted successfully', deletedCategory });
+  } catch (error) {
+      console.error('Error deleting category:', error);
+      res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+
+module.exports = {deletecat,postcategory,postaddproduct,homePage,logIn,Forget,order,productm,addproduct,coupon,categories,banner,payments,settings,profile}

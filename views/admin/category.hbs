@@ -13,7 +13,7 @@
                     <p class="card-text">{{this.name}}</p>
                     <div class="d-flex justify-content-between">
                         <button type="button" class="btn btn-dark" >Edit</button>
-                        <button type="button" class="btn btn-dark" onclick=deleteCat({{this._id}})>Delete</button>
+                        <button type="button" class="btn btn-dark" onclick="deleteCat('{{this._id}}')">Delete</button>
                     </div>
                     
                 </div>
@@ -62,43 +62,37 @@
 </section>
 <!-- CATEGORY MANAGEMENT SECTION -->
 <script>
-    function deleteCat(catId) {
-    event.preventDefault();
-    //  alert(subCatId)
+    async function deleteCat(catId) {
+        console.log("fun called");
+        event.preventDefault();
 
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'You won\'t be able to revert this!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#da1d1d',
-      cancelButtonColor: '#26e204',
-      confirmButtonText: 'Yes, Delete it!',
-      customClass: {
-    popup: 'custom-swal-popup',//MY CSS
-  }
-    }).then((result) => {
-      if (result.isConfirmed) {
-        axios.delete('/admin/deleteCategory', {
-          data: { categoryId: catId }
-        })
+        Swal.fire({
+            title: `Do you want to delete category ?`,
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: "Yes",
+            denyButtonText: `No`
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const response = await fetch(`/category/${catId}`, {
+                        method: 'DELETE'
+                    });
 
-          .then(response => {
-            if (response.data.success) {
-              document.cookie = "alertDefined=" + JSON.stringify(response.data.success); //CREATED A COOKIE NAMED ALRTDEFINED AND IT SEND AS THE DOCUMENTS IN THE FORM OF STRING
-              window.location.reload()
-            } else {
-              console.error("cant delete right now")
-              alert("please try after sometime")
-              window.location.href = "/admin/ViewCategory"
+                    if (response.ok) {
+                            location.reload();
+                    } else {
+                        // Handle error responses
+                        console.error('Error deleting category:', response.statusText);
+                        // Display an error message to the user
+                        alert('Failed to delete category. Please try again.');
+                    }
+                } catch (error) {
+                    console.error('Error deleting category:', error);
+                    // Display an error message to the user
+                    alert('An unexpected error occurred. Please try again later.');
+                }
             }
-          })
-          .catch(error => {
-            console.error("Error deleting the category:", error);
-            alert("Error in deleting the category. Please try again later.");
-          })
-      }
-    })
-
-  }
+        });
+    }
 </script>

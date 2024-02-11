@@ -21,5 +21,6 @@ router.get('/profile',adminControllers.profile)
 
 router.post('/add-product',adminControllers.postaddproduct)
 router.post('/add-category',upload.single('categoryImage'),adminControllers.postcategory)
+router.delete('/category/:id',adminControllers.deletecat)
 
 module.exports=router;
