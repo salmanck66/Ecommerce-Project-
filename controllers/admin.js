@@ -62,37 +62,50 @@ let profile = (req, res) => {
     res.render('admin/profile',{layout:"adminLayout.hbs"})
   }
 
-let postaddproduct = async (req, res) => {
-  try {
+  let postaddproduct = async (req, res) => {
+    try {
       // Upload image to Cloudinary
       const result = await cloudinary.uploader.upload(req.file.path);
-
-      // Extract product data from the request body
-      const { name, variant, mrp, price, stock, description, richdescription, category, subcategory } = req.body;
-
+  
+      // Log received request body
+      console.log("Received body:", req.body);
+  
+      // Extract stock data from the nested structure
+      const stock = {
+        S: req.body['stock.S'],
+        M: req.body['stock.M'],
+        L: req.body['stock.L'],
+        XL: req.body['stock.XL'],
+        XXL: req.body['stock.XXL']
+      };
+  
+      // Extract product data (ensure correct field names/structure)
+      const { name, variant, mrp, price, description, richdescription, category, subcategory } = req.body;
+  
       // Create new product object with Cloudinary image URL
       const newProduct = {
-          name,
-          variant,
-          image: result.secure_url, // Cloudinary image URL
-          mrp,
-          price,
-          stock,
-          description,
-          richdescription,
-          category,
-          subcategory
+        name,
+        variant,
+        image: result.secure_url,
+        mrp,
+        price,
+        stock, // Assign the extracted stock object
+        description,
+        richdescription,
+        category,
+        subcategory
       };
-
+  
       // Save product to MongoDB
       const product = await Product.create(newProduct);
-
+  
       res.status(201).json({ message: 'Product added successfully', product });
-  } catch (error) {
+    } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Internal server error' });
-  }
-}
+    }
+  };
+
 
 let postcategory = async (req, res) => {
   try {
