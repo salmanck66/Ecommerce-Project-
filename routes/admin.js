@@ -3,8 +3,8 @@ const router=express.Router()
 const adminControllers=require('../controllers/admin')
 const cloudinary = require('../utils/cloudinery')
 const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
-const Category = require('../models/category');
+const upload = multer({ dest: 'uploads/'});
+
 
 router.get('/admin',adminControllers.logIn)
 router.get('/forget',adminControllers.Forget)

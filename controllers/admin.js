@@ -1,6 +1,10 @@
 const cloudinary = require('../utils/cloudinery');
 const Category = require('../models/category')
 const SubCategory = require('../models/subcategory')
+const Product  = require('../models/product')
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
+
 
 const mongoose = require('mongoose');
 
@@ -60,34 +64,36 @@ let profile = (req, res) => {
 
 let postaddproduct = async (req, res) => {
   try {
-    // Upload image to Cloudinary
-    console.log("entered post category");
-    const result = await cloudinary.uploader.upload(req.file.path);
+      // Upload image to Cloudinary
+      const result = await cloudinary.uploader.upload(req.file.path);
 
+      // Extract product data from the request body
+      const { name, variant, mrp, price, stock, description, richdescription, category, subcategory } = req.body;
 
-    // Create new product with image URL
-    const newProduct = new Product({
-      name: req.body.name,
-      mrp: req.body.mrp,
-      price: req.body.price,
-      description: req.body.description,
-      richdescription: req.body.richdescription,
-      image: result.secure_url, // URL of the uploaded image on Cloudinary
-      category: req.body.category,
-      subcategory: req.body.subcategory,
-      countinstock: req.body.countinstock,
-      variants: req.body.variants
-    });
+      // Create new product object with Cloudinary image URL
+      const newProduct = {
+          name,
+          variant,
+          image: result.secure_url, // Cloudinary image URL
+          mrp,
+          price,
+          stock,
+          description,
+          richdescription,
+          category,
+          subcategory
+      };
 
-    // Save new product to the database
-    await newProduct.save();
+      // Save product to MongoDB
+      const product = await Product.create(newProduct);
 
-    res.status(201).redirect('/productm'); // Redirect to the appropriate route
+      res.status(201).json({ message: 'Product added successfully', product });
   } catch (error) {
-    console.error(error);
-    res.status(500).send('Internal Server Error');
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
   }
-};
+}
+
 let postcategory = async (req, res) => {
   try {
     console.log("entered post category");
