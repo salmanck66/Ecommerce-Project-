@@ -11,6 +11,32 @@
                 <img src="{{this.imageUrl}}" class="card-img-top" alt="image">
                 <div class="card-body">
                     <p class="card-text">{{this.name}}</p>
+                    
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-dark" onclick="deleteCat('{{this._id}}')">Delete</button>
+                        <button type="button" class="btn btn-dark update-category-button" 
+    data-bs-toggle="modal" data-bs-target="#exampleModal" 
+    data-bs-whatever="{{this._id}}">Update</button>
+
+                    </div>
+                    
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+
+    <!-- Existing Sub Categories -->
+    <div class="existing-categories mb-4">
+        <h3>Existing Sub Categories</h3>
+        <div id="existingCategoriesList" class="d-flex">
+            {{#each file}}
+            <div class="card m-1" style="width: 12rem;">
+                <div class="card-body">
+                    <label for="categoryImage" class="form-label text-danger">Sub Category Name</label>
+                    <p class="card-text">{{this.subCategoryName}}</p>
+                    <label for="categoryImage" class="form-label text-danger">Parent Category</label>
+                    <p class="card-text">{{this.parentCategory}}</p>
                     <div class="d-flex justify-content-between">
                         <button type="button" class="btn btn-dark" onclick="deleteCat('{{this._id}}')">Delete</button>
                         <button type="button" class="btn btn-dark update-category-button" 
@@ -53,9 +79,8 @@
                 <label for="parentCategory" class="form-label">Parent Category</label>
                 <select class="form-select" id="parentCategory" name="parentCategory">
                     {{#each data}}
-                    <option value="{{this._id}}" >{{this.name}}</option>
+                    <option value="{{this.name}}" >{{this.name}}</option>
                     {{/each}}
-                   
                 </select>
             </div>
             <button type="submit" class="btn btn-primary">Add Subcategory</button>
@@ -141,6 +166,42 @@
             }
         });
     }
+
+        async function deleteSubCat(catId) {
+        console.log("fun called");
+        event.preventDefault();
+
+        Swal.fire({
+            title: `Do you want to delete category ?`,
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: "Yes",
+            denyButtonText: `No`
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const response = await fetch(`/category/${catId}`, {
+                        method: 'DELETE'
+                    });
+
+                    if (response.ok) {
+                            location.reload();
+                    } else {
+                        // Handle error responses
+                        console.error('Error deleting category:', response.statusText);
+                        // Display an error message to the user
+                        alert('Failed to delete category. Please try again.');
+                    }
+                } catch (error) {
+                    console.error('Error deleting category:', error);
+                    // Display an error message to the user
+                    alert('An unexpected error occurred. Please try again later.');
+                }
+            }
+        });
+    }
+    
+    
     function updateCategory() {
     // Get the values from the form fields
     const categoryId = document.getElementById('categoryId').value;

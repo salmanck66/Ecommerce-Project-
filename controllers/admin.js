@@ -25,9 +25,11 @@ let productm = (req, res) => {
     console.log("admin product management");
     res.render('admin/productm',{layout:"adminLayout.hbs"})
   }
-let addproduct = (req, res) => {
+let addproduct = async (req, res) => {
     console.log("admin product management");
-    res.render('admin/addproduct',{layout:"adminLayout.hbs"})
+    const categories  = await Category.find()
+    const subc  = await SubCategory.find()
+    res.render('admin/addproduct',{data:categories,file:subc,layout:"adminLayout.hbs"})
   }
 let coupon = (req, res) => {
     console.log("admin coupn management");
@@ -35,8 +37,9 @@ let coupon = (req, res) => {
   }
 let categories = async (req, res) => {
     const categories  = await Category.find()
+    const subc  = await SubCategory.find()
     console.log("admin categories management");
-    res.status(200).render('admin/category',{data:categories,layout:"adminLayout.hbs"})
+    res.status(200).render('admin/category',{data:categories,file:subc,layout:"adminLayout.hbs"})
   }
 let banner = (req, res) => {
     console.log("admin banner management");
@@ -55,10 +58,36 @@ let profile = (req, res) => {
     res.render('admin/profile',{layout:"adminLayout.hbs"})
   }
 
-let postaddproduct = (req,res)=>
-{
-  res.json(req.body)
-}
+let postaddproduct = async (req, res) => {
+  try {
+    // Upload image to Cloudinary
+    console.log("entered post category");
+    const result = await cloudinary.uploader.upload(req.file.path);
+
+
+    // Create new product with image URL
+    const newProduct = new Product({
+      name: req.body.name,
+      mrp: req.body.mrp,
+      price: req.body.price,
+      description: req.body.description,
+      richdescription: req.body.richdescription,
+      image: result.secure_url, // URL of the uploaded image on Cloudinary
+      category: req.body.category,
+      subcategory: req.body.subcategory,
+      countinstock: req.body.countinstock,
+      variants: req.body.variants
+    });
+
+    // Save new product to the database
+    await newProduct.save();
+
+    res.status(201).redirect('/productm'); // Redirect to the appropriate route
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+};
 let postcategory = async (req, res) => {
   try {
     console.log("entered post category");
