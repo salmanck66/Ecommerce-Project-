@@ -20,14 +20,12 @@
         </div>
         <!-- Variant -->
         <div class="mb-3">
-          <label for="variants" class="form-label">Select Variant</label>
+          <label for="variants" class="form-label">Edition</label>
           <select class="form-select mb-2" id="variant" name="variant">
-            <option value="home">Home</option>
-            <option value="away">Away</option>
-            <option value="third">Third</option>
-            <option value="fourth">Fourth</option>
-            <option value="specialEdition">Special Edition</option>
-            <option value="gk">GK</option>
+            <option value="Player version" selected>Player version</option>
+            <option value="Fan version">Fan version</option>
+            <option value="First Grade Set">First Grade Set</option>
+            <option value="Sublimation">Sublimation</option>
           </select>
         </div>
         <!-- Pricing -->
@@ -81,7 +79,21 @@
             <input type="number" class="form-control" id="XXL" name="stock.XXL">
           </div>
         </div>
+
+        <div class="mb-3">
+          <label for="tags" class="form-label">Tags</label>
+          <select class="form-select mb-2" id="tags" name="tags">
+            <option value="new" selected>new</option>
+            <option value="best seller">best seller</option>
+            <option value="hot deal">hot deal</option>
+            <option value="trending">trending</option>
+          </select>
+        </div>
       </div>
+
+      
+
+      
       <div class="col-lg-6">
         <!-- Product Description -->
         <div class="mb-3">
@@ -127,4 +139,33 @@
     </div>
     <button type="submit" class="btn btn-primary mx-auto d-block mt-1 mb-3">Add Product</button>
   </form>
+
 </section>
+<script>
+  
+fetch('/add-product', {
+  method: 'POST',
+  body: formData
+})
+.then(response => response.json())
+.then(data => {
+  if (data.success) {
+    // Trigger a success Toastify notification
+    Toastify({
+      text: data.message,
+      duration: 3000,
+      gravity: 'bottom',
+      position: 'right',
+      backgroundColor: 'green',
+      stopOnFocus: true
+    }).showToast();
+  } else {
+    // Handle other responses or errors
+    console.error('Product upload failed:', data.message);
+  }
+})
+.catch(error => {
+  console.error('Error uploading product:', error);
+});
+
+</script>

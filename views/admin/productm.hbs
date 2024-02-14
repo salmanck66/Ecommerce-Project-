@@ -1,43 +1,178 @@
-
 <div class="container-fluid product-management mt-5">
   <div class="row justify-content-center">
     <div class="col-md-10">
-      <div class="add-product mb-4 d-flex justify-content-end align-content-end">
-        <a href="addproduct"><button class="btn btn-primary btn-lg"><i class="fas fa-plus"></i> Add Product</button></a>
+      <div
+        class="add-product mb-4 d-flex justify-content-end align-content-end"
+      >
+        <a href="addproduct"><button class="btn btn-primary btn-lg"><i
+              class="fas fa-plus"
+            ></i>
+            Add Product</button></a>
       </div>
 
       <div class="product-list table-responsive">
         <table class="table table-striped">
           <thead>
             <tr class="">
-              <th scope="col">Image</th>
-              <th scope="col">Name</th>
-              <th scope="col">Price</th>
-              <th scope="col">Action</th>
+              <th class="col-4" scope="col">Image</th>
+              <th class="col-2" scope="col">Name</th>
+              <th class="col-2" scope="col">Price</th>
+              <th class="col-2" scope="col">Category</th>
+              <th class="col-2" scope="col">Action</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td class="w-25"><img src="/images/product-09.jpg" alt="Product 1" class="rounded img-thumbnail h-25 w-25"></td>
-              <td>Product 1</td>
-              <td>$19.99</td>
-              <td>
-                <button class="btn btn-sm btn-info"><i class="fas fa-edit"></i> Edit</button>
-                <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i> Delete</button>
-              </td>
-            </tr>
-            <tr>
-              <td><img src="/images/product-10.jpg" alt="Product 2" class="rounded img-thumbnail w-25"></td>
-              <td>Product 2</td>
-              <td>$24.99</td>
-              <td>
-                <button class="btn btn-sm btn-info"><i class="fas fa-edit"></i> Edit</button>
-                <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i> Delete</button>
-              </td>
-            </tr>
-            </tbody>
+            {{#each data}}
+              <tr
+                class="justify-content-center align-content-center align-items-center"
+              >
+                <td class=""><img
+                    src="{{this.image}}"
+                    alt="Product Image"
+                    class="rounded img-thumbnail"
+                    style="height: 8rem;"
+                  /></td>
+                <td>{{this.name}}</td>
+                <td>₹{{this.price}}</td>
+                <td>{{this.category}}</td>
+                <td>
+                  <!-- Edit button with product ID as data attribute -->
+                  <a href="#" class="btn btn-sm btn-info btn-edit-product" data-id="{{this._id}}" onclick="handleEditClick(this)">
+  <i class="fas fa-edit"></i> Edit
+</a>
+
+                  <!-- Delete button with product ID as data attribute -->
+                  <button
+                    class="btn btn-sm btn-danger delete-product"
+                    data-product-id="{{this._id}}"
+                  ><i class="fas fa-trash"></i> Delete</button>
+                </td>
+              </tr>
+              <input type="hidden" name="_id" type="text" value="{{this._id}}">
+            {{/each}}
+          </tbody>
         </table>
       </div>
     </div>
   </div>
 </div>
+
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Product</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="productName" class="form-label">Product Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="name"
+            name="name"
+            placeholder="Enter product name"
+          />
+          
+          </div>
+          <div class="mb-3">
+            <label for="productMedia" class="form-label">Product Media</label>
+            <input type="file" class="form-control" id="productMedia" name="image" />
+          </div>
+
+          <div class="mb-3">
+            <label for="variants" class="form-label">Edition</label>
+          <select class="form-select mb-2" id="variant" name="variant">
+            <option value="Player version" selected>Player version</option>
+            <option value="Fan version">Fan version</option>
+            <option value="First Grade Set">First Grade Set</option>
+            <option value="Sublimation">Sublimation</option>
+          </select>
+          </div>
+
+          <div class="mb-3">
+             <label for="mrp" class="form-label">MRP</label>
+              <input
+                type="number"
+                class="form-control"
+                id="mrp"
+                placeholder="Enter MRP"
+                name="mrp"
+              />
+          </div>
+          <div class="mb-3">
+            <label for="price" class="form-label">Price</label>
+              <input
+                type="number"
+                class="form-control"
+                id="price"
+                placeholder="Enter price"
+                name="price"
+              />
+          </div>
+          <div class="mb-3">
+           <label for="size" class="form-label">Stock</label><br>
+            <label for="S">S</label>
+            <input type="number" class="form-control" id="S" name="stock.S">
+            <label for="M">M</label>
+            <input type="number" class="form-control" id="M" name="stock.M" >
+            <label for="L">L</label>
+            <input type="number" class="form-control" id="L" name="stock.L" >
+            <label for="XL">XL</label>
+            <input type="number" class="form-control" id="XL" name="stock.XL" >
+            <label for="XXL">XXL</label>
+            <input type="number" class="form-control" id="XXL" name="stock.XXL">
+            <label for="tags" class="form-label">Tags</label>
+          <select class="form-select mb-2" id="tags" name="tags">
+            <option value="new" selected>new</option>
+            <option value="best seller">best seller</option>
+            <option value="hot deal">hot deal</option>
+            <option value="trending">trending</option>
+          </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+function handleEditClick(button) {
+  const id = button.getAttribute('data-id');
+  fetch(`/edit-product/${id}`)
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById('exampleModalLabel').innerText = `Edit ${data.name} `;
+      // Update the form fields with the fetched data
+      document.querySelector('#editModal [name="name"]').value = data.name;
+      document.querySelector('#editModal [name="variant"]').value = data.variant;
+      document.querySelector('#editModal [name="mrp"]').value = data.mrp;
+      document.querySelector('#editModal [name="description"]').value = data.description;
+      document.querySelector('#editModal [name="richdescription"]').value = data.richdescription;
+      document.querySelector('#editModal [name="category"]').value = data.category;
+      document.querySelector('#editModal [name="price"]').value = data.price;
+      document.querySelector('#editModal [name="stock.S"]').value = data.stock.S;
+      document.querySelector('#editModal [name="stock.M"]').value = data.stock.M;
+      document.querySelector('#editModal [name="stock.L"]').value = data.stock.L;
+      document.querySelector('#editModal [name="stock.XL"]').value = data.stock.XL;
+      document.querySelector('#editModal [name="stock.XXL"]').value = data.stock.XXL;
+      // You may not want to populate the file input
+      // document.querySelector('#editModal [name="image"]').data.img; 
+      document.querySelector('#editModal [name="_id"]').value = data._id;
+
+      const editModal = new bootstrap.Modal(document.getElementById('editModal'));
+      editModal.show();
+    })
+    .catch(error => console.error('Error:', error));
+}
+</script>
+

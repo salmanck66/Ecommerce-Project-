@@ -1,5 +1,7 @@
 const { signUser, verifyUser } = require('../middleware/jwt')
-const helpers = require('../helpers/userhelper')
+const helpers = require('../helpers/userhelper');
+const { default: mongoose } = require('mongoose');
+const Product = require('../models/product');
 
 
 
@@ -99,14 +101,18 @@ let homePage = async (req, res) => {
     if (req.cookies.jwt) {
       let tokenExracted = await verifyUser(req.cookies.jwt) //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
       var userName = tokenExracted.userName
-
+      
     }
     if(userName)
     {
-      return res.render('user/index', { userName,  user: true, home: true })
+      const products = await Product.find()
+      console.log(products);
+      return res.render('user/index', { userName,  user: true, home: true ,data: products})
     }
     else{
-      res.render('user/index')
+      const products = await Product.find()
+      console.log(products);
+      res.render('user/index',{data : products})
     }
      
     

@@ -4,11 +4,12 @@ const SubCategory = require('../models/subcategory')
 const Product  = require('../models/product')
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
-
-
 const mongoose = require('mongoose');
+const { product } = require('./user');
 
-let homePage = (req, res) => {
+
+
+  let homePage = (req, res) => {
     console.log("admin dashbord page");
     res.render('admin/index',{layout:"adminLayout.hbs"})
   }
@@ -25,9 +26,11 @@ let order = (req, res) => {
     console.log("admin order management");
     res.render('admin/order',{layout:"adminLayout.hbs"})
   }
-let productm = (req, res) => {
+let productm = async (req, res) => {
+  const product  = await Product.find()
     console.log("admin product management");
-    res.render('admin/productm',{layout:"adminLayout.hbs"})
+    console.log(product);
+    res.render('admin/productm',{data : product ,layout:"adminLayout.hbs"})
   }
 let addproduct = async (req, res) => {
     console.log("admin product management");
@@ -80,7 +83,7 @@ let profile = (req, res) => {
       };
   
       // Extract product data (ensure correct field names/structure)
-      const { name, variant, mrp, price, description, richdescription, category, subcategory } = req.body;
+      const { name, variant, mrp, price, description, richdescription, category, subcategory,tags } = req.body;
   
       // Create new product object with Cloudinary image URL
       const newProduct = {
@@ -89,7 +92,8 @@ let profile = (req, res) => {
         image: result.secure_url,
         mrp,
         price,
-        stock, // Assign the extracted stock object
+        stock,
+        tags,
         description,
         richdescription,
         category,
@@ -99,12 +103,92 @@ let profile = (req, res) => {
       // Save product to MongoDB
       const product = await Product.create(newProduct);
   
-      res.status(201).json({ message: 'Product added successfully', product });
+res.status(201).redirect('/productm');
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Internal server error' });
     }
   };
+
+
+// let prodcteditpage =async (req, res) => {
+//   const productId = req.params.id;
+//   const product = await Product.findById(productId);
+//   console.log("admin dashbord page");
+//   res.render('admin/index',{layout:"adminLayout.hbs",product})
+// }
+
+let producteditpage = async (req, res) => {
+  try {
+    // Assuming you have the product ID from the URL parameters
+    const productId = req.params.id;
+
+    // Fetch the product data from your database based on the product ID
+    const product = await Product.findById(productId);
+    console.log( product)
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+  const updateProduct = async (req, res) => {
+    try {
+        const productId = req.params.id; // Extract product ID from request parameters
+
+        // Upload image to Cloudinary if a new image is provided
+        let imageUrl;
+        if (req.file) {
+            const result = await cloudinary.uploader.upload(req.file.path);
+            imageUrl = result.secure_url;
+        }
+
+        // Extract stock data from the nested structure
+        const stock = {
+            S: req.body['stock.S'],
+            M: req.body['stock.M'],
+            L: req.body['stock.L'],
+            XL: req.body['stock.XL'],
+            XXL: req.body['stock.XXL']
+        };
+
+        // Extract product data (ensure correct field names/structure)
+        const { name, variant, mrp, price, description, richdescription, category, subcategory, tags } = req.body;
+
+        // Construct update object based on provided data
+        const updateData = {
+            name,
+            variant,
+            mrp,
+            price,
+            stock,
+            tags,
+            description,
+            richdescription,
+            category,
+            subcategory
+        };
+
+        // If a new image URL is provided, add it to the update object
+        if (imageUrl) {
+            updateData.image = imageUrl;
+        }
+
+        // Find the product by ID and update it with the new data
+        const updatedProduct = await Product.findByIdAndUpdate(productId, updateData, { new: true });
+
+        if (!updatedProduct) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+
+        res.status(200).redirect('/productm'); // Redirect to product management page
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
 
 
 let postcategory = async (req, res) => {
@@ -203,4 +287,4 @@ let addSubcategory = async (req, res) => {
 
 
 
-module.exports = {addSubcategory,deletecat,postcategory,postaddproduct,homePage,logIn,Forget,order,productm,addproduct,coupon,categories,banner,payments,settings,profile,updatecat}
+module.exports = {producteditpage,updateProduct,addSubcategory,deletecat,postcategory,postaddproduct,homePage,logIn,Forget,order,productm,addproduct,coupon,categories,banner,payments,settings,profile,updatecat}

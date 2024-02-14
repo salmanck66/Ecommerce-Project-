@@ -13,7 +13,12 @@ const productSchema = new mongoose.Schema({
   variant: {
     type: String,
     required: true,
-    enum: ['home', 'away', 'third', 'fourth', 'specialEdition', 'gk']
+    enum: ['Player version', 'Fan version', 'First Grade Set', 'Sublimation']
+  },
+  tags: {
+    type: String,
+    required: true,
+    enum: ['new', 'best seller',  'hot deal','trending']
   },
   mrp: {
     type: Number,
