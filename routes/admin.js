@@ -22,14 +22,14 @@ router.get('/profile',adminControllers.profile)
 
 router.get('/edit-product/:id',adminControllers.producteditpage)
 router.post('/add-product',upload.single('productImage'),adminControllers.postaddproduct)
-
 router.post('/edit-product',upload.single('productImage'),adminControllers.editproduct)
-
 router.delete('/delete-product/:id',adminControllers.deleteprod)
 
+router.get('/update-category/:id',adminControllers.categoryeditpage)
 router.delete('/category/:id',adminControllers.deletecat)
 router.post('/add-category',upload.single('categoryImage'),adminControllers.postcategory)
-router.put('/category/:categoryId', upload.single('categoryImage'),adminControllers.updatecategory)
+router.post('/update-category', upload.single('categoryImage'), adminControllers.updatecategory);
+
 
 
 router.post('/add-subcategory',adminControllers.addSubcategory)

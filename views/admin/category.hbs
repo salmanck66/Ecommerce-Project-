@@ -14,9 +14,10 @@
                     
                     <div class="d-flex justify-content-between">
                         <button type="button" class="btn btn-dark" onclick="deleteCat('{{this._id}}')">Delete</button>
-                        <button type="button" class="btn btn-dark update-category-button" 
-    data-bs-toggle="modal" data-bs-target="#exampleModal" 
-    data-bs-whatever="{{this._id}}">Update</button>
+                       <a href="/update-category/{{this._id}}" class="btn btn-sm btn-info btn-edit-product" data-id="{{this._id}}" onclick="handleEditClick(this)">
+                    <i class="fas fa-edit"></i>
+                    Edit
+                  </a>
 
                     </div>
                     
@@ -67,7 +68,7 @@
     </div>
 
     <!-- Add Subcategory Form -->
-    <div class="add-subcategory mt-4">
+   <div class="add-subcategory mt-4">
         <h3>Add Subcategory</h3>
         <form id="addSubcategoryForm" action="add-subcategory" method="post">
             <div class="mb-3">
@@ -84,56 +85,14 @@
             </div>
             <button type="submit" class="btn btn-primary">Add Subcategory</button>
         </form>
-    </div> 
+    </div>
 
-    {{!-- <div class="add-subcategory mt-4">
-    <h3>Add Subcategory</h3>
-    <form id="addSubcategoryForm" action="add-subcategory" method="post">
-        <div class="mb-3">
-            <label for="subcategoryName" class="form-label">Subcategory Name</label>
-            <input type="text" class="form-control" id="subcategoryName" name="subCategoryName" placeholder="Enter subcategory name">
 
-        </div>
-        <button type="submit" class="btn btn-primary">Add Subcategory</button>
-    </form>
-</div> --}}
 </section>
 
 
 
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Update Category</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form id="updateCategoryForm" action="" method="post" >
-                    <div class="mb-3">
-                        <label for="updateCategoryName" class="form-label">Category Name</label>
-                        <input type="text" class="form-control" id="updateCategoryName" name="updateCategoryName" placeholder="Enter category name">
-                    </div>
-                    <div class="mb-3">
-                        <label for="updateCategoryImage" class="form-label">Category Image</label>
-                        <input type="file" class="form-control" id="updateCategoryImage" name="updateCategoryImage">
-                    </div>
-                    {{#each data}}
-                    <input type="hidden" id="categoryId" value="{{this._id}}">
-                    {{/each}}
-                </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-<!-- Update button in the modal -->
-<button type="button" class="btn btn-dark update-category-button" 
-    onclick="updateCategory()">Update</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></>
 <!-- CATEGORY MANAGEMENT SECTION -->
 <script>
     async function deleteCat(catId) {
@@ -204,49 +163,5 @@
         });
     }
     
-function openUpdateModal(categoryId, categoryName) {
-    console.log("Opening modal for category ID:", categoryId);
-    // Set category ID and name in the modal form
-    document.getElementById('updateCategoryId').value = categoryId;
-    document.getElementById('updateCategoryName').value = categoryName;
-
-    // Show the modal
-    $('#exampleModal').modal('show');
-}
-function updateCategory() {
-    console.log("Updating category...");
-    const categoryId = document.getElementById('updateCategoryId').value;
-    const categoryName = document.getElementById('updateCategoryName').value;
-    const categoryImage = document.getElementById('updateCategoryImage').files[0];
-
-    console.log("Category ID:", categoryId);
-    console.log("Category Name:", categoryName);
-    console.log("Category Image:", categoryImage);
-
-    const formData = new FormData();
-    formData.append('categoryName', categoryName);
-    formData.append('categoryImage', categoryImage);
-
-    fetch(`/category/${categoryId}`, {
-        method: 'POST', 
-        body: formData
-    })
-    .then(response => {
-        console.log("Update response:", response);
-        if (response.ok) {
-            location.reload();
-        } else {
-            console.error('Error updating category:', response.statusText);
-            alert('Failed to update category. Please try again.');
-        }
-    })
-    .catch(error => {
-        console.error('Error updating category:', error);
-        alert('An unexpected error occurred. Please try again later.');
-    });
-}
-
-
-
 
 </script>

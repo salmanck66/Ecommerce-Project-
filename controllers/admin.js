@@ -41,12 +41,7 @@ let coupon = (req, res) => {
     console.log("admin coupn management");
     res.render('admin/coupons',{layout:"adminLayout.hbs"})
   }
-let categories = async (req, res) => {
-    const categories  = await Category.find()
-    const subc  = await SubCategory.find()
-    console.log("admin categories management");
-    res.status(200).render('admin/category',{data:categories,file:subc,layout:"adminLayout.hbs"})
-  }
+
 let banner = (req, res) => {
     console.log("admin banner management");
     res.render('admin/banner',{layout:"adminLayout.hbs"})
@@ -64,8 +59,9 @@ let profile = (req, res) => {
     res.render('admin/profile',{layout:"adminLayout.hbs"})
   }
 
-  let editproduct = async (req, res) => {
+  let  editproduct = async (req, res) => {
     console.log(req.body);
+    console.log(req.file);
     try {
       // Extract product ID from request parameters
       
@@ -178,13 +174,60 @@ res.status(201).redirect('/productm');
 //   console.log("admin dashbord page");
 //   res.render('admin/index',{layout:"adminLayout.hbs",product})
 // }
+let categories = async (req, res) => {
+  const categories  = await Category.find()
+  const subc  = await SubCategory.find()
+  console.log("admin categories management");
+  res.status(200).render('admin/category',{data:categories,file:subc,layout:"adminLayout.hbs"})
+}
+const updatecategory =
+async (req, res) => {
+  try {
+    console.log(req.body);
+  
+      // Extract updated category data from request body
+      const { name,id} = req.body;
+
+      // Check if there's a file uploaded for the image
+      let imageUrl;
+      if (req.file) {
+        console.log("image uploading");
+          // Upload new image to Cloudinary
+          const result = await cloudinary.uploader.upload(req.file.path);
+          imageUrl = result.secure_url;
+      }
+
+      // Build updated category object with Cloudinary image URL if available
+      const updatedCategory = {
+          name,
+      };
+
+      // If there's a new image, add it to the updated category object
+      if (imageUrl) {
+          updatedCategory.imageUrl = imageUrl;
+      }
+
+      // Update category in MongoDB
+      const category = await Category.findByIdAndUpdate(id, updatedCategory, { new: true });
+
+      if (!category) {
+          // If category with given ID is not found
+          return res.status(404).json({ message: 'Category not found' });
+      }
+
+      // Redirect or render as needed after successful update
+      res.redirect('/category'); // Redirect to home page for example
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 
 let producteditpage = async (req, res) => {
   try {
     // Assuming you have the product ID from the URL parameters
     const productId = req.params.id;
-
-    // Fetch the product data from your database based on the product ID
     const product = await Product.findById(productId);
     const category = await Category.find();
     const subcategory = await SubCategory.find();
@@ -196,33 +239,24 @@ let producteditpage = async (req, res) => {
   }
 };
 
-const updatecategory =
-  async (req, res) => {
-    try {
-        // Find the category by ID
-        const categoryId = req.params.categoryId;
-        const category = await Category.findById(categoryId);
+let categoryeditpage = async (req, res) => {
+  try {
+    // Assuming you have the product ID from the URL parameters
+    const cateid = req.params.id;
+    console.log(cateid);
+    const category = await Category.findById(cateid);
+    console.log(category);
 
-        if (!category) {
-            return res.status(404).send('Category not found');
-        }
+    res.render('admin/updatecate',{category,layout:false} )
 
-        // Update category details
-        category.name = req.body.categoryName;
-        if (req.file) {
-            const result = await cloudinary.uploader.upload(req.file.path);
-            category.imageUrl = result.secure_url;
-        }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
 
-        // Save the updated category
-        await category.save();
 
-        res.status(200).send('Category updated successfully');
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Internal Server Error');
-    }
-}
+
 
 const updateProduct = async (req, res) => {
     try {
@@ -377,4 +411,4 @@ let addSubcategory = async (req, res) => {
 
 
 
-module.exports = {editproduct,deleteprod,deletesubcat,updatecategory,producteditpage,updateProduct,addSubcategory,deletecat,postcategory,postaddproduct,homePage,logIn,Forget,order,productm,addproduct,coupon,categories,banner,payments,settings,profile}
+module.exports = {categoryeditpage,editproduct,deleteprod,deletesubcat,updatecategory,producteditpage,updateProduct,addSubcategory,deletecat,postcategory,postaddproduct,homePage,logIn,Forget,order,productm,addproduct,coupon,categories,banner,payments,settings,profile}

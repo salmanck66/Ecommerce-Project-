@@ -1,0 +1,61 @@
+<!-- editproduct.hbs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Category</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            margin-left: 30vw;
+            background-color: #f8f9fa; /* Set a light background color */
+            height: 100vh; /* Set full height */
+            display: flex;
+            align-items: center; /* Center items vertically */
+            justify-content: center; /* Center items horizontally */
+        }
+
+        .edit-form {
+            background-color: #ffffff; /* Set a white background color */
+            padding: 30px;
+            border-radius: 10px; /* Add rounded corners */
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Add shadow */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="edit-form">
+                    <h1 class="text-center mb-4">Edit Category</h1>
+                    <form action="/update-category" method="post" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="name">Name:</label>
+                            <input type="text" class="form-control" id="name" name="name" value="{{category.name}}">
+                        </div>
+                        <input type="text" name="id" value="{{category._id}}" hidden>
+                        <div class="form-group">
+                            <label for="imageUrl">Existing Image:</label>
+                            <br>
+                            <img src="{{category.imageUrl}}" class="img-fluid" style="height: 10rem;" alt="Existing Image">
+                        </div>
+                        <div class="form-group">
+                            <label for="categoryImage" class="form-label">Category Image</label>
+                            <input type="file" class="form-control" id="categoryImage" name="categoryImage" />
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Update Category</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies (jQuery and Popper.js) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

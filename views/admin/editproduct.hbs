@@ -190,6 +190,7 @@ function removeDuplicateOptions() {
     var dataVariantTags = "{{data.tags}}"; // Assuming data.variant is a variable in your context
     var dataCategory = "{{data.category}}"; // Assuming data.variant is a variable in your context
     var dataSubCategory = "{{data.subcategory}}"; // Assuming data.variant is a variable in your context
+    var dataSubCategory = "{{data.subcategory}}"; // Assuming data.variant is a variable in your context
 
     // Get the select element
     var selectElement = document.getElementById("variant");
@@ -209,6 +210,7 @@ function removeDuplicateOptions() {
         if (options[i].value === dataVariant) {
             // Remove the option if it matches the data.variant
             selectElement.remove(i);
+			break;
         }
     }
     for (var i = optionsTags.length - 1; i >= 0; i--) {
