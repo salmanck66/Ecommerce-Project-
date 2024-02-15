@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Jcclub | Edit Product</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	<script src="js/main.js"></script>
+	<script src="js/map-custom.js"></script>
+	<script src="js/slick-custom.js"></script>
+	<style>
+		/* Your custom styles here */
+	</style>
+</head>
+<body>
+	<div class="container-fluid product-management mt-5">
+		<div class="row justify-content-center">
+			<div class="col-md-10">
+				<div class="product-list table-responsive">
+					<table class="table table-striped">
+						<thead>
+							<tr class="">
+								<th class="col-4" scope="col">Image</th>
+								<th class="col-2" scope="col">Name</th>
+								<th class="col-2" scope="col">Price</th>
+								<th class="col-2" scope="col">Category</th>
+								<th class="col-2" scope="col">Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							{{#each data}}
+							<tr class="justify-content-center align-content-center align-items-center">
+								<td class=""><img src="{{this.image}}" alt="Product Image" class="rounded img-thumbnail" style="height: 8rem;" /></td>
+								<td>{{this.name}}</td>
+								<td>₹{{this.price}}</td>
+								<td>{{this.category}}</td>
+								<td>
+									<!-- Edit button with product ID as data attribute -->
+									<a href="/edit-product/{{this._id}}" class="btn btn-sm btn-info btn-edit-product" data-id="{{this._id}}" onclick="handleEditClick(this)">
+										<i class="fas fa-edit"></i>
+										Edit
+									</a>
+									<!-- Delete button with product ID as data attribute -->
+									<button class="btn btn-sm btn-danger delete-product" data-product-id="{{this._id}}">
+										<i class="fas fa-trash"></i> Delete
+									</button>
+								</td>
+							</tr>
+							<input type="hidden" name="_id" type="text" value="{{this._id}}" />
+							{{/each}}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Edit Product Modal -->
+	<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<!-- Modal content goes here -->
+			</div>
+		</div>
+	</div>
+</body>
+</html>

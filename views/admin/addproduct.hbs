@@ -130,6 +130,7 @@
         <div class="mb-3">
           <label for="productSubcategory" class="form-label">Product Subcategory</label>
           <select class="form-select" id="productSubcategory" name="subcategory">
+            <option value="" selected>None</option>
             {{#each file}}
             <option value="{{this.subCategoryName}}">{{this.subCategoryName}}</option>
             {{/each}}

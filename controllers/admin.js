@@ -29,7 +29,6 @@ let order = (req, res) => {
 let productm = async (req, res) => {
   const product  = await Product.find()
     console.log("admin product management");
-    console.log(product);
     res.render('admin/productm',{data : product ,layout:"adminLayout.hbs"})
   }
 let addproduct = async (req, res) => {
@@ -126,6 +125,7 @@ let producteditpage = async (req, res) => {
     // Fetch the product data from your database based on the product ID
     const product = await Product.findById(productId);
     console.log( product)
+    res.render('admin/addproduct',{data : product , layout:"adminLayout.hbs"} )
 
   } catch (error) {
     console.error(error);
@@ -133,7 +133,35 @@ let producteditpage = async (req, res) => {
   }
 };
 
-  const updateProduct = async (req, res) => {
+const updatecategory =
+  async (req, res) => {
+    try {
+        // Find the category by ID
+        const categoryId = req.params.categoryId;
+        const category = await Category.findById(categoryId);
+
+        if (!category) {
+            return res.status(404).send('Category not found');
+        }
+
+        // Update category details
+        category.name = req.body.categoryName;
+        if (req.file) {
+            const result = await cloudinary.uploader.upload(req.file.path);
+            category.imageUrl = result.secure_url;
+        }
+
+        // Save the updated category
+        await category.save();
+
+        res.status(200).send('Category updated successfully');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+}
+
+const updateProduct = async (req, res) => {
     try {
         const productId = req.params.id; // Extract product ID from request parameters
 
@@ -214,6 +242,7 @@ let postcategory = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
+
 let deletecat = async (req, res) => {
   try {
       const categoryId = req.params.id;
@@ -232,44 +261,42 @@ let deletecat = async (req, res) => {
   }
 }
 
-let updatecat = async (req, res) => {
+let deleteprod = async (req, res) => {
   try {
-    const categoryId = req.params.id;
-    const { updateCategoryName, updateCategoryImage } = req.body; // Destructure the updated category name and image from the request body
+      const prodId = req.params.id;
 
-    // If there's no category name provided, return an error
-    if (!updateCategoryName) {
-      return res.status(400).json({ message: 'Category name is required for update' });
-    }
+      // Find category by ID and delete it
+      const product = await Product.findByIdAndDelete(prodId);
 
-    let imageUrl; // Variable to store the updated image URL
+      if (!product) {
+          return res.status(404).json({ message: 'Product not found' });
+      }
 
-    // Check if there's an updated image sent from the client
-    if (updateCategoryImage) {
-      // Upload the updated image to Cloudinary
-      const result = await cloudinary.uploader.upload(updateCategoryImage.path);
-      imageUrl = result.secure_url; // Store the secure URL of the uploaded image
-    }
-
-    // Prepare the update data based on whether there's an updated image or not
-    const updateData = { name: updateCategoryName };
-    if (imageUrl) {
-      updateData.imageUrl = imageUrl;
-    }
-
-    // Find the category by ID and update it with the new data
-    const updatedCategory = await Category.findByIdAndUpdate(categoryId, updateData, { new: true });
-
-    if (!updatedCategory) {
-      return res.status(404).json({ message: 'Category not found' });
-    }
-
-    res.json({ message: 'Category updated successfully', updatedCategory });
+      res.json({ message: 'Category deleted successfully', product});
   } catch (error) {
-    console.error('Error updating category:', error);
-    res.status(500).json({ message: 'Internal server error' });
+      console.error('Error deleting category:', error);
+      res.status(500).json({ message: 'Internal server error' });
   }
 }
+let deletesubcat = async (req, res) => {
+  try {
+      const subcategoryId = req.params.id;
+
+      // Find category by ID and delete it
+      const deletedCategory = await SubCategory.findByIdAndDelete(subcategoryId);
+
+      if (!deletedCategory) {
+          return res.status(404).json({ message: 'Category not found' });
+      }
+
+      res.json({ message: 'Category deleted successfully', deletedCategory });
+  } catch (error) {
+      console.error('Error deleting category:', error);
+      res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+
 
 let addSubcategory = async (req, res) => {
   try {
@@ -287,4 +314,4 @@ let addSubcategory = async (req, res) => {
 
 
 
-module.exports = {producteditpage,updateProduct,addSubcategory,deletecat,postcategory,postaddproduct,homePage,logIn,Forget,order,productm,addproduct,coupon,categories,banner,payments,settings,profile,updatecat}
+module.exports = {deleteprod,deletesubcat,updatecategory,producteditpage,updateProduct,addSubcategory,deletecat,postcategory,postaddproduct,homePage,logIn,Forget,order,productm,addproduct,coupon,categories,banner,payments,settings,profile}

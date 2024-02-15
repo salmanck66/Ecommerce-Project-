@@ -4,6 +4,7 @@ const adminControllers=require('../controllers/admin')
 const cloudinary = require('../utils/cloudinery')
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/'});
+const axios = require('axios');
 
 
 router.get('/admin',adminControllers.logIn)
@@ -20,14 +21,16 @@ router.get('/settings',adminControllers.settings)
 router.get('/profile',adminControllers.profile)
 
 router.get('/edit-product/:id',adminControllers.producteditpage)
-
 router.post('/add-product',upload.single('productImage'),adminControllers.postaddproduct)
 router.put('/edit-product/:id',upload.single('productImage'),adminControllers.updateProduct)
+router.delete('/delete-product/:id',adminControllers.deleteprod)
 
-router.post('/add-category',upload.single('categoryImage'),adminControllers.postcategory)
 router.delete('/category/:id',adminControllers.deletecat)
-router.put('/category/:id',adminControllers.updatecat)
+router.post('/add-category',upload.single('categoryImage'),adminControllers.postcategory)
+router.put('/category/:categoryId', upload.single('categoryImage'),adminControllers.updatecategory)
+
 
 router.post('/add-subcategory',adminControllers.addSubcategory)
+router.delete('/subcatcategory/:id',adminControllers.deletesubcat)
 
 module.exports=router;

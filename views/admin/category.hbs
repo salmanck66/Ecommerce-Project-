@@ -37,14 +37,13 @@
                     <p class="card-text">{{this.subCategoryName}}</p>
                     <label for="categoryImage" class="form-label text-danger">Parent Category</label>
                     <p class="card-text">{{this.parentCategory}}</p>
+                    <input type="hidden" id="categoryId" value="{{this._id}}">
                     <div class="d-flex justify-content-between">
-                        <button type="button" class="btn btn-dark" onclick="deleteCat('{{this._id}}')">Delete</button>
+                        <button type="button" class="btn btn-dark" onclick="deleteSubCat('{{this._id}}')">Delete</button>
                         <button type="button" class="btn btn-dark update-category-button" 
     data-bs-toggle="modal" data-bs-target="#exampleModal" 
     data-bs-whatever="{{this._id}}">Update</button>
-
-                    </div>
-                    
+                    </div>         
                 </div>
             </div>
             {{/each}}
@@ -119,18 +118,22 @@
                         <label for="updateCategoryImage" class="form-label">Category Image</label>
                         <input type="file" class="form-control" id="updateCategoryImage" name="updateCategoryImage">
                     </div>
-                    <input type="hidden" id="categoryId">
+                    {{#each data}}
+                    <input type="hidden" id="categoryId" value="{{this._id}}">
+                    {{/each}}
                 </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onclick="updateCategory()">Update</button>
+<!-- Update button in the modal -->
+<button type="button" class="btn btn-dark update-category-button" 
+    onclick="updateCategory()">Update</button>
       </div>
     </div>
   </div>
 </div>
 
-
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <!-- CATEGORY MANAGEMENT SECTION -->
 <script>
     async function deleteCat(catId) {
@@ -168,11 +171,11 @@
     }
 
         async function deleteSubCat(catId) {
-        console.log("fun called");
+        console.log("del fun called");
         event.preventDefault();
 
         Swal.fire({
-            title: `Do you want to delete category ?`,
+            title: `Do you want to delete sub category ?`,
             showDenyButton: true,
             showCancelButton: true,
             confirmButtonText: "Yes",
@@ -180,7 +183,7 @@
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const response = await fetch(`/category/${catId}`, {
+                    const response = await fetch(`/subcatcategory/${catId}`, {
                         method: 'DELETE'
                     });
 
@@ -201,40 +204,48 @@
         });
     }
     
-    
-    function updateCategory() {
-    // Get the values from the form fields
-    const categoryId = document.getElementById('categoryId').value;
-    const categoryName = document.getElementById('updateCategoryName').value;
-    const categoryImage = document.getElementById('updateCategoryImage').files[0]; // Assuming single file upload
+function openUpdateModal(categoryId, categoryName) {
+    console.log("Opening modal for category ID:", categoryId);
+    // Set category ID and name in the modal form
+    document.getElementById('updateCategoryId').value = categoryId;
+    document.getElementById('updateCategoryName').value = categoryName;
 
-    // Create a FormData object to send data to the server
+    // Show the modal
+    $('#exampleModal').modal('show');
+}
+function updateCategory() {
+    console.log("Updating category...");
+    const categoryId = document.getElementById('updateCategoryId').value;
+    const categoryName = document.getElementById('updateCategoryName').value;
+    const categoryImage = document.getElementById('updateCategoryImage').files[0];
+
+    console.log("Category ID:", categoryId);
+    console.log("Category Name:", categoryName);
+    console.log("Category Image:", categoryImage);
+
     const formData = new FormData();
     formData.append('categoryName', categoryName);
     formData.append('categoryImage', categoryImage);
 
-    // Make a fetch request to update the category
     fetch(`/category/${categoryId}`, {
-        method: 'PUT',
+        method: 'POST', 
         body: formData
     })
     .then(response => {
+        console.log("Update response:", response);
         if (response.ok) {
-            // Category updated successfully, reload the page or perform any other action
             location.reload();
         } else {
-            // Handle error responses
             console.error('Error updating category:', response.statusText);
-            // Display an error message to the user
             alert('Failed to update category. Please try again.');
         }
     })
     .catch(error => {
         console.error('Error updating category:', error);
-        // Display an error message to the user
         alert('An unexpected error occurred. Please try again later.');
     });
 }
+
 
 
 
