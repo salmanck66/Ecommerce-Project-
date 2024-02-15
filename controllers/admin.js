@@ -64,6 +64,68 @@ let profile = (req, res) => {
     res.render('admin/profile',{layout:"adminLayout.hbs"})
   }
 
+  let editproduct = async (req, res) => {
+    console.log(req.body);
+    try {
+      // Extract product ID from request parameters
+      
+  
+      // Extract updated product data from request body
+      const { name, variant, mrp, price, description, richdescription, category, subcategory, tags,id} = req.body;
+      const productId = id;
+      // Extract updated stock data from the nested structure
+      const stock = {
+        S: req.body['stock.S'],
+        M: req.body['stock.M'],
+        L: req.body['stock.L'],
+        XL: req.body['stock.XL'],
+        XXL: req.body['stock.XXL']
+      };
+  
+      // Check if there's a file uploaded for the image
+      let imageUrl;
+      if (req.file) {
+        // Upload new image to Cloudinary
+        const result = await cloudinary.uploader.upload(req.file.path);
+        imageUrl = result.secure_url;
+      }
+  
+      // Build updated product object with Cloudinary image URL if available
+      const updatedProduct = {
+        name,
+        variant,
+        mrp,
+        price,
+        stock,
+        tags,
+        description,
+        richdescription,
+        category,
+        subcategory
+      };
+  
+      // If there's a new image, add it to the updated product object
+      if (imageUrl) {
+        updatedProduct.image = imageUrl;
+      }
+  
+      // Update product in MongoDB
+      const product = await Product.findByIdAndUpdate(productId, updatedProduct, { new: true });
+  
+      if (!product) {
+        // If product with given ID is not found
+        return res.status(404).json({ message: 'Product not found' });
+      }
+  
+      // Redirect to product management page after successful update
+      res.redirect('/productm');
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  };
+  
+
   let postaddproduct = async (req, res) => {
     try {
       // Upload image to Cloudinary
@@ -124,8 +186,9 @@ let producteditpage = async (req, res) => {
 
     // Fetch the product data from your database based on the product ID
     const product = await Product.findById(productId);
-    console.log( product)
-    res.render('admin/addproduct',{data : product , layout:"adminLayout.hbs"} )
+    const category = await Category.find();
+    const subcategory = await SubCategory.find();
+    res.render('admin/editproduct',{data : product,category,subcategory, layout:false} )
 
   } catch (error) {
     console.error(error);
@@ -314,4 +377,4 @@ let addSubcategory = async (req, res) => {
 
 
 
-module.exports = {deleteprod,deletesubcat,updatecategory,producteditpage,updateProduct,addSubcategory,deletecat,postcategory,postaddproduct,homePage,logIn,Forget,order,productm,addproduct,coupon,categories,banner,payments,settings,profile}
+module.exports = {editproduct,deleteprod,deletesubcat,updatecategory,producteditpage,updateProduct,addSubcategory,deletecat,postcategory,postaddproduct,homePage,logIn,Forget,order,productm,addproduct,coupon,categories,banner,payments,settings,profile}

@@ -22,7 +22,9 @@ router.get('/profile',adminControllers.profile)
 
 router.get('/edit-product/:id',adminControllers.producteditpage)
 router.post('/add-product',upload.single('productImage'),adminControllers.postaddproduct)
-router.put('/edit-product/:id',upload.single('productImage'),adminControllers.updateProduct)
+
+router.post('/edit-product',upload.single('productImage'),adminControllers.editproduct)
+
 router.delete('/delete-product/:id',adminControllers.deleteprod)
 
 router.delete('/category/:id',adminControllers.deletecat)
