@@ -31,8 +31,8 @@ router.post('/add-category',upload.single('categoryImage'),adminControllers.post
 router.post('/update-category', upload.single('categoryImage'), adminControllers.updatecategory);
 
 
-
+router.get('/update-subcategory/:id',adminControllers.subcategoryeditpage)
 router.post('/add-subcategory',adminControllers.addSubcategory)
 router.delete('/subcatcategory/:id',adminControllers.deletesubcat)
-
+router.post('/update-subcategory',adminControllers.updatesubcategory);
 module.exports=router;

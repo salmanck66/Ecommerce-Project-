@@ -222,6 +222,36 @@ async (req, res) => {
       res.status(500).json({ message: 'Internal server error' });
   }
 };
+const updatesubcategory =
+async (req, res) => {
+  try {
+    console.log(req.body);
+  
+      // Extract updated category data from request body
+      const { subCategoryName,id} = req.body;
+
+      // Check if there's a file uploaded for the image
+
+      // Build updated category object with Cloudinary image URL if available
+      const updatedCategory = {
+        subCategoryName,
+      };
+
+      // Update category in MongoDB
+      const subcategory = await SubCategory.findByIdAndUpdate(id, updatedCategory, { new: true });
+
+      if (!subcategory) {
+          // If category with given ID is not found
+          return res.status(404).json({ message: 'Sub Category not found' });
+      }
+
+      // Redirect or render as needed after successful update
+      res.redirect('/category'); // Redirect to home page for example
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
+  }
+};
 
 
 let producteditpage = async (req, res) => {
@@ -248,6 +278,22 @@ let categoryeditpage = async (req, res) => {
     console.log(category);
 
     res.render('admin/updatecate',{category,layout:false} )
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+let subcategoryeditpage = async (req, res) => {
+  try {
+    // Assuming you have the product ID from the URL parameters
+    const cateid = req.params.id;
+    console.log(cateid);
+    const subcategory = await SubCategory.findById(cateid);
+    console.log(subcategory);
+
+    res.render('admin/updatesubcat',{subcategory,layout:false} )
 
   } catch (error) {
     console.error(error);
@@ -411,4 +457,4 @@ let addSubcategory = async (req, res) => {
 
 
 
-module.exports = {categoryeditpage,editproduct,deleteprod,deletesubcat,updatecategory,producteditpage,updateProduct,addSubcategory,deletecat,postcategory,postaddproduct,homePage,logIn,Forget,order,productm,addproduct,coupon,categories,banner,payments,settings,profile}
+module.exports = {updatesubcategory,subcategoryeditpage,categoryeditpage,editproduct,deleteprod,deletesubcat,updatecategory,producteditpage,updateProduct,addSubcategory,deletecat,postcategory,postaddproduct,homePage,logIn,Forget,order,productm,addproduct,coupon,categories,banner,payments,settings,profile}

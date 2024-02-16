@@ -18,9 +18,7 @@
                     <i class="fas fa-edit"></i>
                     Edit
                   </a>
-
-                    </div>
-                    
+                    </div> 
                 </div>
             </div>
             {{/each}}
@@ -41,9 +39,8 @@
                     <input type="hidden" id="categoryId" value="{{this._id}}">
                     <div class="d-flex justify-content-between">
                         <button type="button" class="btn btn-dark" onclick="deleteSubCat('{{this._id}}')">Delete</button>
-                        <button type="button" class="btn btn-dark update-category-button" 
-    data-bs-toggle="modal" data-bs-target="#exampleModal" 
-    data-bs-whatever="{{this._id}}">Update</button>
+                        <a href="/update-subcategory/{{this._id}}">
+                        <button type="button" class="btn btn-dark update-category-button" >Update</button></a>
                     </div>         
                 </div>
             </div>
