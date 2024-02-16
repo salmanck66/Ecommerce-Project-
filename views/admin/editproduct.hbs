@@ -50,11 +50,12 @@
           <label for="variants" class="form-label">Edition</label>
 		  
           <select class="form-select mb-2" id="variant" name="variant">
-            <option value="value="{{data.variant}}"" selected>{{data.variant}}</option>
+            <option value="{{data.variant}}" selected>{{data.variant}}</option>
             <option value="Player version" >Player version</option>
             <option value="Fan version">Fan version</option>
             <option value="First Grade Set">First Grade Set</option>
             <option value="Sublimation">Sublimation</option>
+            <option >None</option>
           </select>
         </div>
         <!-- Pricing -->
@@ -114,7 +115,7 @@
         <div class="mb-3">
           <label for="tags" class="form-label">Tags</label>
           <select class="form-select mb-2" id="tags" name="tags">
-			<option value="value="{{data.tags}}"" selected>{{data.tags}}</option>
+			<option value="{{data.tags}}" selected>{{data.tags}}</option>
             <option value="new" >new</option>
             <option value="best seller">best seller</option>
             <option value="hot deal">hot deal</option>
@@ -161,6 +162,7 @@
             {{/each}}
           </select>
         </div>
+        
         <!-- Product Subcategory -->
         <div class="mb-3">
           <label for="productSubcategory" class="form-label">Product Subcategory</label>
@@ -174,7 +176,7 @@
         </div>
       </div>
     </div>
-    <button type="submit" class="btn btn-primary mx-auto d-block mt-1 mb-3">Add Product</button>
+    <button type="submit" class="btn btn-primary mx-auto d-block mt-1 mb-3">Update Product</button>
   </form>
 
 </section>

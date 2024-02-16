@@ -42,7 +42,10 @@ router.post('/add-coupon',adminControllers.addCoupon)
 router.delete('/deletecoupon/:id',adminControllers.deletecoupon)
 router.post('/update-coupon',adminControllers.editCoupon)
 
+router.get('/update-banner/:id',adminControllers.updatebanner)
 router.post('/add-banner',upload.single('bannerimage'),adminControllers.addbanner)
+router.delete('/delete-banner/:id',adminControllers.deletebanner)
+router.post('/update-banner', upload.single('bannerimage'), adminControllers.updatebannerpost);
 
 
 

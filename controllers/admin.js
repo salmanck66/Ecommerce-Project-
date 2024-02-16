@@ -47,9 +47,11 @@ let coupon = async (req, res) => {
     res.render('admin/coupons',{coupon,layout:"adminLayout.hbs"})
   }
 
-let banner = (req, res) => {
+let banner = async(req, res) => {
     console.log("admin banner management");
-    res.render('admin/banner',{layout:"adminLayout.hbs"})
+    const banner = await Banner.find()
+    console.log(banner);
+    res.render('admin/banner',{banner,layout:"adminLayout.hbs"})
   }
 let payments = (req, res) => {
     console.log("admin banner management");
@@ -59,9 +61,9 @@ let settings = (req, res) => {
     console.log("admin banner management");
     res.render('admin/settings',{layout:"adminLayout.hbs"})
   }
-let profile = (req, res) => {
+let profile =  (req, res) => {
     console.log("admin banner management");
-    const banner = await
+  
     res.render('admin/profile',{layout:"adminLayout.hbs"})
   }
 
@@ -228,6 +230,54 @@ async (req, res) => {
       res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+const updatebannerpost =
+async (req, res) => {
+  try {
+    console.log(req.body);
+  
+      // Extract updated category data from request body
+      const { head,subhead,buttontext,buttonlink,id} = req.body;
+
+      // Check if there's a file uploaded for the image
+      let imageUrl;
+      if (req.file) {
+        console.log("image uploading");
+          // Upload new image to Cloudinary
+          const result = await cloudinary.uploader.upload(req.file.path);
+          imageUrl = result.secure_url;
+      }
+
+      // Build updated category object with Cloudinary image URL if available
+      const updatedCategory = {
+        head:req.body.bannerHeading,
+        subhead:req.body.bannerSubHeading,
+        buttontext,buttonlink
+      };
+
+      // If there's a new image, add it to the updated category object
+      if (imageUrl) {
+          updatedCategory.imageUrl = imageUrl;
+      }
+
+      // Update category in MongoDB
+      const category = await Banner.findByIdAndUpdate(id, updatedCategory, { new: true });
+
+      if (!category) {
+          // If category with given ID is not found
+          return res.status(404).json({ message: 'Category not found' });
+      }
+
+      // Redirect or render as needed after successful update
+      res.redirect('/banner'); // Redirect to home page for example
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+
 const updatesubcategory =
 async (req, res) => {
   try {
@@ -435,6 +485,23 @@ let deletecat = async (req, res) => {
       res.status(500).json({ message: 'Internal server error' });
   }
 }
+let deletebanner = async (req, res) => {
+  try {
+      const categoryId = req.params.id;
+
+      // Find category by ID and delete it
+      const deletedCategory = await Banner.findByIdAndDelete(categoryId);
+
+      if (!deletedCategory) {
+          return res.status(404).json({ message: 'Category not found' });
+      }
+
+      res.json({ message: 'Category deleted successfully', deletedCategory });
+  } catch (error) {
+      console.error('Error deleting category:', error);
+      res.status(500).json({ message: 'Internal server error' });
+  }
+}
 
 let deleteprod = async (req, res) => {
   try {
@@ -539,6 +606,23 @@ let updatecoupon = async (req, res) => {
       res.status(500).json({ message: 'Failed to fetch coupon', error: error.message });
   }
 }
+
+let updatebanner = async (req, res) => {
+  try {
+      const couponId = req.params.id; // Accessing route parameter 'id'
+      console.log(couponId);
+      const banner = await Banner.findById(couponId);
+      console.log(banner);
+      if (!banner) {
+          return res.status(404).json({ message: 'Coupon not found' });
+      }
+      res.render('admin/editbanner', {layout:false, banner});
+  } catch (error) {
+      res.status(500).json({ message: 'Failed to fetch coupon', error: error.message });
+  }
+}
+
+
 let editCoupon = async (req,res)=>
 {
   console.log(req.body);
@@ -557,4 +641,4 @@ res.status(200).redirect('/coupon'); // Redirect to product management page
 
 
 
-module.exports = {addbanner,editCoupon,updatecoupon,deletecoupon,addCoupon,updatesubcategory,subcategoryeditpage,categoryeditpage,editproduct,deleteprod,deletesubcat,updatecategory,producteditpage,updateProduct,addSubcategory,deletecat,postcategory,postaddproduct,homePage,logIn,Forget,order,productm,addproduct,coupon,categories,banner,payments,settings,profile}
+module.exports = {updatebannerpost,updatebanner,deletebanner,addbanner,editCoupon,updatecoupon,deletecoupon,addCoupon,updatesubcategory,subcategoryeditpage,categoryeditpage,editproduct,deleteprod,deletesubcat,updatecategory,producteditpage,updateProduct,addSubcategory,deletecat,postcategory,postaddproduct,homePage,logIn,Forget,order,productm,addproduct,coupon,categories,banner,payments,settings,profile}

@@ -2,6 +2,8 @@ const { signUser, verifyUser } = require('../middleware/jwt')
 const helpers = require('../helpers/userhelper');
 const { default: mongoose } = require('mongoose');
 const Product = require('../models/product');
+const Category = require('../models/category');
+const Banner = require('../models/banner');
 
 
 let loginGetPage = async (req, res) => {
@@ -103,8 +105,10 @@ let homePage = async (req, res) => {
     if(userName)
     {
       const products = await Product.find()
-      console.log(products);
-      return res.render('user/index', { userName,  user: true, home: true ,data: products})
+      const category = await Category.find()
+      const banner = await Banner.find()
+      console.log(products[0],category[0],banner[0]);
+      return res.render('user/index', { userName,category,banner,  user: true, home: true ,data: products})
     }
     else{
       const products = await Product.find()

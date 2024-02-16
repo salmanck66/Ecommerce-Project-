@@ -19,14 +19,63 @@
         <!-- Existing Banners -->
         <div class="existing-banners mb-4">
             <h3>Existing Banners</h3>
-            <div class="row" id="existingBanners">
-                <!-- This section will be populated with existing banners dynamically -->
-            </div>
+            <div class="product-list table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr class="">
+              <th class="col-2" scope="col">Image</th>
+              <th class="col-2" scope="col">Heading</th>
+              <th class="col-2" scope="col">subheading</th>
+              <th class="col-2" scope="col">button text</th>
+              <th class="col-2" scope="col">button link</th>
+              <th class="col" scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each banner}}
+              <tr
+                class="justify-content-center align-content-center align-items-center"
+              >
+                <td class=""><img
+                    src="{{this.imageUrl}}"
+                    alt="Product Image"
+                    class="rounded img-thumbnail"
+                    style="height: 8rem;"
+                  /></td>
+                <td>{{this.head}}</td>
+                <td>{{this.subhead}}</td>
+                <td>{{this.buttontext}}</td>
+                <td>{{this.buttonlink}}</td>
+                <td>
+                  <!-- Edit button with product ID as data attribute -->
+                 <a href="/update-banner/{{this._id}}" class="btn btn-sm btn-info btn-edit-product" data-id="{{this._id}}" onclick="handleEditClick(this)">
+
+                    <i class="fas fa-edit"></i>
+                    Edit
+                  </a>
+
+                  <!-- Delete button with product ID as data attribute -->
+                  <button
+                    class="btn btn-sm btn-danger delete-product"
+                    onclick="deleteCat('{{this._id}}')"
+                  ><i class="fas fa-trash"></i> Delete</button>
+                </td>
+              </tr>
+              <input
+                type="hidden"
+                name="_id"
+                type="text"
+                value="{{this._id}}"
+              />
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
         </div>
 
         <!-- Add New Banner Form -->
         <div class="add-new-banner mb-4">
-            <h3>Add New Banner</h3>
+            <h3>Add Banner</h3>
             <form id="addBannerForm" method="post" action="/add-banner"  enctype="multipart/form-data">
                 <div class="mb-3 col-4">
                     <label for="bannerTitle" class="form-label">Banner Heading</label>
@@ -61,5 +110,41 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <!-- Your custom JavaScript -->
     <script src="scripts.js"></script>
+     <script>
+       async function deleteCat(catId) {
+        console.log("fun called");
+        event.preventDefault();
+
+        Swal.fire({
+            title: `Do you want to delete category ?`,
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: "Yes",
+            denyButtonText: `No`
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const response = await fetch(`/delete-banner/${catId}`, {
+                        method: 'DELETE'
+                    });
+
+                    if (response.ok) {
+                            location.reload();
+                    } else {
+                        // Handle error responses
+                        console.error('Error deleting category:', response.statusText);
+                        // Display an error message to the user
+                        alert('Failed to delete category. Please try again.');
+                    }
+                } catch (error) {
+                    console.error('Error deleting category:', error);
+                    // Display an error message to the user
+                    alert('An unexpected error occurred. Please try again later.');
+                }
+            }
+        });
+    }
+    </script>
+   
 </body>
 </html>
