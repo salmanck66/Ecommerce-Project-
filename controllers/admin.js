@@ -511,8 +511,22 @@ let updatecoupon = async (req, res) => {
       res.status(500).json({ message: 'Failed to fetch coupon', error: error.message });
   }
 }
+let editCoupon = async (req,res)=>
+{
+  console.log(req.body);
+  const {couponCode,couponDescription,discountType,discountValue,expiryDate,id}= req.body;
+  const updateddata = {
+    couponCode,couponDescription,discountType,discountValue,expiryDate
+  }
+  const updatedProduct = await Coupon.findByIdAndUpdate(id, updateddata, { new: true });
+  if (!updatedProduct) {
+    return res.status(404).json({ message: 'couponCodeuct not found' });
+}
+
+res.status(200).redirect('/coupon'); // Redirect to product management page
+}
 
 
 
 
-module.exports = {updatecoupon,deletecoupon,addCoupon,updatesubcategory,subcategoryeditpage,categoryeditpage,editproduct,deleteprod,deletesubcat,updatecategory,producteditpage,updateProduct,addSubcategory,deletecat,postcategory,postaddproduct,homePage,logIn,Forget,order,productm,addproduct,coupon,categories,banner,payments,settings,profile}
+module.exports = {editCoupon,updatecoupon,deletecoupon,addCoupon,updatesubcategory,subcategoryeditpage,categoryeditpage,editproduct,deleteprod,deletesubcat,updatecategory,producteditpage,updateProduct,addSubcategory,deletecat,postcategory,postaddproduct,homePage,logIn,Forget,order,productm,addproduct,coupon,categories,banner,payments,settings,profile}

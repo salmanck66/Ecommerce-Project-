@@ -40,6 +40,7 @@ router.post('/update-subcategory',adminControllers.updatesubcategory);
 router.get('/update-coupon/:id',adminControllers.updatecoupon)
 router.post('/add-coupon',adminControllers.addCoupon)
 router.delete('/deletecoupon/:id',adminControllers.deletecoupon)
+router.post('/update-coupon',adminControllers.editCoupon)
 
 
 module.exports=router;

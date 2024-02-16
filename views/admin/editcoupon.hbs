@@ -11,10 +11,10 @@
 <body>
     <div class="container mt-5">
         <h2 class="mb-4">Update Coupon</h2>
-        <form method="post" action="/update-coupon/{{coupon._id}}">
+        <form method="post" action="/update-coupon">
             <div class="form-group">
                 <label for="couponCode">Coupon Code</label>
-                <input type="text" class="form-control" id="couponCode" name="couponCode" value="{{coupon.couponCode}}" readonly>
+                <input type="text" class="form-control" id="couponCode" name="couponCode" value="{{coupon.couponCode}}">
             </div>
             <div class="form-group">
                 <label for="couponDescription">Coupon Description</label>
@@ -23,8 +23,9 @@
             <div class="form-group">
                 <label for="discountType">Discount Type</label>
                 <select class="form-select" name="discountType" id="discountType">
-                <option value="percentage" >{{coupon.discountType}}</option>
+                <option value="percentage" selected>{{coupon.discountType}}</option>
                 <option value="fixedAmount">Fixed Amount</option>
+                <option value="percentage">Percentage</option>
 </select>
             </div>
             <div class="form-group">
@@ -33,8 +34,10 @@
             </div>
             <div class="form-group">
                 <label for="expiryDate">Expiry Date</label>
+                <input type="text" class="form-control"  value="{{coupon.expiryDate}}" readonly>
                 <input type="date" class="form-control" id="expiryDate" name="expiryDate" value="{{coupon.expiryDate}}">
             </div>
+            <input type="text" value="{{coupon._id}}" name="id" id="id" hidden>
             <button type="submit" class="btn btn-primary">Update Coupon</button>
         </form>
     </div>
@@ -42,5 +45,20 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        window.onload = function() {
+    removeDuplicateOptions();
+    };  
+    var dataVariant = "{{coupon.discountType}}";
+    var selectElement = document.getElementById("discountType");
+    var options = selectElement.options;
+     for (var i = options.length - 1; i >= 0; i--) {
+        if (options[i].value === dataVariant) {
+            // Remove the option if it matches the data.variant
+            selectElement.remove(i);
+			break;
+        }
+    }
+    </script>
 </body>
 </html>
