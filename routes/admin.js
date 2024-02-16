@@ -7,6 +7,7 @@ const upload = multer({ dest: 'uploads/'});
 const axios = require('axios');
 
 
+
 router.get('/admin',adminControllers.logIn)
 router.get('/forget',adminControllers.Forget)
 router.get('/dashboard',adminControllers.homePage)
@@ -35,4 +36,10 @@ router.get('/update-subcategory/:id',adminControllers.subcategoryeditpage)
 router.post('/add-subcategory',adminControllers.addSubcategory)
 router.delete('/subcatcategory/:id',adminControllers.deletesubcat)
 router.post('/update-subcategory',adminControllers.updatesubcategory);
+
+router.get('/update-coupon/:id',adminControllers.updatecoupon)
+router.post('/add-coupon',adminControllers.addCoupon)
+router.delete('/deletecoupon/:id',adminControllers.deletecoupon)
+
+
 module.exports=router;

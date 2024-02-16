@@ -6,6 +6,8 @@ const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 const mongoose = require('mongoose');
 const { product } = require('./user');
+const Coupon = require('../models/coupon');
+
 
 
 
@@ -37,9 +39,11 @@ let addproduct = async (req, res) => {
     const subc  = await SubCategory.find()
     res.render('admin/addproduct',{data:categories,file:subc,layout:"adminLayout.hbs"})
   }
-let coupon = (req, res) => {
+let coupon = async (req, res) => {
     console.log("admin coupn management");
-    res.render('admin/coupons',{layout:"adminLayout.hbs"})
+    coupon = await Coupon.find()
+    console.log(coupon);
+    res.render('admin/coupons',{coupon,layout:"adminLayout.hbs"})
   }
 
 let banner = (req, res) => {
@@ -438,6 +442,23 @@ let deletesubcat = async (req, res) => {
       res.status(500).json({ message: 'Internal server error' });
   }
 }
+let deletecoupon = async (req, res) => {
+  try {
+      const subcategoryId = req.params.id;
+
+      // Find category by ID and delete it
+      const deletedCategory = await Coupon.findByIdAndDelete(subcategoryId);
+
+      if (!deletedCategory) {
+          return res.status(404).json({ message: 'Category not found' });
+      }
+
+      res.json({ message: 'Category deleted successfully', deletedCategory });
+  } catch (error) {
+      console.error('Error deleting category:', error);
+      res.status(500).json({ message: 'Internal server error' });
+  }
+}
 
 
 
@@ -455,6 +476,43 @@ let addSubcategory = async (req, res) => {
   }
 }
 
+const addCoupon = async (req, res) => {
+  try {
+      // Extract data from request body
+      const { couponCode, couponDescription, discountType, discountValue, expiryDate } = req.body;
+
+      // Create a new coupon instance
+      const newCoupon = new Coupon({
+          couponCode,
+          couponDescription,
+          discountType,
+          discountValue,
+          expiryDate
+      });
+
+      // Save the new coupon to the database
+      await newCoupon.save();
+
+      res.redirect('/coupon')
+  } catch (error) {
+      res.status(500).json({ message: 'Failed to add coupon', error: error.message });
+  }
+};
+let updatecoupon = async (req, res) => {
+  try {
+      const couponId = req.params.id; // Accessing route parameter 'id'
+      console.log(couponId);
+      const coupon = await Coupon.findById(couponId);
+      if (!coupon) {
+          return res.status(404).json({ message: 'Coupon not found' });
+      }
+      res.render('admin/editcoupon', {layout:false, coupon });
+  } catch (error) {
+      res.status(500).json({ message: 'Failed to fetch coupon', error: error.message });
+  }
+}
 
 
-module.exports = {updatesubcategory,subcategoryeditpage,categoryeditpage,editproduct,deleteprod,deletesubcat,updatecategory,producteditpage,updateProduct,addSubcategory,deletecat,postcategory,postaddproduct,homePage,logIn,Forget,order,productm,addproduct,coupon,categories,banner,payments,settings,profile}
+
+
+module.exports = {updatecoupon,deletecoupon,addCoupon,updatesubcategory,subcategoryeditpage,categoryeditpage,editproduct,deleteprod,deletesubcat,updatecategory,producteditpage,updateProduct,addSubcategory,deletecat,postcategory,postaddproduct,homePage,logIn,Forget,order,productm,addproduct,coupon,categories,banner,payments,settings,profile}
