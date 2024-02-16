@@ -7,6 +7,7 @@ const upload = multer({ dest: 'uploads/' });
 const mongoose = require('mongoose');
 const { product } = require('./user');
 const Coupon = require('../models/coupon');
+const Banner = require('../models/banner');
 
 
 
@@ -60,6 +61,7 @@ let settings = (req, res) => {
   }
 let profile = (req, res) => {
     console.log("admin banner management");
+    const banner = await
     res.render('admin/profile',{layout:"adminLayout.hbs"})
   }
 
@@ -389,6 +391,32 @@ let postcategory = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
+let addbanner = async (req, res) => {
+  try {
+    console.log("entered post category");
+    // Upload image to Cloudinary
+    const result = await cloudinary.uploader.upload(req.file.path);
+    console.log("got image");
+
+    // Create new category with image URL
+    const newCategory = new Banner({
+      _id: new mongoose.Types.ObjectId(), // Set a new ObjectId for _id
+      head: req.body.bannerHeading,
+      subhead: req.body.bannerSubHeading,
+      buttontext: req.body.buttontext,
+      buttonlink: req.body.buttonlink,
+      imageUrl: result.secure_url // URL of the uploaded image on Cloudinary
+    });
+
+    // Save new category to the database
+    await newCategory.save();
+
+    res.status(201).redirect('/banner');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+};
 
 let deletecat = async (req, res) => {
   try {
@@ -529,4 +557,4 @@ res.status(200).redirect('/coupon'); // Redirect to product management page
 
 
 
-module.exports = {editCoupon,updatecoupon,deletecoupon,addCoupon,updatesubcategory,subcategoryeditpage,categoryeditpage,editproduct,deleteprod,deletesubcat,updatecategory,producteditpage,updateProduct,addSubcategory,deletecat,postcategory,postaddproduct,homePage,logIn,Forget,order,productm,addproduct,coupon,categories,banner,payments,settings,profile}
+module.exports = {addbanner,editCoupon,updatecoupon,deletecoupon,addCoupon,updatesubcategory,subcategoryeditpage,categoryeditpage,editproduct,deleteprod,deletesubcat,updatecategory,producteditpage,updateProduct,addSubcategory,deletecat,postcategory,postaddproduct,homePage,logIn,Forget,order,productm,addproduct,coupon,categories,banner,payments,settings,profile}

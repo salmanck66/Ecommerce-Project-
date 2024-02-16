@@ -42,5 +42,9 @@ router.post('/add-coupon',adminControllers.addCoupon)
 router.delete('/deletecoupon/:id',adminControllers.deletecoupon)
 router.post('/update-coupon',adminControllers.editCoupon)
 
+router.post('/add-banner',upload.single('bannerimage'),adminControllers.addbanner)
+
+
+
 
 module.exports=router;
