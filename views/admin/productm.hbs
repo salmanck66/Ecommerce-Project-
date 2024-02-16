@@ -4,7 +4,7 @@
       <div
         class="add-product mb-4 d-flex justify-content-end align-content-end"
       >
-        <a href="addproduct"><button class="btn btn-primary btn-lg"><i
+        <a href="addproduct"><button class="btn btn-dark btn-lg"><i
               class="fas fa-plus"
             ></i>
             Add Product</button></a>
@@ -37,7 +37,7 @@
                 <td>{{this.category}}</td>
                 <td>
                   <!-- Edit button with product ID as data attribute -->
-                 <a href="/edit-product/{{this._id}}" class="btn btn-sm btn-info btn-edit-product" data-id="{{this._id}}" onclick="handleEditClick(this)">
+                 <a href="/edit-product/{{this._id}}" class="btn btn-sm btn-secondary btn-edit-product" data-id="{{this._id}}" onclick="handleEditClick(this)">
 
                     <i class="fas fa-edit"></i>
                     Edit

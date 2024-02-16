@@ -112,8 +112,10 @@ let homePage = async (req, res) => {
     }
     else{
       const products = await Product.find()
+      const category = await Category.find()
+      const banner = await Banner.find()
       console.log(products);
-      res.render('user/index',{data : products})
+      res.render('user/index',{data : products,category,banner})
     }
      
     
@@ -138,10 +140,12 @@ let product = (req, res) => {
     console.log("product");
     res.render('user/product')
   }
-let productdetail = (req, res) => {
+  let productdetail = async (req, res) => {
+    const id = req.params.id;
     console.log("product-detail");
-    res.render('user/product-detail')
-  }
+    const product = await Product.findById(id); // Adding await here to wait for the query to complete
+    res.render('user/product-detail', { layout: "layout.hbs", product }); // Adding await here as well
+}
 let cart = (req, res) => {
     console.log("cart");
     res.render('user/cart')

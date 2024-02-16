@@ -22,31 +22,34 @@
 	<section class="section-slide">
 		<div class="wrap-slick1">
 			<div class="slick1">
-				<div class="item-slick1" style="background-image: url(images/slide-01.jpg);">
+
+				{{#each banner}}
+				<div class="item-slick1" style="background-image: url({{this.imageUrl}});">
 					<div class="container h-full">
 						<div class="flex-col-l-m h-full p-t-100 p-b-30 respon5">
 							<div class="layer-slick1 animated visible-false" data-appear="fadeInDown" data-delay="0">
 								<span class="ltext-101 cl2 respon2">
-									Season 23/24 Jerseys
+									{{this.head}}
 								</span>
 							</div>
 								
 							<div class="layer-slick1 animated visible-false" data-appear="fadeInUp" data-delay="800">
 								<h2 class="ltext-201 cl2 p-t-19 p-b-43 respon1 ">
-									Available Now
+									{{this.subhead}}
 								</h2>
 							</div>
 								
 							<div class="layer-slick1 animated visible-false" data-appear="zoomIn" data-delay="1600">
 								<a href="product" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 ">
-									Shop Now
+									{{this.buttontext}}
 								</a>
 							</div>
 						</div>
 					</div>
 				</div>
+				{{/each}}
 
-				<div class="item-slick1" style="background-image: url(images/slide-02.jpg);">
+				{{!-- <div class="item-slick1" style="background-image: url(images/slide-02.jpg);">
 					<div class="container h-full">
 						<div class="flex-col-l-m h-full p-t-100 p-b-30 respon5">
 							<div class="layer-slick1 animated visible-false" data-appear="rollIn" data-delay="0">
@@ -68,9 +71,9 @@
 							</div>
 						</div>
 					</div>
-				</div>
+				</div> --}}
 
-				<div class="item-slick1" style="background-image: url(images/slide-03.jpg);">
+				{{!-- <div class="item-slick1" style="background-image: url(images/slide-03.jpg);">
 					<div class="container h-full">
 						<div class="flex-col-l-m h-full p-t-100 p-b-30 respon5">
 							<div class="layer-slick1 animated visible-false" data-appear="rotateInDownLeft" data-delay="0">
@@ -92,7 +95,7 @@
 							</div>
 						</div>
 					</div>
-				</div>
+				</div> --}}
 			</div>
 		</div>
 	</section>
@@ -102,15 +105,16 @@
 	<div class="sec-banner bg0 p-t-80 p-b-50">
 		<div class="container">
 			<div class="row">
+				{{#each category}}
 				<div class="col-6 col-md-6 col-xl-4 p-b-30 m-lr-auto">
 					<!-- Block1 -->
 					<div class="block1 wrap-pic-w">
-						<img style="height: 50vh;" src="images/banner-01.jpg" alt="IMG-BANNER">
+						<img style="height: 50vh;" src="{{this.imageUrl}}" alt="IMG-BANNER">
 
 						<a href="product" class="block1-txt ab-t-l s-full flex-col-l-sb p-lr-38 p-tb-34 trans-03 respon3">
 							<div class="block1-txt-child1 flex-col-l">
 								<span class="block1-name ltext-102 trans-04 p-b-8">
-									Player Version
+									{{this.name}}
 								</span>
 
 								<span class="block1-info stext-102 trans-04">
@@ -126,128 +130,8 @@
 						</a>
 					</div>
 				</div>
-					<div class="col-6 col-md-6 col-xl-4 p-b-30 m-lr-auto">
-						<!-- Block1 -->
-						<div class="block1 wrap-pic-w">
-							<img style="height: 50vh;" src="images/banner-02.jpg" alt="IMG-BANNER">
+				{{/each}}
 
-							<a href="product" class="block1-txt ab-t-l s-full flex-col-l-sb p-lr-38 p-tb-34 trans-03 respon3">
-								<div class="block1-txt-child1 flex-col-l">
-									<span class="block1-name ltext-102 trans-04 p-b-8">
-										Fan Version
-									</span>
-
-									<span class="block1-info stext-102 trans-04">
-										Premium Quality
-									</span>
-								</div>
-
-								<div class="block1-txt-child2 p-b-4 trans-05">
-									<div class="block1-link stext-101 cl0 trans-09">
-										Shop Now
-									</div>
-								</div>
-							</a>
-						</div>
-					</div>
-					<div class="col-6 col-md-6 col-xl-4 p-b-30 m-lr-auto">
-						<!-- Block1 -->
-						<div class="block1 wrap-pic-w">
-							<img style="height: 50vh;" src="images/banner-4.jpg" alt="IMG-BANNER">
-
-							<a href="product" class="block1-txt ab-t-l s-full flex-col-l-sb p-lr-38 p-tb-34 trans-03 respon3">
-								<div class="block1-txt-child1 flex-col-l">
-									<span class="block1-name ltext-102 trans-04 p-b-8">
-										Jersey Set
-									</span>
-
-									<span class="block1-info stext-102 trans-04">
-										First Quality
-									</span>
-								</div>
-
-								<div class="block1-txt-child2 p-b-4 trans-05">
-									<div class="block1-link stext-101 cl0 trans-09">
-										Shop Now
-									</div>
-								</div>
-							</a>
-						</div>
-					</div>
-					<div class=" col-6 col-md-6 col-xl-4 p-b-30 m-lr-auto">
-						<!-- Block1 -->
-						<div class="block1 wrap-pic-w">
-							<img style="height: 50vh;" src="images/banner-03.webp" alt="IMG-BANNER">
-
-							<a href="product" class="block1-txt ab-t-l s-full flex-col-l-sb p-lr-38 p-tb-34 trans-03 respon3">
-								<div class="block1-txt-child1 flex-col-l">
-									<span class="block1-name ltext-102 trans-04 p-b-8">
-										Collectibles
-									</span>
-
-									<span class="block1-info stext-102 trans-04">
-										Muffllers,mugs,flags and more
-									</span>
-								</div>
-
-								<div class="block1-txt-child2 p-b-4 trans-05">
-									<div class="block1-link stext-101 cl0 trans-09">
-										Shop Now
-									</div>
-								</div>
-							</a>
-						</div>
-					</div>
-
-				<div class="col-6 col-md-6 col-xl-4 p-b-30 m-lr-auto">
-					<!-- Block1 -->
-					<div class="block1 wrap-pic-w">
-						<img style="height: 50vh;" src="images/b-2.jpg" alt="IMG-BANNER">
-
-						<a href="product" class="block1-txt ab-t-l s-full flex-col-l-sb p-lr-38 p-tb-34 trans-03 respon3">
-							<div class="block1-txt-child1 flex-col-l">
-								<span class="block1-name ltext-102 trans-04 p-b-8">
-									Sports Sheoes
-								</span>
-
-								<span class="block1-info stext-102 trans-04">
-									Hard Ground & Artificial Ground
-								</span>
-							</div>
-
-							<div class="block1-txt-child2 p-b-4 trans-05">
-								<div class="block1-link stext-101 cl0 trans-09">
-									Shop Now
-								</div>
-							</div>
-						</a>
-					</div>
-				</div>
-
-				<div class="col-6 col-md-6 col-xl-4 p-b-30 m-lr-auto">
-					<!-- Block1 -->
-					<div class="block1 wrap-pic-s">
-						<img style="height: 50vh;"  src="/images/banner-05.jpg" alt="IMG-BANNER">
-
-						<a href="product" class="block1-txt ab-t-l s-full flex-col-l-sb p-lr-38 p-tb-34 trans-03 respon3">
-							<div class="block1-txt-child1 flex-col-l">
-								<span class="block1-name ltext-102 trans-04 p-b-8">
-									Kids Jersey
-								</span>
-
-								<span class="block1-info stext-102 trans-04">
-									Age 3-13
-								</span>
-							</div>
-
-							<div class="block1-txt-child2 p-b-4 trans-05">
-								<div class="block1-link stext-101 cl0 trans-09">
-									Shop Now
-								</div>
-							</div>
-						</a>
-					</div>
-				</div>
 			</div>
 		</div>
 	</div>
@@ -515,7 +399,7 @@
 					<!-- Block2 -->
 					<div class="block2">
 						<div class="block2-pic hov-img0">
-							<img src={{this.image}} alt="IMG-PRODUCT">
+							<img src={{this.image}} style="height: 18rem;" alt="IMG-PRODUCT">
 
 							<a href="#" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
 								Quick View
@@ -524,7 +408,7 @@
 
 						<div class="block2-txt flex-w flex-t p-t-14">
 							<div class="block2-txt-child1 flex-col-l ">
-								<a href="productdetail" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+								<a href="productdetail/{{this._id}}" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
 									{{this.name}}
 								</a>
 									<span class="cl3 mr-1">
