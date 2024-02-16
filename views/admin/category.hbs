@@ -8,13 +8,13 @@
         <div id="existingCategoriesList" class="d-flex">
             {{#each data}}
             <div class="card m-1" style="width: 12rem;">
-                <img src="{{this.imageUrl}}" class="card-img-top" alt="image">
+                <img src="{{this.imageUrl}}" class="card-img-top" style="height: 12rem;" alt="image">
                 <div class="card-body">
                     <p class="card-text">{{this.name}}</p>
                     
                     <div class="d-flex justify-content-between">
                         <button type="button" class="btn btn-dark" onclick="deleteCat('{{this._id}}')">Delete</button>
-                       <a href="/update-category/{{this._id}}" class="btn btn-sm btn-info btn-edit-product" data-id="{{this._id}}" onclick="handleEditClick(this)">
+                       <a href="/update-category/{{this._id}}" class="btn btn btn-dark btn-edit-product" data-id="{{this._id}}" onclick="handleEditClick(this)">
                     <i class="fas fa-edit"></i>
                     Edit
                   </a>
@@ -91,8 +91,8 @@
 </section>
 
 
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></>
 <!-- CATEGORY MANAGEMENT SECTION -->
 <script>
     async function deleteCat(catId) {

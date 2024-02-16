@@ -4,9 +4,6 @@ const { default: mongoose } = require('mongoose');
 const Product = require('../models/product');
 
 
-
-
-
 let loginGetPage = async (req, res) => {
   console.log("User login page");
   try {
