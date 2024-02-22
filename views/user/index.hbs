@@ -401,8 +401,8 @@
 						<div class="block2-pic hov-img0">
 							<img src={{this.image}} style="height: 18rem;" alt="IMG-PRODUCT">
 
-							<a href="#" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
-								Quick View
+							<a href="add-to-cart/{{this._id}}" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">
+								Add to cart
 							</a>
 						</div>
 
@@ -709,6 +709,25 @@
 				ps.update();
 			})
 		});
+
+
+	fetch('/add-to-cart/'+ productId)
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      // Product added successfully, show a sweet alert
+      swal('Success', data.message, 'success');
+    } else {
+      // Error occurred, show a sweet alert with the error message
+      swal('Error', data.error, 'error');
+    }
+  })
+  .catch(error => {
+    // Error occurred while making the request
+    console.error('Error:', error);
+    swal('Error', 'An error occurred while adding the product to the cart', 'error');
+  });
+
 	</script>
 <!--===============================================================================================-->
 	<script src="js/main.js"></script>

@@ -5,8 +5,7 @@ const authMiddleware = async (req, res, next) => {
         // Check if JWT token exists in cookies
         if (req.cookies.jwt) {
             const tokenExracted = await verifyUser(req.cookies.jwt);
-            if (tokenExracted.role === 'user') {
-                // User is authenticated, proceed to the next middleware/route handler
+            if (tokenExracted) {
                 return next();
             }
         }

@@ -26,7 +26,6 @@ router.get('/contact',userControllers.contact)
 router.get('/about',userControllers.about)
 router.get('/product',userControllers.product)
 router.get('/productdetail',userControllers.productdetail)
-router.get('/cart',userControllers.cart)
 router.get('/help',userControllers.help)
 router.get('/wishlist',authMiddleware,userControllers.wishlist)
 router.get('/userprofile',authMiddleware,userControllers.userprofile)
@@ -35,7 +34,9 @@ router.get('/ordercomplete',authMiddleware,userControllers.ordercomplete)
 router.get('/login',userControllers.loginGetPage)
 router.get('/signup',userControllers.signup)
 router.get('/forget',userControllers.forgetpass)
-router.get('/invoice',authMiddleware,userControllers.invoice)
+
+router.get('/cart',authMiddleware,userControllers.cart)
+router.get('/add-to-cart/:id',authMiddleware,userControllers.addtocart)
 
 router.post('/signup',userControllers.signUpPostPage);
 router.post('/login', userControllers.loginPostPage);

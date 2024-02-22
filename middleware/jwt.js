@@ -9,7 +9,6 @@ module.exports = {
           const payLoad = {
               userId: user._id,
               userName: user.userName,
-              role: 'user'
           }
           jwt.sign(payLoad, jwtKey, { expiresIn: '2h' }, (error, token) => {
               if (error) {

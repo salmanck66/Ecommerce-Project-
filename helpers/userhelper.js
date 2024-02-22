@@ -1,8 +1,12 @@
 const User = require('../models/users')
+const Cart = require('../models/cart')
 const bcrypt = require('bcrypt')
 const dotenv = require('dotenv')
 dotenv.config();
-const util = require('util')
+var objectId =require('mongodb').ObjectId
+const util = require('util');
+const { product } = require('../controllers/user');
+const { response } = require('express');
 
 function signupHelper(recievedUserData) {
     const { firstName, lastName, mail, phoneNumber, password } = recievedUserData
@@ -53,7 +57,29 @@ function signupHelper(recievedUserData) {
       throw error;
     }
   }
+  let  addToCart =  (proId,userId)=>
+  {
+    return new Promise(async(res,rej)=>
+    {
+      let usercart = await db.get().collection(collection.Cart.findOne({user:objectId(userId)}))
+      if(usercart)
+      {
+
+      }else
+      {
+        let cartobj =
+        {
+          user:objectId(userId),
+          products:[objectId(proId)]
+        }
+        db.get.collection(collection.Cart).insertOne(cartObj).then(()=>
+        {
+          res.redirect('/')
+        })
+      }
+    })
+  }
   
 module.exports = {
-     signupHelper, loginHelper
+     signupHelper, loginHelper,addToCart
   }

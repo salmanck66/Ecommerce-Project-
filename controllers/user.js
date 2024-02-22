@@ -1,9 +1,11 @@
 const { signUser, verifyUser } = require("../middleware/jwt");
-const helpers = require("../helpers/userhelper");
+const  Userhelpers = require("../helpers/userhelper");
 const { default: mongoose } = require("mongoose");
 const Product = require("../models/product");
 const Category = require("../models/category");
 const Banner = require("../models/banner");
+const Cart = require("../models/cart");
+const { session } = require("passport");
 
 let loginGetPage = async (req, res) => {
   console.log("User login page");
@@ -39,7 +41,7 @@ let signUpPostPage = async (req, res) => {
     console.log("entered user registration section");
     // console.log(req.body);
 
-    let resolved = await helpers.signupHelper(req.body);
+    let resolved = await Userhelpers.signupHelper(req.body);
     if (resolved.mailExist) {
       console.log("mail already exist");
       res
@@ -70,7 +72,7 @@ let loginPostPage = async (req, res) => {
   try {
     console.log("entered in login post section");
 
-    let resolved = await helpers.loginHelper(req.body);
+    let resolved = await  Userhelpers.loginHelper(req.body);
     if (resolved.invalidUsername) {
       console.log("invalid user name");
       return res.render("user/login", {
@@ -113,8 +115,10 @@ let homePage = async (req, res) => {
   if (req.cookies.jwt) {
     let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
     var userName = tokenExracted.userName;
+    console.log(userName);
   }
   if (userName) {
+    console.log("Having User");
     const products = await Product.find();
     const category = await Category.find();
     const banner = await Banner.find();
@@ -167,6 +171,72 @@ let cart = (req, res) => {
   console.log("cart");
   res.render("user/cart");
 };
+
+let addtocart = async (req, res) => {
+  try {
+    let tokenExracted = await verifyUser(req.cookies.jwt)
+    console.log(tokenExracted.userId);
+    // Check if user is authenticated
+    if (!tokenExracted.userId) {
+      return res.status(401).json({ error: 'User not authenticated' });
+    }
+
+    const productId = req.params.id;
+    console.log(productId);
+    
+    const userId = tokenExracted.userId // Assuming user ID is available in the JWT payload
+    console.log(userId);
+    // Check if the product exists
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    // Add the product to the user's cart
+    let cart = await Cart.findOne({ user: userId });
+    if (!cart) {
+      cart = new Cart({ user: userId, items: [] });
+    }
+
+    // Check if the product is already in the cart
+    const existingItem = cart.items.find(item => item.product.equals(productId));
+    if (existingItem) {
+      existingItem.quantity += 1;
+    } else {
+      cart.items.push({ product: productId, quantity: 1 });
+    }
+
+    await cart.save();
+    res.status(201).json({ message: 'Product added to cart successfully' });
+  } catch (error) {
+    console.error('Error adding product to cart:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+let viewcart = async (req, res) => {
+  try {
+    // Extract the user ID from the JWT token
+    const tokenExtracted = await verifyUser(req.cookies.jwt);
+    const userId = tokenExtracted.userId;
+
+    // Find the user's cart based on the user ID
+    const cart = await Cart.findOne({ user: userId }).populate('items.product');
+
+    if (!cart) {
+      return res.status(404).json({ error: 'Cart not found' });
+    }
+
+    // Send the cart as a response
+    res.status(200).json({ cart });
+  } catch (error) {
+    console.error('Error viewing cart:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+
+
 let help = (req, res) => {
   console.log("help");
   res.render("user/help");
@@ -187,6 +257,7 @@ let ordercomplete = (req, res) => {
   console.log("ordercomplete");
   res.render("user/ordercomplete");
 };
+
 // let signin = (req, res) => {
 //     console.log("login");
 //     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
@@ -226,4 +297,6 @@ module.exports = {
   loginPostPage,
   loginGetPage,
   logoutPage,
+  addtocart,
+  viewcart
 };
