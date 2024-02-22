@@ -40,11 +40,11 @@
                         <div class="form-group">
                             <label for="imageUrl">Existing Image:</label>
                             <br>
-                            <img src="{{category.imageUrl}}" class="img-fluid" style="height: 10rem;" alt="Existing Image">
+                            <img src="{{category.imageUrl}}" class="img-fluid" style="height: 10rem;" alt="Existing Image" id="eximg">
                         </div>
                         <div class="form-group">
                             <label for="categoryImage" class="form-label">Category Image</label>
-                            <input type="file" class="form-control" id="categoryImage" name="categoryImage" />
+                            <input type="file" class="form-control" id="categoryImage" onchange="viewimage(event)" name="categoryImage" />
                         </div>
                         <button type="submit" class="btn btn-primary btn-block">Update Category</button>
                     </form>
@@ -57,5 +57,11 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function viewimage(event)
+{
+  document.getElementById('eximg').src = URL.createObjectURL(event.target.files[0])
+}
+    </script>
 </body>
 </html>

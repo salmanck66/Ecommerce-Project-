@@ -8,7 +8,7 @@
         <div id="existingCategoriesList" class="d-flex">
             {{#each data}}
             <div class="card m-1" style="width: 12rem;">
-                <img src="{{this.imageUrl}}" class="card-img-top" style="height: 12rem;" alt="image">
+                <img src="{{this.imageUrl}}" class="card-img-top" style="height: 12rem;" alt="image" >
                 <div class="card-body">
                     <p class="card-text">{{this.name}}</p>
                     
@@ -92,6 +92,11 @@
 
 <!-- CATEGORY MANAGEMENT SECTION -->
 <script>
+    function viewimage(event)
+{
+  document.getElementById('eximg').src = URL.createObjectURL(event.target.files[0])
+}
+
     async function deleteCat(catId) {
         console.log("fun called");
         event.preventDefault();

@@ -3,12 +3,29 @@ const router=express.Router()
 const userControllers=require('../controllers/user')
 const {userLogined} = require('../middleware/jwt')
 const {authMiddleware} = require('../middleware/auth')
+const passport = require('passport');
+require("../passport")
+router.use(passport.initialize())
+router.use(passport.session())
+
+router.get('/auth/google' , passport.authenticate('google', { scope: 
+	[ 'email', 'profile' ] 
+})); 
+
+// Auth Callback 
+router.get( '/auth/google/callback', 
+	passport.authenticate( 'google', { 
+		successRedirect: '/', 
+		failureRedirect: '/login'
+}));
+
 
 router.get('/',userControllers.homePage)
+
 router.get('/contact',userControllers.contact)
 router.get('/about',userControllers.about)
 router.get('/product',userControllers.product)
-router.get('/productdetail/:id',userControllers.productdetail)
+router.get('/productdetail',userControllers.productdetail)
 router.get('/cart',userControllers.cart)
 router.get('/help',userControllers.help)
 router.get('/wishlist',authMiddleware,userControllers.wishlist)
