@@ -178,36 +178,42 @@ let addtocart = async (req, res) => {
     console.log(tokenExracted.userId);
     // Check if user is authenticated
     if (!tokenExracted.userId) {
-      return res.status(401).json({ error: 'User not authenticated' });
+      return res.status(401).redirect("/login",{ error: 'User not authenticated' });
     }
+    console.log(req.body);
+    const {size,prdid,qty} = req.body
+    
 
-    const productId = req.params.id;
+    const productId =prdid
     console.log(productId);
     
     const userId = tokenExracted.userId // Assuming user ID is available in the JWT payload
     console.log(userId);
     // Check if the product exists
     const product = await Product.findById(productId);
+    console.log("Product Exist");
     if (!product) {
       return res.status(404).json({ error: 'Product not found' });
     }
 
     // Add the product to the user's cart
     let cart = await Cart.findOne({ user: userId });
+    console.log(cart);
+    console.log("found cart");
     if (!cart) {
       cart = new Cart({ user: userId, items: [] });
     }
 
     // Check if the product is already in the cart
-    const existingItem = cart.items.find(item => item.product.equals(productId));
+    const existingItem = cart.items.find(item => item.product.equals(productId) && item.size === size);
     if (existingItem) {
-      existingItem.quantity += 1;
+      existingItem.quantity += qty;
     } else {
-      cart.items.push({ product: productId, quantity: 1 });
+      cart.items.push({ product: productId, quantity: qty ,size :size});
     }
 
     await cart.save();
-    res.status(201).json({ message: 'Product added to cart successfully' });
+  //   res.status(201).json({ message: 'Product added to cart successfully' });
   } catch (error) {
     console.error('Error adding product to cart:', error);
     res.status(500).json({ error: 'Internal server error' });

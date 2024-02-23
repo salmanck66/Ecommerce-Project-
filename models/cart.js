@@ -9,7 +9,10 @@ const cartItemSchema = new Schema({
   quantity: {
     type: Number,
     default: 1
-  }
+  },
+  size: {
+    type: String
+  },
 });
 
 const cartSchema = new Schema({

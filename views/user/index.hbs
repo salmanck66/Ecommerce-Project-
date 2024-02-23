@@ -395,22 +395,23 @@
 			<div class="row isotope-grid">
 
 				{{#each data}}
+				<a href="productdetail?id={{this._id}}" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6" style="text-decoration: none;">
 				<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women">
 					<!-- Block2 -->
 					<div class="block2">
 						<div class="block2-pic hov-img0">
 							<img src={{this.image}} style="height: 18rem;" alt="IMG-PRODUCT">
 
-							<a href="add-to-cart/{{this._id}}" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">
+							{{!-- <a href="add-to-cart/{{this._id}}" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">
 								Add to cart
-							</a>
+							</a> --}}
 						</div>
 
 						<div class="block2-txt flex-w flex-t p-t-14">
 							<div class="block2-txt-child1 flex-col-l ">
-								<a href="productdetail?id={{this._id}}" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+								
 									{{this.name}}
-								</a>
+							
 									<span class="cl3 mr-1">
 									{{this.variant}}
 								</span>
@@ -434,7 +435,7 @@
 							</div>
 						</div>
 					</div>
-				</div>
+				</div></a>
 				{{/each}}
 			</div>
 
