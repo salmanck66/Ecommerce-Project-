@@ -172,6 +172,24 @@ let cart = (req, res) => {
   res.render("user/cart");
 };
 
+let updatecart = async (req, res) => {
+  try {
+      const productId = req.body.productId;
+      const newQuantity = req.body.quantity;
+
+      // Update the quantity in the database
+
+      // Calculate the new total price
+      const updatedProduct = await Product.findById(productId);
+      const totalPrice = updatedProduct.price * newQuantity;
+
+      res.json({ totalPrice: totalPrice });
+  } catch (error) {
+      console.error('Error updating quantity:', error);
+      res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
 let addtocart = async (req, res) => {
   try {
     let tokenExracted = await verifyUser(req.cookies.jwt)
@@ -207,7 +225,7 @@ let addtocart = async (req, res) => {
     // Check if the product is already in the cart
     const existingItem = cart.items.find(item => item.product.equals(productId) && item.size === size);
     if (existingItem) {
-      existingItem.quantity += qty;
+      existingItem.quantity += parseInt(qty);
     } else {
       cart.items.push({ product: productId, quantity: qty ,size :size});
     }
@@ -220,26 +238,45 @@ let addtocart = async (req, res) => {
   }
 }
 
-let viewcart = async (req, res) => {
-  try {
-    // Extract the user ID from the JWT token
-    const tokenExtracted = await verifyUser(req.cookies.jwt);
-    const userId = tokenExtracted.userId;
+  let viewCart = async (req, res) => {
+    try {
+      let tokenExracted = await verifyUser(req.cookies.jwt);
+      console.log(tokenExracted.userId);
+      
+      // Check if user is authenticated
+      if (!tokenExracted.userId) {
+        return res.status(401).redirect("/login", { error: 'User not authenticated' });
+      }
+      
+      const userId = tokenExracted.userId;
+      console.log(userId);
 
-    // Find the user's cart based on the user ID
-    const cart = await Cart.findOne({ user: userId }).populate('items.product');
+      // Find the user's cart
+      const cart = await Cart.findOne({ user: userId }).populate('items.product');
 
-    if (!cart) {
-      return res.status(404).json({ error: 'Cart not found' });
+      // Prepare the response data
+      const cartItems = cart.items.map(item => {
+        return {
+          productId: item.product._id,
+          productName: item.product.name,
+          productImage: item.product.image,
+          size: item.size,
+          price: item.product.price,
+          quantity: item.quantity,
+          totalPrice: item.quantity * item.product.price // Assuming each product has a 'price' field
+        };
+      });
+      console.log(cartItems);
+
+      const totalPrice = cartItems.reduce((total, item) => total + item.totalPrice, 0);
+      res.render("user/cart",{ items: cartItems, totalPrice: totalPrice });
+
+    } catch (error) {
+      console.error('Error viewing cart:', error);
+      res.render("user/cart");
     }
-
-    // Send the cart as a response
-    res.status(200).json({ cart });
-  } catch (error) {
-    console.error('Error viewing cart:', error);
-    res.status(500).json({ error: 'Internal server error' });
   }
-};
+
 
 
 
@@ -304,5 +341,5 @@ module.exports = {
   loginGetPage,
   logoutPage,
   addtocart,
-  viewcart
+  viewCart,updatecart
 };
