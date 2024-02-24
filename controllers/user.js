@@ -171,22 +171,48 @@ let cart = (req, res) => {
   console.log("cart");
   res.render("user/cart");
 };
+function calculateTotalPrice(cartItems) {
+  let totalPrice = 0;
+  for (const item of cartItems) {
+      totalPrice += item.product.price * item.quantity;
+  }
+  return totalPrice;
+}
 
 let updatecart = async (req, res) => {
   try {
-      const productId = req.body.productId;
-      const newQuantity = req.body.quantity;
+    let tokenExracted = await verifyUser(req.cookies.jwt)
+    const userId = tokenExracted.userId // Assuming you have a function to extract the user ID from the JWT token
+    console.log(userId);
 
-      // Update the quantity in the database
+    const productId = req.body.productId;
+    const newQuantity = req.body.quantity;
 
-      // Calculate the new total price
-      const updatedProduct = await Product.findById(productId);
-      const totalPrice = updatedProduct.price * newQuantity;
+    // Find the user's cart
+    const cart = await Cart.findOne({ user: userId });
 
-      res.json({ totalPrice: totalPrice });
+    // Find the index of the product in the cart items array
+    const index = cart.items.findIndex(item => item.product.toString() === productId);
+
+    // If the product is not found in the cart, handle accordingly
+    if (index === -1) {
+      return res.status(404).json({ error: 'Product not found in the cart' });
+    }
+
+    // Update the quantity of the product in the cart
+    cart.items[index].quantity = newQuantity;
+
+    // Calculate the new total price for the cart
+    cart.totalPrice = calculateTotalPrice(cart.items);
+
+    // Save the updated cart back to the database
+    await cart.save();
+
+    // Send back the updated total price
+    res.json({ totalPrice: cart.totalPrice });
   } catch (error) {
-      console.error('Error updating quantity:', error);
-      res.status(500).json({ error: 'Internal server error' });
+    console.error('Error updating quantity:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 }
 

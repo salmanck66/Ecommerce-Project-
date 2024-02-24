@@ -39,7 +39,7 @@
 										</div>
 									</td>
 									<td class="column-2">{{this.productName}}</td>
-									<td class="column-2 prod" hidden>{{this._id}}</td>
+									<td class="column-2 prod" hidden>{{this.productId}}</td>
 									<td class="column-3">{{this.price}}</td>
 									<td class="column-4">
 										<div class="wrap-num-product flex-w  m-r-0 w-50">
@@ -128,10 +128,30 @@
 <script>
 	$('.qtyinput').on('change', function() {
     console.log("button clicked");
-    var productId = $(this).closest('.table_row').data('product-id');
+    
+    // Find the closest table row
+    var $tableRow = $(this).closest('.table_row');
+    
+    // Retrieve the product ID from the column-2 with class 'prod'
+    var productId = $tableRow.find('.column-2.prod').text();
+    
+    // Retrieve the new quantity from the input field
     var newQuantity = $(this).val();
+    
     console.log(newQuantity);
     console.log(productId);
+	$.ajax({
+      url: '/updateQuantity',
+      method: 'POST',
+      data: { productId: productId, quantity: newQuantity },
+      success: function(response) {
+        $(this).closest('.table_row').find('.column-5').text('$' + response.totalPrice);
+      },
+      error: function(error) {
+        console.error('Error updating quantity:', error);
+      }
+    });
+
 });
 	$('#tcoupon').on('change',()=>
 	{
