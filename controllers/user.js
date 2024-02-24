@@ -196,7 +196,7 @@ let updatecart = async (req, res) => {
 
     // Find the index of the product in the cart items array
     const index = cart.items.findIndex(item => item.product.toString() === productId && item.size === size);
-    
+
     // If the product is not found in the cart, handle accordingly
     if (index === -1) {
       return res.status(404).json({ error: 'Product not found in the cart' });
@@ -310,6 +310,16 @@ let addtocart = async (req, res) => {
       console.log(cartItems);
 
       const totalPrice = cartItems.reduce((total, item) => total + item.totalPrice, 0);
+
+      cart.items.forEach(item => {
+        // If the quantity exceeds 5, update it to 5 in the database
+        if (item.quantity > 5) {
+            item.quantity = 5;
+        }
+    });
+
+    // Save the updated cart back to the database
+    await cart.save();
       res.render("user/cart",{ items: cartItems, totalPrice: totalPrice });
 
     } catch (error) {
@@ -317,6 +327,25 @@ let addtocart = async (req, res) => {
       res.render("user/cart");
     }
   }
+
+let removeCartItem = async (req,res)=>
+{
+  try {
+    console.log("remove");
+    let tokenExracted = await verifyUser(req.cookies.jwt);
+  const userId = tokenExracted.userId;
+  const { size, id } = req.body;
+  console.log(size,id);
+  const cart = await Cart.findOne({user: userId})
+  const index = cart.items.findIndex(item=>item.product.toString()===id && size)
+  if(index!==-1){
+     cart.items.splice(index,1) 
+     await cart.save()
+  }
+  res.redirect("/cart");
+  }catch(err)
+  {console.log(err)}
+}
 
 
 
@@ -382,5 +411,5 @@ module.exports = {
   loginGetPage,
   logoutPage,
   addtocart,
-  viewCart,updatecart
+  viewCart,updatecart,removeCartItem
 };

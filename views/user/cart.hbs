@@ -17,7 +17,7 @@
 
 	<!-- Shoping Cart -->
 	 
-	<form class="bg0 p-t-75 p-b-85" action="checkout">
+
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
@@ -37,6 +37,11 @@
 										<div class="how-itemcart1">
 											<img src="{{this.productImage}}" alt="IMG">
 										</div>
+										<form action="removeItem" method="post">
+											<input name="id" value="{{this.productId}}" hidden type="text">
+											<input name="size" value="{{this.size}}" hidden type="text">
+											<button class="btn" type="submit">Remove</button>
+										</form>
 									</td>
 									<td class="column-2">{{this.productName}} <br>Size : {{this.size}}</td>
 									<td class="column-2 prod" hidden>{{this.productId}}</td>
@@ -55,7 +60,7 @@
 											</div> --}}
 										</div>
 									</td>
-									<td class="column-5">{{this.totalPrice}}</td>
+									<td class="column-5 tp">{{this.totalPrice}}</td>
 								</tr>
 								{{/each}}
 							</table>
@@ -71,7 +76,7 @@
 							</div>
 
 							<div class="flex-c-m stext-101 cl2 size-119 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-10">
-								<button type="submit">Update Cart</button>
+								<a href="cart"><div class="btn btm-primary">Update Cart</div></a>
 							</div>
 						</div>
 					</div>
@@ -100,7 +105,6 @@
 								</div>
 							</div>
 						</div>
-						<h1>hieiejsjie</h1>
 						<div class="flex-w flex-t p-t-27 p-b-33">
 							<div class="size-208">
 								<span class="mtext-101 cl2">
@@ -115,7 +119,7 @@
 							</div>
 						</div>
 
-						<a href="checkout"><button class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">
+						<a href="checkout"><button type="submit" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">
 							Proceed to Checkout
 						</button>
 						</a>
@@ -123,10 +127,48 @@
 				</div>
 			</div>
 		</div>
-	</form>
+
 <input type="number" class="button-coupon afa afaf afrqaera adsa" name="" id="">
 
 <script>
+$(document).ready(function() {
+    // Iterate through each row in the table
+    $('.table_row').each(function() {
+        // Retrieve the quantity input element
+        var $quantityInput = $(this).find('.qtyinput');
+        
+        // Retrieve the current quantity value
+        var currentQuantity = parseInt($quantityInput.val());
+        
+        // If the current quantity exceeds 5, set it to 5
+        if (currentQuantity > 5 ) {
+            $quantityInput.val(5);
+	
+			Swal.fire({title:"Maximum Order Quantity Is 5 Per Size"
+			}).then((result)=>
+			{
+				if(result.isConfirmed)
+				{
+					location.reload()
+				}
+			})
+        }
+        if (currentQuantity <= 0 ) {
+            $quantityInput.val(1);
+	
+			Swal.fire({title:"Minimum Quantity Should Be Greater Than "
+			}).then((result)=>
+			{
+				if(result.isConfirmed)
+				{
+					location.reload()
+				}
+			})
+        }
+    });
+	
+});
+
 $('.qtyinput').on('change', function() {
     console.log("button clicked");
     
@@ -136,16 +178,22 @@ $('.qtyinput').on('change', function() {
     // Retrieve the product ID and size from the table row
     var productId = $tableRow.find('.column-2.prod').text();
     var size = $tableRow.find('.column-8.size').text();
-    
-    // Retrieve the new quantity from the input field
+
     var newQuantity = $(this).val();
 
-    if (newQuantity > 10 ) {
+    if (newQuantity > 5 ) {
         // Show error message
-        $(this).val(10);
-        Swal.fire("Product Quantity Should Be Less Than 10")
+        $(this).val(5);
+        Swal.fire("Product Quantity Should Be Less Than 5")
         return;
     } 
+    if (newQuantity <= 0 ) {
+        // Show error message
+        $(this).val(1);
+        Swal.fire("Product Quantity Should Be Greater Than 1")
+        return;
+    } 
+
 
     $.ajax({
         url: '/updateQuantity',
@@ -156,6 +204,28 @@ $('.qtyinput').on('change', function() {
         },
         error: function(error) {
             console.error('Error updating quantity:', error);
+        }
+    });
+});
+
+
+$('.remove-item-btn').on('click', function() {
+    // Retrieve product ID and size from data attributes
+    var productId = $(this).data('product-id');
+
+    var size = $(this).data('size');
+	console.log(productId,size)
+    
+    // Send AJAX request to remove item
+    $.ajax({
+        url: '/removeItem',
+        method: 'POST',
+        data: { productId: productId, size: size },
+        success: function(response) {
+            $(this).closest('.cart-item').remove();
+        },
+        error: function(error) {
+            console.error('Error removing item from cart:', error);
         }
     });
 });

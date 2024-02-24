@@ -38,6 +38,7 @@ router.get('/forget',userControllers.forgetpass)
 router.get('/cart',authMiddleware,userControllers.viewCart)
 router.post('/add-to-cart',authMiddleware,userControllers.addtocart)
 router.post('/updateQuantity',authMiddleware,userControllers.updatecart)
+router.post('/removeItem',authMiddleware,userControllers.removeCartItem)
 
 router.post('/signup',userControllers.signUpPostPage);
 router.post('/login', userControllers.loginPostPage);
