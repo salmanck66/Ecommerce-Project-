@@ -38,8 +38,9 @@
 											<img src="{{this.productImage}}" alt="IMG">
 										</div>
 									</td>
-									<td class="column-2">{{this.productName}}</td>
+									<td class="column-2">{{this.productName}} <br>Size : {{this.size}}</td>
 									<td class="column-2 prod" hidden>{{this.productId}}</td>
+									<td class="column-8 size" hidden>{{this.size}}</td>
 									<td class="column-3">{{this.price}}</td>
 									<td class="column-4">
 										<div class="wrap-num-product flex-w  m-r-0 w-50">
@@ -62,8 +63,8 @@
 
 						<div class="flex-w flex-sb-m bor15 p-t-18 p-b-15 p-lr-40 p-lr-15-sm">
 							<div class="flex-w flex-m m-r-20 m-tb-5">
-								<input id="tcoupon" class="tcoupon stext-104 cl2 plh4 size-117 bor13 p-lr-20 m-r-10 m-tb-5" type="text" name="coupon" placeholder="Coupon Code">
-									
+								<input id="tcoupon" class="tcoupon stext-104 cl2 plh4 size-117 bor13 p-lr-20 m-r-10 m-tb-5" type="text" onchange="validateqty()" name="coupon" placeholder="Coupon Code">
+								
 								<div class=" flex-c-m stext-101 cl2 size-118 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-5">
 									Apply coupon
 								</div>
@@ -126,60 +127,38 @@
 <input type="number" class="button-coupon afa afaf afrqaera adsa" name="" id="">
 
 <script>
-	$('.qtyinput').on('change', function() {
+$('.qtyinput').on('change', function() {
     console.log("button clicked");
     
     // Find the closest table row
     var $tableRow = $(this).closest('.table_row');
     
-    // Retrieve the product ID from the column-2 with class 'prod'
+    // Retrieve the product ID and size from the table row
     var productId = $tableRow.find('.column-2.prod').text();
+    var size = $tableRow.find('.column-8.size').text();
     
     // Retrieve the new quantity from the input field
     var newQuantity = $(this).val();
-    
-    console.log(newQuantity);
-    console.log(productId);
-	$.ajax({
-      url: '/updateQuantity',
-      method: 'POST',
-      data: { productId: productId, quantity: newQuantity },
-      success: function(response) {
-        $(this).closest('.table_row').find('.column-5').text('$' + response.totalPrice);
-      },
-      error: function(error) {
-        console.error('Error updating quantity:', error);
-      }
-    });
 
-});
-	$('#tcoupon').on('change',()=>
-	{
-		console.log("Value")
-	})
-
-    // Add event listeners to quantity input fields
-	<script>
-$(document).ready(function() {
-  $('.num-product').on('change', function() {
-	console.log("fun called")
-    var productId = $(this).closest('.table_row').data('product-id');
-    var newQuantity = $(this).val();
+    if (newQuantity > 10 ) {
+        // Show error message
+        $(this).val(10);
+        Swal.fire("Product Quantity Should Be Less Than 10")
+        return;
+    } 
 
     $.ajax({
-      url: '/updateQuantity',
-      method: 'POST',
-      data: { productId: productId, quantity: newQuantity },
-      success: function(response) {
-        $(this).closest('.table_row').find('.column-5').text('$' + response.totalPrice);
-      },
-      error: function(error) {
-        console.error('Error updating quantity:', error);
-      }
+        url: '/updateQuantity',
+        method: 'POST',
+        data: { productId: productId, size: size, quantity: newQuantity },
+        success: function(response) {
+            $(this).closest('.table_row').find('.column-5').text('$' + response.totalPrice);
+        },
+        error: function(error) {
+            console.error('Error updating quantity:', error);
+        }
     });
-  });
 });
-</script>
 </script>
 
 		

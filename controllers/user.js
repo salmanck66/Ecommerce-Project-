@@ -6,6 +6,7 @@ const Category = require("../models/category");
 const Banner = require("../models/banner");
 const Cart = require("../models/cart");
 const { session } = require("passport");
+const url = require('url');
 
 let loginGetPage = async (req, res) => {
   console.log("User login page");
@@ -187,13 +188,15 @@ let updatecart = async (req, res) => {
 
     const productId = req.body.productId;
     const newQuantity = req.body.quantity;
-
+    const size = req.body.size;
+    console.log(newQuantity);
+    console.log(size);
     // Find the user's cart
     const cart = await Cart.findOne({ user: userId });
 
     // Find the index of the product in the cart items array
-    const index = cart.items.findIndex(item => item.product.toString() === productId);
-
+    const index = cart.items.findIndex(item => item.product.toString() === productId && item.size === size);
+    
     // If the product is not found in the cart, handle accordingly
     if (index === -1) {
       return res.status(404).json({ error: 'Product not found in the cart' });
@@ -226,20 +229,20 @@ let updatecart = async (req, res) => {
 
 let addtocart = async (req, res) => {
   try {
-    let tokenExracted = await verifyUser(req.cookies.jwt)
+    let tokenExracted = await verifyUser(req.cookies.jwt);
     console.log(tokenExracted.userId);
     // Check if user is authenticated
     if (!tokenExracted.userId) {
-      return res.status(401).redirect("/login",{ error: 'User not authenticated' });
+      return res.status(401).redirect("/login", { error: 'User not authenticated' });
     }
     console.log(req.body);
-    const {size,prdid,qty} = req.body
-    
+    const { size, prdid, qty } = req.body;
 
-    const productId =prdid
+
+    const productId = prdid;
     console.log(productId);
-    
-    const userId = tokenExracted.userId // Assuming user ID is available in the JWT payload
+
+    const userId = tokenExracted.userId; // Assuming user ID is available in the JWT payload
     console.log(userId);
     // Check if the product exists
     const product = await Product.findById(productId);
@@ -261,11 +264,15 @@ let addtocart = async (req, res) => {
     if (existingItem) {
       existingItem.quantity += parseInt(qty);
     } else {
-      cart.items.push({ product: productId, quantity: qty ,size :size});
+      cart.items.push({ product: productId, quantity: qty, size: size });
     }
-
     await cart.save();
-  //   res.status(201).json({ message: 'Product added to cart successfully' });
+
+    // Redirect back to the referring page
+    const referringUrl = req.headers.referer || '/';
+    const parsedUrl = url.parse(referringUrl);
+    res.redirect(302, parsedUrl.path);
+
   } catch (error) {
     console.error('Error adding product to cart:', error);
     res.status(500).json({ error: 'Internal server error' });
