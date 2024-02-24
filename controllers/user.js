@@ -182,7 +182,7 @@ function calculateTotalPrice(cartItems) {
 let updatecart = async (req, res) => {
   try {
     let tokenExracted = await verifyUser(req.cookies.jwt)
-    const userId = tokenExracted.userId // Assuming you have a function to extract the user ID from the JWT token
+    const userId = tokenExracted.userId; // Assuming you have a function to extract the user ID from the JWT token
     console.log(userId);
 
     const productId = req.body.productId;
@@ -199,8 +199,13 @@ let updatecart = async (req, res) => {
       return res.status(404).json({ error: 'Product not found in the cart' });
     }
 
-    // Update the quantity of the product in the cart
-    cart.items[index].quantity = newQuantity;
+    if (newQuantity == 0) {
+      // Remove the item from the cart
+      cart.items.splice(index, 1);
+    } else {
+      // Update the quantity of the product in the cart
+      cart.items[index].quantity = newQuantity;
+    }
 
     // Calculate the new total price for the cart
     cart.totalPrice = calculateTotalPrice(cart.items);
@@ -210,11 +215,14 @@ let updatecart = async (req, res) => {
 
     // Send back the updated total price
     res.json({ totalPrice: cart.totalPrice });
+
   } catch (error) {
     console.error('Error updating quantity:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 }
+
+
 
 let addtocart = async (req, res) => {
   try {
