@@ -201,12 +201,15 @@ $('.qtyinput').on('change', function() {
         data: { productId: productId, size: size, quantity: newQuantity },
         success: function(response) {
             $(this).closest('.table_row').find('.column-5').text('$' + response.totalPrice);
+			window.location.reload()
         },
         error: function(error) {
             console.error('Error updating quantity:', error);
         }
     });
 });
+
+
 
 
 $('.remove-item-btn').on('click', function() {
