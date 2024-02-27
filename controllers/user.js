@@ -192,7 +192,7 @@ let updatecart = async (req, res) => {
     console.log(newQuantity);
     console.log(size);
     // Find the user's cart
-    const cart = await Cart.findOne({ user: userId });
+    const cart = await Cart.findOne({ user: userId })
 
     // Find the index of the product in the cart items array
     const index = cart.items.findIndex(item => item.product.toString() === productId && item.size === size);
@@ -213,6 +213,7 @@ let updatecart = async (req, res) => {
     // Calculate the new total price for the cart
     cart.totalPrice = calculateTotalPrice(cart.items);
 
+   
     // Save the updated cart back to the database
     await cart.save();
 
@@ -301,6 +302,7 @@ let addtocart = async (req, res) => {
           productId: item.product._id,
           productName: item.product.name,
           productImage: item.product.image,
+          productstock: item.product.stock,
           size: item.size,
           price: item.product.price,
           quantity: item.quantity,
@@ -312,14 +314,21 @@ let addtocart = async (req, res) => {
       const totalPrice = cartItems.reduce((total, item) => total + item.totalPrice, 0);
 
       cart.items.forEach(item => {
-        // If the quantity exceeds 5, update it to 5 in the database
+        if (item.product.stock[item.size] < item.quantity) {
+
+            item.quantity = item.product.stock[item.size];
+            // Add a message property to inform the user
+            item.message = `Quantity reduced to match available stock (${item.quantity} available)`;
+        }
+    });
+
+      cart.items.forEach(item => {
         if (item.quantity > 5) {
             item.quantity = 5;
         }
     });
 
-    // Save the updated cart back to the database
-    await cart.save();
+      await cart.save();
       res.render("user/cart",{ items: cartItems, totalPrice: totalPrice });
 
     } catch (error) {

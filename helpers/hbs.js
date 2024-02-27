@@ -30,3 +30,6 @@ Handlebars.registerHelper('ifCond', function(v1, operator, v2, options) {
 Handlebars.registerHelper('ifEquals', function(arg1, arg2, options) {
     return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
 });
+Handlebars.registerHelper('lookup', function(obj, key) {
+    return obj[key];
+  });

@@ -49,15 +49,11 @@
 									<td class="column-3">{{this.price}}</td>
 									<td class="column-4">
 										<div class="wrap-num-product flex-w  m-r-0 w-50">
-											{{!-- <div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
-												<i class="fs-16 zmdi zmdi-minus"></i>
-											</div> --}}
-
 											<input class="mtext-104 cl3 txt-center num-product qtyinput w-100"  type="number" name="qty" value="{{this.quantity}}">
-
-											{{!-- <div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
-												<i class="fs-16 zmdi zmdi-plus"></i>
-											</div> --}}
+										</div>
+										<div class="flex-w">
+											<p >Stock : &nbsp;</p>
+											<p id="stock"> {{lookup productstock size}}</p>
 										</div>
 									</td>
 									<td class="column-5 tp">{{this.totalPrice}}</td>
@@ -128,7 +124,7 @@
 			</div>
 		</div>
 
-<input type="number" class="button-coupon afa afaf afrqaera adsa" name="" id="">
+
 
 <script>
 $(document).ready(function() {
@@ -178,15 +174,18 @@ $('.qtyinput').on('change', function() {
     // Retrieve the product ID and size from the table row
     var productId = $tableRow.find('.column-2.prod').text();
     var size = $tableRow.find('.column-8.size').text();
+    var stock = $('#stock').text();
+	console.log(stock)
 
     var newQuantity = $(this).val();
-
-    if (newQuantity > 5 ) {
-        // Show error message
-        $(this).val(5);
-        Swal.fire("Product Quantity Should Be Less Than 5")
+	if(newQuantity > parseInt(stock))
+	{
+		 Swal.fire(`Available Stock Is ${parseInt(stock)},Please Adjust Quantity Accordingly` , '','warning')
+		 $(this).val(parseInt(stock));
         return;
-    } 
+	}
+
+
     if (newQuantity <= 0 ) {
         // Show error message
         $(this).val(1);
@@ -209,9 +208,6 @@ $('.qtyinput').on('change', function() {
     });
 });
 
-
-
-
 $('.remove-item-btn').on('click', function() {
     // Retrieve product ID and size from data attributes
     var productId = $(this).data('product-id');
@@ -232,6 +228,8 @@ $('.remove-item-btn').on('click', function() {
         }
     });
 });
+
+
 </script>
 
 		

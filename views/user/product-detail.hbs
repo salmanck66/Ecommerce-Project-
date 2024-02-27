@@ -66,7 +66,7 @@
 					
 				<div class="col-md-6 col-lg-5 p-b-30">
 					<div class="p-r-50 p-t-5 p-lr-0-lg">
-						<form action="add-to-cart" method="post">
+						<form action="" method="post" id="addToCartForm">
 						<h4 class="mtext-105 cl2 js-name-detail p-b-14">
 							{{productsss.name}}
 							
@@ -96,7 +96,7 @@
 
 								<div class="size-204 respon6-next">
 									<div class="rs1-select2 bor8 bg0">
-										<select class="js-select2" name="size">
+										<select class="js-select2" name="size" id="sizeSelect">
 											<option value="S" name="S">S</option>
 											<option value="M" name="M">M</option>
 											<option value="L" name="L">L</option>
@@ -121,8 +121,11 @@
 											<i class="fs-16 zmdi zmdi-plus"></i>
 										</div>
 									</div>
+									<div >
+										<p  id="id="stockDisplay""></p>
+									</div>
 
-									<button type="submit" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-">
+									<button  type="submit" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-">
 										Add to cart
 									</button>
 									</form>
@@ -609,4 +612,80 @@
 			</div>
 		</div>
 	</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+	console.log(sizeSelect);
+    const addToCartForm = document.querySelector('#addToCartForm');
+    addToCartForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const size = addToCartForm.querySelector('select[name="size"]').value;
+      const prdid = addToCartForm.querySelector('input[name="prdid"]').value;
+      const qty = addToCartForm.querySelector('input[name="qty"]').value;
+	  console.log(size,qty)
+
+      try {
+        const response = await fetch("add-to-cart", {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ size, prdid, qty })
+        });
+        
+        if (response.ok) {
+          // If response is successful, show SweetAlert
+          Swal.fire({
+            icon: 'success',
+            title: 'Product added to cart!',
+            showConfirmButton: false,
+            timer: 1500
+          });
+        } else {
+          // If response is not successful, handle error
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Something went wrong!'
+          });
+        }
+      } catch (error) {
+        console.error('Error adding product to cart:', error);
+        // If fetch fails, show SweetAlert with error message
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Something went wrong!'
+        });
+      }
+    });
+  });
+	// Get the select element
+
+
+// Add event listener for change event
+const sizeSelect = document.getElementById('sizeSelect');
+sizeSelect.addEventListener('change', function() {
+    console.log("calling")
+	
+    const selectedSize = sizeSelect.value;
+
+    // Get the corresponding stock value
+    const stock = productsss.stock[selectedSize];
+
+    // Update the displayed stock value
+    const stockDisplay = document.getElementById('stockDisplay');
+    stockDisplay.textContent = `Stock: ${stock}`;
+});
+
+
+
+  $('.btn-num-product-down, .btn-num-product-up').on('click', function() {
+    $(this).closest('.wrap-num-product').find('.num-product').trigger('change');
+	console.log("call")
+
+});
+</script>
+
 		
