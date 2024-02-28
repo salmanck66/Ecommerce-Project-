@@ -123,17 +123,18 @@
 									</div>
 									
 									<div class="d-flex">
-										<p>Stock :&nbsp;</p>
-										<p id="stockDisplay"></p>
+										<p hidden id="stockDisplay"></p>
 									</div>
 
-									<button  type="submit" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-">
+									<button  type="submit" id="addcart" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-">
 										Add to cart
 									</button>
+									
 									</form>
 								</div>
 							</div>	
 						</div>
+
 
 						<!--  -->
 						<div class="flex-w flex-m p-l-100 p-t-40 respon7">
@@ -650,6 +651,13 @@ const stockDisplay = document.getElementById('stockDisplay');
 const sizeSelect = document.getElementById('sizeSelect');
 const selectedSize = sizeSelect.value;
 stockDisplay.innerHTML = `{{productsss.stock.S}}`;
+const initialStock = parseInt(stockDisplay.textContent);
+
+    // Set numProductInput value to 0 if stock is 0
+    if (initialStock === 0) {
+        numProductInput.val(0);
+    }
+
 	
 
 
@@ -662,7 +670,6 @@ stockDisplay.innerHTML = `{{productsss.stock.S}}`;
       const prdid = addToCartForm.querySelector('input[name="prdid"]').value;
       const qty = addToCartForm.querySelector('input[name="qty"]').value;
 	  console.log(size,qty)
-
       try {
         const response = await fetch("add-to-cart", {
           method: "POST",
@@ -701,20 +708,25 @@ stockDisplay.innerHTML = `{{productsss.stock.S}}`;
   });
 	// Get the select element
 
-
-// Add event listener for change event
-
-
-
-
-
   $('.btn-num-product-down, .btn-num-product-up').on('click', function() {
     var numProductInput = $(this).closest('.wrap-num-product').find('.num-product');
-    numProductInput.trigger('change');
+    var stockDisplay = $('#stockDisplay').text(); // Assuming stockDisplay is a text element
     
-    // Log the value after a short delay to ensure it's updated
+    numProductInput.trigger('change');
+
+    
     setTimeout(function() {
-        console.log("Value:", numProductInput.val());
+        // Check if the product quantity exceeds the available stock
+        if (parseInt(numProductInput.val()) > parseInt(stockDisplay)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Quantity cannot exceed available stock!'
+            });
+            
+            // Reset the quantity to the available stock
+            numProductInput.val(stockDisplay);
+        }
     }, 100); // Adjust the delay as needed
 });
 </script>
