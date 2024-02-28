@@ -96,8 +96,8 @@
 
 								<div class="size-204 respon6-next">
 									<div class="rs1-select2 bor8 bg0">
-										<select class="js-select2" name="size" id="sizeSelect">
-											<option value="S" name="S">S</option>
+										<select class="js-select2" onchange="stockcheck(value)" name="size" id="sizeSelect">
+											<option value="S" selected name="S">S</option>
 											<option value="M" name="M">M</option>
 											<option value="L" name="L">L</option>
 											<option value="XL" name="XL">XL</option>
@@ -115,14 +115,16 @@
 											<i class="fs-16 zmdi zmdi-minus"></i>
 										</div>
 
-										<input class="mtext-104 cl3 txt-center num-product" type="number" name="qty" value="1">
+										<input class="mtext-104 cl3 txt-center num-product" class="nubbb" type="number" value="1" name="qty">
 
 										<div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
 											<i class="fs-16 zmdi zmdi-plus"></i>
 										</div>
 									</div>
-									<div >
-										<p  id="id="stockDisplay""></p>
+									
+									<div class="d-flex">
+										<p>Stock :&nbsp;</p>
+										<p id="stockDisplay"></p>
 									</div>
 
 									<button  type="submit" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-">
@@ -614,10 +616,46 @@
 	</section>
 
 <script>
+
+function stockcheck(productsss) {
+
+    const sizeSelect = document.getElementById('sizeSelect');
+    const selectedSize = sizeSelect.value;
+    console.log(productsss);
+	console.log(typeof productsss)
+
+    const stockDisplay = document.getElementById('stockDisplay');
+	if(selectedSize === 'S'){
+		stockDisplay.innerHTML = ` {{productsss.stock.S}}`;
+	}else
+	if (selectedSize === 'M') {
+	stockDisplay.innerHTML = `{{productsss.stock.M}}`;
+	}else
+	if (selectedSize === 'L') {
+	stockDisplay.innerHTML = `{{productsss.stock.L}}`;
+	}else
+	if (selectedSize === 'XL') {
+	stockDisplay.innerHTML = `{{productsss.stock.XL}}`;
+	}else
+	{
+	stockDisplay.innerHTML = `{{productsss.stock.XXL}}`;
+	}
+}
+
+
+
+
   document.addEventListener('DOMContentLoaded', () => {
-	console.log(sizeSelect);
+const stockDisplay = document.getElementById('stockDisplay');
+const sizeSelect = document.getElementById('sizeSelect');
+const selectedSize = sizeSelect.value;
+stockDisplay.innerHTML = `{{productsss.stock.S}}`;
+	
+
+
     const addToCartForm = document.querySelector('#addToCartForm');
     addToCartForm.addEventListener('submit', async (event) => {
+	const stockDisplay = document.getElementById('stockDisplay');
       event.preventDefault();
 
       const size = addToCartForm.querySelector('select[name="size"]').value;
@@ -665,26 +703,19 @@
 
 
 // Add event listener for change event
-const sizeSelect = document.getElementById('sizeSelect');
-sizeSelect.addEventListener('change', function() {
-    console.log("calling")
-	
-    const selectedSize = sizeSelect.value;
 
-    // Get the corresponding stock value
-    const stock = productsss.stock[selectedSize];
 
-    // Update the displayed stock value
-    const stockDisplay = document.getElementById('stockDisplay');
-    stockDisplay.textContent = `Stock: ${stock}`;
-});
 
 
 
   $('.btn-num-product-down, .btn-num-product-up').on('click', function() {
-    $(this).closest('.wrap-num-product').find('.num-product').trigger('change');
-	console.log("call")
-
+    var numProductInput = $(this).closest('.wrap-num-product').find('.num-product');
+    numProductInput.trigger('change');
+    
+    // Log the value after a short delay to ensure it's updated
+    setTimeout(function() {
+        console.log("Value:", numProductInput.val());
+    }, 100); // Adjust the delay as needed
 });
 </script>
 
