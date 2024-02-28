@@ -238,8 +238,6 @@ let addtocart = async (req, res) => {
     }
     console.log(req.body);
     const { size, prdid, qty } = req.body;
-
-
     const productId = prdid;
     console.log(productId);
 

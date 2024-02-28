@@ -651,19 +651,11 @@ const stockDisplay = document.getElementById('stockDisplay');
 const sizeSelect = document.getElementById('sizeSelect');
 const selectedSize = sizeSelect.value;
 stockDisplay.innerHTML = `{{productsss.stock.S}}`;
-const initialStock = parseInt(stockDisplay.textContent);
 
-    // Set numProductInput value to 0 if stock is 0
-    if (initialStock === 0) {
-        numProductInput.val(0);
-    }
-
-	
 
 
     const addToCartForm = document.querySelector('#addToCartForm');
     addToCartForm.addEventListener('submit', async (event) => {
-	const stockDisplay = document.getElementById('stockDisplay');
       event.preventDefault();
 
       const size = addToCartForm.querySelector('select[name="size"]').value;
