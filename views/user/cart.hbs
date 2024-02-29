@@ -47,13 +47,10 @@
 									<td class="column-2 prod" hidden>{{this.productId}}</td>
 									<td class="column-8 size" hidden>{{this.size}}</td>
 									<td class="column-3">{{this.price}}</td>
+									<td class="column-7">{{lookup productstock size}}</td>
 									<td class="column-4">
 										<div class="wrap-num-product flex-w  m-r-0 w-50">
 											<input class="mtext-104 cl3 txt-center num-product qtyinput w-100"  type="number" name="qty" value="{{this.quantity}}">
-										</div>
-										<div class="flex-w">
-											<p >Stock : &nbsp;</p>
-											<p id="stock"> {{lookup productstock size}}</p>
 										</div>
 									</td>
 									<td class="column-5 tp">{{this.totalPrice}}</td>
@@ -132,35 +129,9 @@ $(document).ready(function() {
     $('.table_row').each(function() {
         // Retrieve the quantity input element
         var $quantityInput = $(this).find('.qtyinput');
-        
         // Retrieve the current quantity value
         var currentQuantity = parseInt($quantityInput.val());
         
-        // If the current quantity exceeds 5, set it to 5
-        if (currentQuantity > 5 ) {
-            $quantityInput.val(5);
-	
-			Swal.fire({title:"Maximum Order Quantity Is 5 Per Size"
-			}).then((result)=>
-			{
-				if(result.isConfirmed)
-				{
-					location.reload()
-				}
-			})
-        }
-        if (currentQuantity <= 0 ) {
-            $quantityInput.val(1);
-	
-			Swal.fire({title:"Minimum Quantity Should Be Greater Than "
-			}).then((result)=>
-			{
-				if(result.isConfirmed)
-				{
-					location.reload()
-				}
-			})
-        }
     });
 	
 });
@@ -174,7 +145,8 @@ $('.qtyinput').on('change', function() {
     // Retrieve the product ID and size from the table row
     var productId = $tableRow.find('.column-2.prod').text();
     var size = $tableRow.find('.column-8.size').text();
-    var stock = $('#stock').text();
+    var stock = $tableRow.find('.column-7').text()
+	stock = parseInt(stock);
 	console.log(stock)
 
     var newQuantity = $(this).val();

@@ -646,7 +646,7 @@ function stockcheck(productsss) {
 
 
 
-  document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
 const stockDisplay = document.getElementById('stockDisplay');
 const sizeSelect = document.getElementById('sizeSelect');
 const selectedSize = sizeSelect.value;
@@ -658,10 +658,22 @@ stockDisplay.innerHTML = `{{productsss.stock.S}}`;
     addToCartForm.addEventListener('submit', async (event) => {
       event.preventDefault();
 
-      const size = addToCartForm.querySelector('select[name="size"]').value;
-      const prdid = addToCartForm.querySelector('input[name="prdid"]').value;
-      const qty = addToCartForm.querySelector('input[name="qty"]').value;
-	  console.log(size,qty)
+      const stock = parseInt(document.getElementById('stockDisplay').textContent);
+    const size = addToCartForm.querySelector('select[name="size"]').value;
+    const prdid = addToCartForm.querySelector('input[name="prdid"]').value;
+    const qty = parseInt(addToCartForm.querySelector('input[name="qty"]').value);
+    console.log(size, qty, stock);
+
+    if (stock < qty || stock === 0) {
+        // Show error message and prevent adding to cart
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Insufficient stock!'
+        });
+        return;
+    }
+	
       try {
         const response = await fetch("add-to-cart", {
           method: "POST",
