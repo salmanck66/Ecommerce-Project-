@@ -648,17 +648,23 @@ function stockcheck(productsss) {
 
 document.addEventListener('DOMContentLoaded', () => {
 const stockDisplay = document.getElementById('stockDisplay');
+const addToCartButton = document.getElementById('addcart');
 const sizeSelect = document.getElementById('sizeSelect');
 const selectedSize = sizeSelect.value;
 stockDisplay.innerHTML = `{{productsss.stock.S}}`;
+const initialStock = parseInt(stockDisplay.textContent);
+const addToCartForm = document.querySelector('#addToCartForm');
 
+if(initialStock === 0)
+{
+	addToCartButton.textContent = 'Out of Stock';
+    addToCartButton.disabled = true;
+}
 
-
-    const addToCartForm = document.querySelector('#addToCartForm');
     addToCartForm.addEventListener('submit', async (event) => {
       event.preventDefault();
 
-      const stock = parseInt(document.getElementById('stockDisplay').textContent);
+    const stock = parseInt(document.getElementById('stockDisplay').textContent);
     const size = addToCartForm.querySelector('select[name="size"]').value;
     const prdid = addToCartForm.querySelector('input[name="prdid"]').value;
     const qty = parseInt(addToCartForm.querySelector('input[name="qty"]').value);
@@ -673,7 +679,7 @@ stockDisplay.innerHTML = `{{productsss.stock.S}}`;
         });
         return;
     }
-	
+
       try {
         const response = await fetch("add-to-cart", {
           method: "POST",
