@@ -616,6 +616,12 @@
 		</div>
 	</section>
 
+	<p id="S">{{productsss.stock.S}}</p>
+	<p id="M">{{productsss.stock.M}}</p>
+	<p id="L">{{productsss.stock.L}}</p>
+	<p id="XL">{{productsss.stock.XL}}</p>
+	<p id="XXL">{{productsss.stock.XXL}}</p>
+
 <script>
 
 function stockcheck(productsss) {
@@ -675,14 +681,44 @@ const stock = parseInt(document.getElementById('stockDisplay').textContent);
     const qty = parseInt(addToCartForm.querySelector('input[name="qty"]').value);
     console.log(size, qty, stock);
 	var numProductInput = $(this).closest('.wrap-num-product').find('.num-product');
-
-	if(initialStock == '0')
+	const stockS = parseInt(document.getElementById('S').textContent);
+	const stockM = parseInt(document.getElementById('M').textContent);
+	const stockL = parseInt(document.getElementById('L').textContent);
+	const stockXL = parseInt(document.getElementById('XL').textContent);
+	const stockXXL = parseInt(document.getElementById('XXL').textContent);
+	if(size === 'S' && stockS === 0)
 	{
 		addToCartButton.textContent = 'Out of Stock';
         addToCartButton.disabled = true;
 		addToCartButton.style.backgroundColor = "black"
 		Input.hidden = true
-
+	}else
+	if(size === 'M' && stockM === 0)
+	{
+		addToCartButton.textContent = 'Out of Stock';
+        addToCartButton.disabled = true;
+		addToCartButton.style.backgroundColor = "black"
+		Input.hidden = true
+	}else
+	if(size === 'L' && stockL === 0)
+	{
+		addToCartButton.textContent = 'Out of Stock';
+        addToCartButton.disabled = true;
+		addToCartButton.style.backgroundColor = "black"
+		Input.hidden = true
+	}else
+	if(size === 'XL' && stockXL === 0)
+	{
+		addToCartButton.textContent = 'Out of Stock';
+        addToCartButton.disabled = true;
+		addToCartButton.style.backgroundColor = "black"
+		Input.hidden = true
+	}else
+	{
+		addToCartButton.textContent = 'Out of Stock';
+        addToCartButton.disabled = true;
+		addToCartButton.style.backgroundColor = "black"
+		Input.hidden = true
 	}
 
     addToCartForm.addEventListener('submit', async (event) => {
