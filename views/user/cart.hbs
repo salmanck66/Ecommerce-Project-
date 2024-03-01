@@ -129,7 +129,7 @@ $(document).ready(function() {
     $('.table_row').each(function() {
         // Retrieve the quantity input element
         var $quantityInput = $(this).find('.qtyinput');
-        // Retrieve the current quantity value
+        var $stock = $(this).find('.qtyinput');
         var currentQuantity = parseInt($quantityInput.val());
         
     });

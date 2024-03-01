@@ -139,30 +139,55 @@ let homePage = async (req, res) => {
   }
 };
 
-let payment = (req, res) => {
+let payment =async (req, res) => {
+  if (req.cookies.jwt) {
+    let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
+    var userName = tokenExracted.userName;
+    console.log(userName);
+  }
   console.log("home");
-  res.render("user/payments");
+  res.render("user/payments",{userName});
 };
 
-let contact = (req, res) => {
+let contact = async (req, res) => {
+  if (req.cookies.jwt) {
+    let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
+    var userName = tokenExracted.userName;
+    console.log(userName);
+  }
   console.log("contact");
-  res.render("user/contact", { layout: "layout" });
+  res.render("user/contact", { userName,layout: "layout" });
 };
-let about = (req, res) => {
+let about =async (req, res) => {
+  if (req.cookies.jwt) {
+    let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
+    var userName = tokenExracted.userName;
+    console.log(userName);
+  }
   console.log("about");
-  res.render("user/about");
+  res.render("user/about",{userName});
 };
-let product = (req, res) => {
+let product =async (req, res) => {
+  if (req.cookies.jwt) {
+    let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
+    var userName = tokenExracted.userName;
+    console.log(userName);
+  }
   console.log("product");
-  res.render("user/product");
+  res.render("user/product",{userName});
 };
 let productdetail = async (req, res) => {
   try {
     const id = req.query.id
+    if (req.cookies.jwt) {
+      let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
+      var userName = tokenExracted.userName;
+      console.log(userName);
+    }
   
     const productsss = await Product.findById(id); // Adding await here to wait for the query to complete
     console.log(productsss)
-    res.render("user/product-detail", { layout: "layout.hbs" ,productsss}); // Adding await here as well
+    res.render("user/product-detail", { layout: "layout.hbs" ,productsss,userName}); // Adding await here as well
 
   } catch (error) {
     console.log(error);
@@ -282,6 +307,8 @@ let addtocart = async (req, res) => {
     try {
       let tokenExracted = await verifyUser(req.cookies.jwt);
       console.log(tokenExracted.userId);
+        var userName = tokenExracted.userName;
+        console.log(userName);
       
       // Check if user is authenticated
       if (!tokenExracted.userId) {
@@ -319,15 +346,10 @@ let addtocart = async (req, res) => {
             item.message = `Quantity reduced to match available stock (${item.quantity} available)`;
         }
     });
-
-      cart.items.forEach(item => {
-        if (item.quantity > 5) {
-            item.quantity = 5;
-        }
-    });
+    
 
       await cart.save();
-      res.render("user/cart",{ items: cartItems, totalPrice: totalPrice });
+      res.render("user/cart",{ items: cartItems, totalPrice: totalPrice,userName });
 
     } catch (error) {
       console.error('Error viewing cart:', error);
@@ -357,25 +379,46 @@ let removeCartItem = async (req,res)=>
 
 
 
-let help = (req, res) => {
+let help =async (req, res) => {
+  if (req.cookies.jwt) {
+    let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
+    var userName = tokenExracted.userName;
+    console.log(userName);
+  }
   console.log("help");
-  res.render("user/help");
+  res.render("user/help",{userName});
 };
-let wishlist = (req, res) => {
+let wishlist =async (req, res) => {
+  if (req.cookies.jwt) {
+    let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
+    var userName = tokenExracted.userName;
+    console.log(userName);
+  }
+  
   console.log("produuct");
-  res.render("user/wishlist");
+  res.render("user/wishlist",{userName});
 };
-let userprofile = (req, res) => {
+let userprofile =async (req, res) => {
+  if (req.cookies.jwt) {
+    let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
+    var userName = tokenExracted.userName;
+    console.log(userName);
+  }
   console.log("userprofile");
-  res.render("user/userprofile");
+  res.render("user/userprofile",{userName});
 };
-let checkout = (req, res) => {
+let checkout = async(req, res) => {
   console.log("checkout");
-  res.render("user/checkout");
+  res.render("user/checkout",{userName});
 };
-let ordercomplete = (req, res) => {
+let ordercomplete =async (req, res) => {
+  if (req.cookies.jwt) {
+    let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
+    var userName = tokenExracted.userName;
+    console.log(userName);
+  }
   console.log("ordercomplete");
-  res.render("user/ordercomplete");
+  res.render("user/ordercomplete",{userName});
 };
 
 // let signin = (req, res) => {
@@ -392,9 +435,14 @@ let forgetpass = (req, res) => {
   console.log("forgetpass");
   res.render("user/forget", { layout: false });
 };
-let invoice = (req, res) => {
+let invoice =async (req, res) => {
+  if (req.cookies.jwt) {
+    let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
+    var userName = tokenExracted.userName;
+    console.log(userName);
+  }
   console.log("invoice");
-  res.render("user/invoice");
+  res.render("user/invoice",{userName});
 };
 module.exports = {
   payment,
