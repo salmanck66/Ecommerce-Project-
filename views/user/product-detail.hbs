@@ -652,6 +652,7 @@ let checkStock=parseInt(stockDisplay.textContent);
 	if(checkStock===0){
 	const addToCartButton = document.getElementById('addcart');
 	addToCartButton.textContent = 'Out Of Stock';
+	addToCartButton.style.backgroundColor = "black"
     addToCartButton.disabled = true;
 	document.getElementById('wrap-num-product').hidden = true
 	}else
@@ -686,40 +687,33 @@ const stock = parseInt(document.getElementById('stockDisplay').textContent);
 	const stockL = parseInt(document.getElementById('L').textContent);
 	const stockXL = parseInt(document.getElementById('XL').textContent);
 	const stockXXL = parseInt(document.getElementById('XXL').textContent);
-	if(size === 'S' && stockS === 0)
-	{
-		addToCartButton.textContent = 'Out of Stock';
+
+	 if (selectedSize === 'S' && stockS === 0) {
+        addToCartButton.textContent = 'Out of Stock';
         addToCartButton.disabled = true;
-		addToCartButton.style.backgroundColor = "black"
-		Input.hidden = true
-	}else
-	if(size === 'M' && stockM === 0)
-	{
-		addToCartButton.textContent = 'Out of Stock';
+        addToCartButton.style.backgroundColor = "black";
+        Input.hidden = true;
+    } else if (selectedSize === 'M' && stockM === 0) {
+        addToCartButton.textContent = 'Out of Stock';
         addToCartButton.disabled = true;
-		addToCartButton.style.backgroundColor = "black"
-		Input.hidden = true
-	}else
-	if(size === 'L' && stockL === 0)
-	{
-		addToCartButton.textContent = 'Out of Stock';
+        addToCartButton.style.backgroundColor = "black";
+        Input.hidden = true;
+    } else if (selectedSize === 'L' && stockL === 0) {
+        addToCartButton.textContent = 'Out of Stock';
         addToCartButton.disabled = true;
-		addToCartButton.style.backgroundColor = "black"
-		Input.hidden = true
-	}else
-	if(size === 'XL' && stockXL === 0)
-	{
-		addToCartButton.textContent = 'Out of Stock';
+        addToCartButton.style.backgroundColor = "black";
+        Input.hidden = true;
+    } else if (selectedSize === 'XL' && stockXL === 0) {
+        addToCartButton.textContent = 'Out of Stock';
         addToCartButton.disabled = true;
-		addToCartButton.style.backgroundColor = "black"
-		Input.hidden = true
-	}else
-	{
-		addToCartButton.textContent = 'Out of Stock';
-        addToCartButton.disabled = true;
-		addToCartButton.style.backgroundColor = "black"
-		Input.hidden = true
-	}
+        addToCartButton.style.backgroundColor = "black";
+        Input.hidden = true;
+    } else {
+        addToCartButton.textContent = 'Add to Cart';
+        addToCartButton.disabled = false;
+        addToCartButton.style.backgroundColor = ""; // Reset button color
+        Input.hidden = false; // Show input
+    }
 
     addToCartForm.addEventListener('submit', async (event) => {
       event.preventDefault();
