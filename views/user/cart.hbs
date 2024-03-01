@@ -55,6 +55,7 @@
 									</td>
 									<td class="column-5 tp">{{this.totalPrice}}</td>
 								</tr>
+								<p id="out-of-stock-message" hidden>Out Of Stock</p>
 								{{/each}}
 							</table>
 						</div>
@@ -125,17 +126,25 @@
 
 <script>
 $(document).ready(function() {
-    // Iterate through each row in the table
-    $('.table_row').each(function() {
-        // Retrieve the quantity input element
-        var $quantityInput = $(this).find('.qtyinput');
-        var $stock = $(this).find('.qtyinput');
-        var currentQuantity = parseInt($quantityInput.val());
-        
-    });
-	
-});
 
+	    function checkQuantityMatchStock() {
+        $('.qtyinput').each(function() {
+            var $tableRow = $(this).closest('.table_row');
+            var stock = parseInt($tableRow.find('.column-7').text());
+            var newQuantity = parseInt($(this).val());
+            
+            if (newQuantity > stock) {
+                Swal.fire(`Available Stock Is ${stock}, Please Adjust Quantity Accordingly`, '', 'warning');
+                $(this).val(stock);
+            }
+        });
+    }
+
+    // Call the function when the page loads
+    checkQuantityMatchStock();
+
+
+})
 $('.qtyinput').on('change', function() {
     console.log("button clicked");
     

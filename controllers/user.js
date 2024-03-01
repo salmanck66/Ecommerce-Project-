@@ -275,13 +275,13 @@ let addtocart = async (req, res) => {
       return res.status(404).json({ error: 'Product not found' });
     }
 
-    if (product.stock[size] < qty) {
-      return res.status(400).json({ error: 'Not enough stock available' });
-    }
+    // if (product.stock[size] < qty) {
+    //   return res.status(400).json({ error: 'Not enough stock available' });
+    // }
 
-    // Reduce the stock of the product
-    product.stock[size] -= qty;
-    await product.save();
+    // // Reduce the stock of the product
+    // product.stock[size] -= qty;
+    // await product.save();
 
 
     // Add the product to the user's cart
