@@ -731,6 +731,10 @@ const stock = parseInt(document.getElementById('stockDisplay').textContent);
             title: 'Oops...',
             text: 'Insufficient stock!'
         });
+		addToCartButton.textContent = 'Out of Stock';
+        addToCartButton.disabled = true;
+        addToCartButton.style.backgroundColor = "black";
+        Input.hidden = true;
         return;
     }
 
