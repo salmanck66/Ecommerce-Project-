@@ -5,6 +5,8 @@ const Product = require("../models/product");
 const Category = require("../models/category");
 const Banner = require("../models/banner");
 const Cart = require("../models/cart");
+const User = require("../models/users");
+const Wishlist = require("../models/wishlist");
 const { session } = require("passport");
 const url = require('url');
 
@@ -116,6 +118,8 @@ let homePage = async (req, res) => {
   if (req.cookies.jwt) {
     let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
     var userName = tokenExracted.userName;
+    var userId = tokenExracted.userId;
+    console.log("uid",userId);
     console.log(userName);
   }
   if (userName) {
@@ -124,6 +128,7 @@ let homePage = async (req, res) => {
     const category = await Category.find();
     const banner = await Banner.find();
     return res.render("user/index", {
+      userId,
       userName,
       category,
       banner,
@@ -135,7 +140,7 @@ let homePage = async (req, res) => {
     const products = await Product.find();
     const category = await Category.find();
     const banner = await Banner.find();
-    res.render("user/index", { data: products, category, banner });
+    res.render("user/index", { data: products, category, banner,userId });
   }
 };
 
@@ -250,7 +255,55 @@ let updatecart = async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 }
+let addtowishlist = async (req, res) => {
+  try {
+      const { userId, productId } = req.body;
+      console.log("userid:",userId,"pid:",productId);
 
+      // Check if user and product exist
+      const user = await User.findById(userId);
+      const product = await Product.findById(productId);
+
+      if (!user) {
+          return res.status(404).json({ error: 'User not found' });
+      }
+
+      if (!product) {
+          return res.status(404).json({ error: 'Product not found' });
+      }
+      if (!userId || !productId) {
+        return res.status(400).json({ error: 'User ID or Product ID is missing in the request body' });
+    }
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ error: 'Invalid user ID' });
+  }
+
+      // Add product to the wishlist
+      const wishlist = await Wishlist.findOne({ user: userId });
+
+      if (!wishlist) {
+          // If user's wishlist doesn't exist, create a new wishlist
+          const newWishlist = new Wishlist({ user: userId, products: [productId] });
+          await newWishlist.save();
+      }
+      const pindex =wishlist.products.indexOf(productId);
+      if(pindex!==-1)
+      {
+        wishlist.products.splice(pindex,1);
+        await wishlist.save()
+        return res.status(200).json({ message: 'Product removed from wishlist successfully' });
+      } else {
+          // If wishlist exists, add the product to the products array
+          wishlist.products.push(productId);
+          await wishlist.save();
+      }
+
+      res.status(200).json({ message: 'Product added to wishlist successfully' });
+  } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Internal server error' });
+  }
+}
 
 
 let addtocart = async (req, res) => {
@@ -475,5 +528,5 @@ module.exports = {
   loginGetPage,
   logoutPage,
   addtocart,
-  viewCart,updatecart,removeCartItem
+  viewCart,updatecart,removeCartItem,addtowishlist
 };

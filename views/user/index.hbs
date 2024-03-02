@@ -381,10 +381,11 @@
 							</div>
 
 							<div class="block2-txt-child2 flex-r p-t-3">
-								<a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
-									<img class="icon-heart1 dis-block trans-04" src="images/icons/icon-heart-01.png" alt="ICON">
-									<img class="icon-heart2 dis-block trans-04 ab-t-l" src="images/icons/icon-heart-02.png" alt="ICON">
-								</a>
+							<a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2" onclick="addToWishlist('{{../userId}}', '{{this._id}}')">
+    						<img class="icon-heart1 dis-block trans-04" src="images/icons/icon-heart-01.png" alt="ICON">
+    						<img class="icon-heart2 dis-block trans-04 ab-t-l" src="images/icons/icon-heart-02.png" alt="ICON">
+							</a>
+
 							</div>
 						</div>
 					</div>
@@ -400,7 +401,9 @@
 			</div>
 		</div>
 	</section>
-
+{{#if userId}}
+        <p>User ID: {{userId}}</p>
+    {{/if}}
 
 
 
@@ -540,11 +543,11 @@
 
 							<!--  -->
 							<div class="flex-w flex-m p-l-100 p-t-40 respon7">
-								<div class="flex-m bor9 p-r-10 m-r-11">
-									<a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 js-addwish-detail tooltip100" data-tooltip="Add to Wishlist">
-										<i class="zmdi zmdi-favorite"></i>
-									</a>
-								</div>
+<div class="flex-m bor9 p-r-10 m-r-11">
+    <div class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2">
+        <i class="zmdi zmdi-favorite"></i>
+    </div>
+</div>
 
 								<a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100" data-tooltip="Facebook">
 									<i class="fa fa-facebook"></i>
@@ -581,6 +584,26 @@
 				dropdownParent: $(this).next('.dropDownSelect2')
 			});
 		})
+		function addToWishlist(userId, productId) {
+			console.log("call")
+    fetch('add-to-wishlist', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ userId, productId })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to add product to wishlist');
+        }
+        // Handle success
+        console.log('Product added to wishlist successfully');
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
 	</script>
 <!--===============================================================================================-->
 	<script src="vendor/daterangepicker/moment.min.js"></script>
@@ -663,8 +686,6 @@
 				ps.update();
 			})
 		});
-
-
 
 	</script>
 <!--===============================================================================================-->
