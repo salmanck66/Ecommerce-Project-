@@ -1,4 +1,5 @@
 const Handlebars = require('handlebars');
+const {isInWishlist} = require('../helpers/userhelper');
 
 Handlebars.registerHelper('ifCond', function(v1, operator, v2, options) {
     switch (operator) {
@@ -33,3 +34,4 @@ Handlebars.registerHelper('ifEquals', function(arg1, arg2, options) {
 Handlebars.registerHelper('lookup', function(obj, key) {
     return obj[key];
   });
+

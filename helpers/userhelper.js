@@ -7,6 +7,8 @@ var objectId =require('mongodb').ObjectId
 const util = require('util');
 const { product } = require('../controllers/user');
 const { response } = require('express');
+const Wishlist = require("../models/wishlist")
+const Handlebars = ("handlebars");
 
 function signupHelper(recievedUserData) {
     const { firstName, lastName, mail, phoneNumber, password } = recievedUserData
@@ -79,7 +81,36 @@ function signupHelper(recievedUserData) {
       }
     })
   }
+
+  const isInWishlist = async (userId, productId) => {
+
+    try {
+  
+      const wishlist = await Wishlist.findOne({ user: userId });
+  
+      if (!wishlist) {
+  
+        return false;
+  
+      }
+  
+      return wishlist.products.includes(productId);
+  
+    } catch (error) {
+  
+      console.error('Error checking wishlist:', error);
+  
+      throw error;
+  
+    }
+  
+  };
+  
+  
+
+
+
   
 module.exports = {
-     signupHelper, loginHelper,addToCart
+     signupHelper, loginHelper,addToCart,isInWishlist
   }

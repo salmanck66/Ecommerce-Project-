@@ -3,6 +3,8 @@ const router=express.Router()
 const userControllers=require('../controllers/user')
 const {userLogined} = require('../middleware/jwt')
 const {authMiddleware} = require('../middleware/auth')
+const { isInWishlist } = require('../helpers/userhelper');
+
 const passport = require('passport');
 require("../passport")
 router.use(passport.initialize())

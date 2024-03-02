@@ -14,7 +14,7 @@ const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-acce
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const multer = require('./middleware/multer');
-
+const {isInWishlist} = require("./helpers/userhelper");
 
 
 
@@ -24,7 +24,12 @@ app.engine('hbs',
   extname: 'hbs',
   defaultLayout: 'layout',
   layoutsDir: path.join(__dirname, '/views/layout/'),
-  partialsDir: path.join(__dirname, '/views/partials/')
+  partialsDir: path.join(__dirname, '/views/partials/'),
+  helpers: {
+    isInWishlist: (userId, productId) => isInWishlist(userId, productId)
+    // You can also directly pass the function reference if it doesn't require additional parameters:
+    // isInWishlist
+}
 }));
 
 app.use(session({   //FOR GOOGLE VERIFICATION

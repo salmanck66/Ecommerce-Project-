@@ -306,6 +306,7 @@ let addtowishlist = async (req, res) => {
 }
 
 
+
 let addtocart = async (req, res) => {
   try {
     let tokenExracted = await verifyUser(req.cookies.jwt);

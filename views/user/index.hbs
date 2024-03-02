@@ -380,18 +380,27 @@
 								<span class="badge rounded-pill badge-danger mt-1 p-2">{{this.tags}}</span>
 							</div>
 
-							<div class="block2-txt-child2 flex-r p-t-3">
-							<a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2" onclick="addToWishlist('{{../userId}}', '{{this._id}}')">
-    						<img class="icon-heart1 dis-block trans-04" src="images/icons/icon-heart-01.png" alt="ICON">
-    						<img class="icon-heart2 dis-block trans-04 ab-t-l" src="images/icons/icon-heart-02.png" alt="ICON">
-							</a>
-
-							</div>
+<div class="block2-txt-child2 flex-r p-t-3">
+        <a href="#" class=" dis-block pos-relative " onclick="addToWishlist('{{../userId}}', '{{this._id}}')">
+            {{#if ../userId}}
+                {{#if (isInWishlist ../userId this._id)}}
+                    <img class="icon-heart1 dis-block trans-04" src="images/icons/icon-heart-02.png" alt="ICON">
+                {{else}}
+                    <img class="icon-heart2 dis-block trans-04 ab-t-l" src="images/icons/icon-heart-01.png" alt="ICON">
+                {{/if}}
+            {{else}}
+                <img class="icon-heart2 dis-block trans-04 ab-t-l" src="images/icons/icon-heart-01.png" alt="ICON">
+            {{/if}}
+        </a>
+    </div>
 						</div>
 					</div>
 				</div></a>
 				{{/each}}
 			</div>
+			{{#if message}}
+			<p>{{message}}</p>
+			{{/if}}
 
 			<!-- Load more -->
 			<div class="flex-c-m flex-w w-full p-t-45">
@@ -635,31 +644,7 @@
 <!--===============================================================================================-->
 	<script src="vendor/sweetalert/sweetalert.min.js"></script>
 	<script>
-		$('.js-addwish-b2').on('click', function(e){
-			e.preventDefault();
-		});
-
-		$('.js-addwish-b2').each(function(){
-			var nameProduct = $(this).parent().parent().find('.js-name-b2').html();
-			$(this).on('click', function(){
-				swal(nameProduct, "is added to wishlist !", "success");
-
-				$(this).addClass('js-addedwish-b2');
-				$(this).off('click');
-			});
-		});
-
-		$('.js-addwish-detail').each(function(){
-			var nameProduct = $(this).parent().parent().parent().find('.js-name-detail').html();
-
-			$(this).on('click', function(){
-				swal(nameProduct, "is added to wishlist !", "success");
-
-				$(this).addClass('js-addedwish-detail');
-				$(this).off('click');
-			});
-		});
-
+		
 		/*---------------------------------------------*/
 
 		$('.js-addcart-detail').each(function(){
