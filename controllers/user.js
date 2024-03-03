@@ -424,7 +424,7 @@ let removeCartItem = async (req,res)=>
 {
   try {
     console.log("remove");
-    let tokenExracted = await verifyUser(req.cookies.jwt);
+  let tokenExracted = await verifyUser(req.cookies.jwt);
   const userId = tokenExracted.userId;
   const { size, id } = req.body;
   console.log(size,id);
@@ -451,16 +451,26 @@ let help =async (req, res) => {
   console.log("help");
   res.render("user/help",{userName});
 };
-let wishlist =async (req, res) => {
+let wishlist = async (req, res) => {
   if (req.cookies.jwt) {
-    let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
-    var userName = tokenExracted.userName;
-    console.log(userName);
+    try {
+      let tokenExracted = await verifyUser(req.cookies.jwt);
+      let userName = tokenExracted.userName;
+      let userid = tokenExracted.userId;
+      console.log("wishid", userid);
+      
+      const wishlists = await Wishlist.find({ user: userid }).populate('products');
+      // Use populate to retrieve the product details associated with each wishlist item
+
+      console.log(wishlists);
+
+      res.render("user/wishlist", { wishlists, userName });
+    } catch (error) {
+      res.render("error", { print: error });
+    }
   }
-  
-  console.log("produuct");
-  res.render("user/wishlist",{userName});
 };
+  
 let userprofile =async (req, res) => {
   if (req.cookies.jwt) {
     let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
@@ -507,7 +517,18 @@ let invoice =async (req, res) => {
   console.log("invoice");
   res.render("user/invoice",{userName});
 };
-module.exports = {
+
+const delwish = async (req, res) => {
+  try {
+    const { productId } = req.params;
+    // Assuming you have a function to remove a product from the wishlist based on its ID
+    await Wishlist.findOneAndUpdate({ "products": productId }, { "$pull": { "products": productId } });
+    res.status(200).json({ message: 'Product removed from wishlist successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+module.exports = {delwish,
   payment,
   ResetPassword,
   homePage,

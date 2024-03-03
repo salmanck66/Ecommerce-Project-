@@ -48,5 +48,5 @@ router.post('/login', userControllers.loginPostPage);
 
 router.get('/logout',userControllers.logoutPage)
 router.get('/resetpass',userControllers.ResetPassword)
-
+router.delete('/wishlist/:productId',authMiddleware,userControllers.delwish)
 module.exports=router;

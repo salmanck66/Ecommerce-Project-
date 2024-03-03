@@ -1,6 +1,4 @@
 const Handlebars = require('handlebars');
-const {isInWishlist} = require('../helpers/userhelper');
-
 Handlebars.registerHelper('ifCond', function(v1, operator, v2, options) {
     switch (operator) {
         case '==':

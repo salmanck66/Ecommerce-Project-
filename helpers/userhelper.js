@@ -59,58 +59,24 @@ function signupHelper(recievedUserData) {
       throw error;
     }
   }
-  let  addToCart =  (proId,userId)=>
-  {
-    return new Promise(async(res,rej)=>
-    {
-      let usercart = await db.get().collection(collection.Cart.findOne({user:objectId(userId)}))
-      if(usercart)
-      {
-
-      }else
-      {
-        let cartobj =
-        {
-          user:objectId(userId),
-          products:[objectId(proId)]
-        }
-        db.get.collection(collection.Cart).insertOne(cartObj).then(()=>
-        {
-          res.redirect('/')
-        })
+  let addToCart = (proId, userId) => {
+    return new Promise(async (res, rej) => {
+      let userCart = await db.get().collection(collection.Cart).findOne({ user: objectId(userId) });
+      if (userCart) {
+        // Handle existing user cart
+      } else {
+        let cartObj = {
+          user: objectId(userId),
+          products: [objectId(proId)]
+        };
+        db.get().collection(collection.Cart).insertOne(cartObj).then(() => {
+          res.redirect('/');
+        });
       }
-    })
-  }
-
-  const isInWishlist = async (userId, productId) => {
-
-    try {
-  
-      const wishlist = await Wishlist.findOne({ user: userId });
-  
-      if (!wishlist) {
-  
-        return false;
-  
-      }
-  
-      return wishlist.products.includes(productId);
-  
-    } catch (error) {
-  
-      console.error('Error checking wishlist:', error);
-  
-      throw error;
-  
-    }
-  
+    });
   };
-  
-  
-
-
 
   
 module.exports = {
-     signupHelper, loginHelper,addToCart,isInWishlist
+     signupHelper, loginHelper,addToCart
   }

@@ -382,15 +382,8 @@
 
 <div class="block2-txt-child2 flex-r p-t-3">
         <a href="#" class=" dis-block pos-relative " onclick="addToWishlist('{{../userId}}', '{{this._id}}')">
-            {{#if ../userId}}
-                {{#if (isInWishlist ../userId this._id)}}
                     <img class="icon-heart1 dis-block trans-04" src="images/icons/icon-heart-02.png" alt="ICON">
-                {{else}}
                     <img class="icon-heart2 dis-block trans-04 ab-t-l" src="images/icons/icon-heart-01.png" alt="ICON">
-                {{/if}}
-            {{else}}
-                <img class="icon-heart2 dis-block trans-04 ab-t-l" src="images/icons/icon-heart-01.png" alt="ICON">
-            {{/if}}
         </a>
     </div>
 						</div>
