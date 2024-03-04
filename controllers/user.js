@@ -5,6 +5,7 @@ const Product = require("../models/product");
 const Category = require("../models/category");
 const Banner = require("../models/banner");
 const Cart = require("../models/cart");
+const Coupon = require("../models/coupon");
 const User = require("../models/users");
 const Wishlist = require("../models/wishlist");
 const { session } = require("passport");
@@ -309,6 +310,42 @@ let addtowishlist = async (req, res) => {
   }
 }
 
+let discount = async (req, res) => {
+  try {
+      const { couponCode, cartTotal } = req.body;
+      
+
+      // Check if the coupon code exists in the database
+      const coupon = await Coupon.findOne({couponCode});
+      console.log(coupon);
+
+      if (!coupon) {
+          return res.status(400).json({ success: false, message: 'Invalid coupon code' });
+          
+      }
+
+      // Check if the coupon is expired
+      if (coupon.expiryDate < Date.now()) {
+          return res.status(400).json({ success: false, message: 'Coupon code has expired' });
+      }
+
+      // Apply discount to the cart total
+      if(coupon.discountType==="percentage")
+      {
+      const discountedTotal = cartTotal - (cartTotal*(coupon.discountValue/100))
+      console.log(discountedTotal)
+      return res.status(200).json({ success: true, message: 'Coupon applied successfully', discountedTotal });
+      }else
+      {
+        const discountedTotal = cartTotal -coupon.discountValue
+        return res.status(200).json({ success: true, message: 'Coupon applied successfully', discountedTotal });
+      }
+      
+  } catch (error) {
+      console.error('Error applying coupon:', error);
+      return res.status(500).json({ success: false, message: 'An error occurred while applying the coupon' });
+  }
+}
 
 
 let addtocart = async (req, res) => {
@@ -532,6 +569,8 @@ const delwish = async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 }
+
+
 module.exports = {delwish,
   payment,
   ResetPassword,
@@ -554,5 +593,5 @@ module.exports = {delwish,
   loginGetPage,
   logoutPage,
   addtocart,
-  viewCart,updatecart,removeCartItem,addtowishlist
+  viewCart,updatecart,removeCartItem,addtowishlist,discount
 };

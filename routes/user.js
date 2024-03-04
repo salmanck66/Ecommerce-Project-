@@ -43,6 +43,8 @@ router.post('/removeItem',authMiddleware,userControllers.removeCartItem)
 
 router.post('/add-to-wishlist',authMiddleware,userControllers.addtowishlist)
 
+router.post('/apply-coupon',authMiddleware,userControllers.discount)
+
 router.post('/signup',userControllers.signUpPostPage);
 router.post('/login', userControllers.loginPostPage);
 

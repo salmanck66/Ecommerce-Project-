@@ -62,17 +62,20 @@
 
 						<div class="flex-w flex-sb-m bor15 p-t-18 p-b-15 p-lr-40 p-lr-15-sm">
 							<div class="flex-w flex-m m-r-20 m-tb-5">
-								<input id="tcoupon" class="tcoupon stext-104 cl2 plh4 size-117 bor13 p-lr-20 m-r-10 m-tb-5" type="text" onchange="validateqty()" name="coupon" placeholder="Coupon Code">
-								
-								<div class=" flex-c-m stext-101 cl2 size-118 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-5">
+								<input id="tcoupon" class="tcoupon stext-104 cl2 plh4 size-117 bor13 p-lr-20 m-r-10 m-tb-5" type="text"  name="coupon" placeholder="Coupon Code">
+								<div class="d-flex justify-content-center align-items-center">
+									<div id="coupbtn" class=" flex-c-m stext-101 cl2 size-118 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-5" onclick="applyCoupon()">
 									Apply coupon
+									</div>
+									<small style="color: red;" id="CouponMessage"></small>
+									<small style="color: green;" id="CouponMessageSuccess"></small>
+									<div id="CouponRemove" style="display: none;" class="ml-2 flex-c-m stext-101 cl2 size-118 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-5" onclick="RemoveCoupon()">
+									Remove Coupon
+									</div>
 								</div>
 							</div>
-
-							<div class="flex-c-m stext-101 cl2 size-119 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-10">
-								<a href="cart"><div class="btn btm-primary">Update Cart</div></a>
-							</div>
 						</div>
+						
 					</div>
 				</div>
 
@@ -107,8 +110,10 @@
 							</div>
 
 							<div class="size-209 p-t-1">
-								<span class="mtext-110 cl2">
-									INR {{totalPrice}}
+								<span class="mtext-110 cl2 d-flex">
+									<p>INR</p> &nbsp;
+									<p id="cart-total">{{totalPrice}}</p>
+									<p id="cart-total-real" style="display: none;">{{totalPrice}}</p>
 								</span>
 							</div>
 						</div>
@@ -210,6 +215,68 @@ $('.remove-item-btn').on('click', function() {
     });
 });
 
+
+ function applyCoupon() {
+    const couponCode = $("#tcoupon").val();
+    const cartTotal = getCartTotal(); // Implement this function to retrieve the current cart total
+	console.log(couponCode,cartTotal)
+
+    // Prepare data to send in the POST request body
+    const data = {
+        couponCode: couponCode,
+        cartTotal: cartTotal
+    };
+
+    // Send POST request to the server
+    fetch('/apply-coupon', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Update cart total with the discounted amount
+            updateCartTotal(data.discountedTotal);
+
+            // Display success message to the user
+            document.getElementById( "CouponMessageSuccess" ).textContent = data.message
+			document.getElementById("coupbtn").style.display = "none"
+			document.getElementById("CouponRemove").style.display = ""
+
+        } else {
+            // Display error message to the user
+			document.getElementById( "CouponMessage" ).textContent = data.message
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while applying the coupon');
+    });
+}
+function getCartTotal() {
+    // Assuming you have a variable or a DOM element that contains the cart total
+    const cartTotalElement = document.getElementById('cart-total');
+    if (cartTotalElement) {
+        return parseFloat(cartTotalElement.textContent);
+    } else {
+        // If the cart total element is not found or unavailable, return 0
+        return 0;
+    }
+}
+function updateCartTotal(value)
+{
+	document.getElementById('cart-total').textContent = value
+}
+function RemoveCoupon()
+{
+	let value=document.getElementById('cart-total-real').textContent
+	document.getElementById('cart-total').textContent = value
+	document.getElementById( "CouponMessageSuccess" ).style.display = "none"
+	document.getElementById("coupbtn").style.display = ""
+}
 
 </script>
 
