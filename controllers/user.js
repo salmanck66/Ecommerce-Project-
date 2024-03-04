@@ -257,51 +257,55 @@ let updatecart = async (req, res) => {
 }
 let addtowishlist = async (req, res) => {
   try {
-      const { userId, productId } = req.body;
-      console.log("userid:",userId,"pid:",productId);
+    const { userId, productId } = req.body;
+    console.log("userid:", userId, "pid:", productId);
 
-      // Check if user and product exist
-      const user = await User.findById(userId);
-      const product = await Product.findById(productId);
+    // Check if user and product exist
+    const user = await User.findById(userId);
+    const product = await Product.findById(productId);
 
-      if (!user) {
-          return res.status(404).json({ error: 'User not found' });
-      }
-
-      if (!product) {
-          return res.status(404).json({ error: 'Product not found' });
-      }
-      if (!userId || !productId) {
-        return res.status(400).json({ error: 'User ID or Product ID is missing in the request body' });
+    if (!user) {
+      return res.status(401).redirect("/login", { error: 'User not authenticated' });
     }
+
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    if (!userId || !productId) {
+      return res.status(400).json({ error: 'User ID or Product ID is missing in the request body' });
+    }
+
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(400).json({ error: 'Invalid user ID' });
-  }
+    }
 
-      // Add product to the wishlist
-      const wishlist = await Wishlist.findOne({ user: userId });
+    // Check if user's wishlist exists
+    let wishlist = await Wishlist.findOne({ user: userId });
 
-      if (!wishlist) {
-          // If user's wishlist doesn't exist, create a new wishlist
-          const newWishlist = new Wishlist({ user: userId, products: [productId] });
-          await newWishlist.save();
-      }
-      const pindex =wishlist.products.indexOf(productId);
-      if(pindex!==-1)
-      {
-        wishlist.products.splice(pindex,1);
-        await wishlist.save()
-        return res.status(200).json({ message: 'Product removed from wishlist successfully' });
-      } else {
-          // If wishlist exists, add the product to the products array
-          wishlist.products.push(productId);
-          await wishlist.save();
-      }
+    if (!wishlist) {
+      // If user's wishlist doesn't exist, create a new wishlist
+      const newWishlist = new Wishlist({ user: userId, products: [productId] });
+      await newWishlist.save();
+      res.status(200).json({ message: 'Product added to wishlist successfully', icon: 'success' });
+    }
 
-      res.status(200).json({ message: 'Product added to wishlist successfully' });
+    // Check if the product is already in the wishlist
+    const pindex = wishlist.products.indexOf(productId);
+    if (pindex !== -1) {
+      // If product exists, remove it from the wishlist
+      wishlist.products.splice(pindex, 1);
+      await wishlist.save();
+      res.status(200).json({ message: 'Product removed from wishlist successfully', icon: 'error' });
+    } else {
+      // If product doesn't exist, add it to the wishlist
+      wishlist.products.push(productId);
+      await wishlist.save();
+      res.status(200).json({ message: 'Product added to wishlist successfully', icon: 'success' });
+    }
   } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: 'Internal server error' });
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
   }
 }
 

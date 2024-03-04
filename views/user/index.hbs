@@ -380,13 +380,12 @@
 								</div>
 								<span class="badge rounded-pill badge-danger mt-1 p-2">{{this.tags}}</span>
 							</div>
-
-<div class="block2-txt-child2 flex-r p-t-3">
-        <a href="#" class=" dis-block pos-relative " onclick="addToWishlist('{{../userId}}', '{{this._id}}')">
+						<div class="block2-txt-child2 flex-r p-t-3">
+        			<a  style="cursor: pointer;" class=" dis-block pos-relative " onclick="addToWishlist('{{../userId}}', '{{this._id}}')">
                     <img class="icon-heart1 dis-block trans-04" src="images/icons/icon-heart-02.png" alt="ICON">
                     <img class="icon-heart2 dis-block trans-04 ab-t-l" src="images/icons/icon-heart-01.png" alt="ICON">
-        </a>
-    </div>
+       				 </a>
+    				</div>
 						</div>
 					</div>
 				</div></a>
@@ -588,7 +587,7 @@
 			});
 		})
 		function addToWishlist(userId, productId) {
-			console.log("call")
+    console.log("call")
     fetch('add-to-wishlist', {
         method: 'POST',
         headers: {
@@ -598,10 +597,21 @@
     })
     .then(response => {
         if (!response.ok) {
-            throw new Error('Failed to add product to wishlist');
+            throw new Error('Failed to add/remove product to/from wishlist');
         }
-        // Handle success
-        console.log('Product added to wishlist successfully');
+        return response.json(); // parse JSON response
+    })
+    .then(data => {
+        // Check if the message indicates the product was added or removed
+        const message = data.message;
+        const icon = data.icon; // assuming you send an icon type in the response
+        
+        Swal.fire({
+            text: message,
+            icon: icon, // use the icon type received from the server
+            timer: 2000,
+            showConfirmButton: false
+        });
     })
     .catch(error => {
         console.error('Error:', error);
