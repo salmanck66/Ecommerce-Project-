@@ -424,6 +424,8 @@ let addtocart = async (req, res) => {
 
       // Find the user's cart
       const cart = await Cart.findOne({ user: userId }).populate('items.product');
+      const coupon = await Coupon.find()
+      console.log(coupon)
 
       // Prepare the response data
       const cartItems = cart.items.map(item => {
@@ -438,7 +440,7 @@ let addtocart = async (req, res) => {
           totalPrice: item.quantity * item.product.price // Assuming each product has a 'price' field
         };
       });
-      console.log(cartItems);
+  
 
       const totalPrice = cartItems.reduce((total, item) => total + item.totalPrice, 0);
 
@@ -453,7 +455,7 @@ let addtocart = async (req, res) => {
     
 
       await cart.save();
-      res.render("user/cart",{ items: cartItems, totalPrice: totalPrice,userName });
+      res.render("user/cart",{ items: cartItems, totalPrice: totalPrice,userName,coupon});
 
     } catch (error) {
       console.error('Error viewing cart:', error);

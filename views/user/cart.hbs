@@ -73,6 +73,11 @@
 									Remove Coupon
 									</div>
 								</div>
+							<select class="form-select" aria-label="Default select example" onchange="codeApply()" id="couponCodeSelect">
+							{{#each coupon}}
+    						<option value="{{this.couponCode}}">{{this.couponCode}}</option>
+    						{{/each}}
+							</select>		
 							</div>
 						</div>
 						
@@ -130,6 +135,12 @@
 
 
 <script>
+	 function codeApply() {
+        var select = document.getElementById("couponCodeSelect");
+        var input = document.getElementById("tcoupon");
+        var selectedCouponCode = select.value;
+        input.value = selectedCouponCode;
+    }
 $(document).ready(function() {
 
 	    function checkQuantityMatchStock() {
@@ -266,16 +277,14 @@ function getCartTotal() {
         return 0;
     }
 }
-function updateCartTotal(value)
+
+function updateCartTotal(value,input.value)
 {
 	document.getElementById('cart-total').textContent = value
 }
 function RemoveCoupon()
 {
-	let value=document.getElementById('cart-total-real').textContent
-	document.getElementById('cart-total').textContent = value
-	document.getElementById( "CouponMessageSuccess" ).style.display = "none"
-	document.getElementById("coupbtn").style.display = ""
+	window.location.reload()
 }
 
 </script>
