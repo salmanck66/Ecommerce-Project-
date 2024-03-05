@@ -1,294 +1,276 @@
+<!-- HTML -->
+<!-- Breadcrumb -->
+<div class="container" style="margin-top: 12vh;">
+    <div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
+        <a href="index.html" class="stext-109 cl8 hov-cl1 trans-04">
+            Home
+            <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+        </a>
 
+        <span class="stext-109 cl4">
+            Shopping Cart
+        </span>
+    </div>
+</div>
 
-	<!-- breadcrumb -->
-	<div class="container " style="margin-top: 12vh;">
-		<div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
-			<a href="index.html" class="stext-109 cl8 hov-cl1 trans-04">
-				Home
-				<i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
-			</a>
+<!-- Shoping Cart -->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
+            <div class="m-l-25 m-r--38 m-lr-0-xl">
+                <div class="wrap-table-shopping-cart">
+                    <table class="table-shopping-cart">
+                        <tr class="table_head">
+                            <th class="column-1">Product</th>
+                            <th class="column-2"></th>
+                            <th class="column-3">Price</th>
+                            <th class="column-4">Quantity</th>
+                            <th class="column-5">Total</th>
+                        </tr>
+                        {{#each items}}
+                        <tr class="table_row">
+                            <td class="column-1">
+                                <div class="how-itemcart1">
+                                    <img src="{{this.productImage}}" alt="IMG">
+                                </div>
+                                <form action="removeItem" method="post">
+                                    <input name="id" value="{{this.productId}}" hidden type="text">
+                                    <input name="size" value="{{this.size}}" hidden type="text">
+                                    <button class="btn" type="submit">Remove</button>
+                                </form>
+                            </td>
+                            <td class="column-2">{{this.productName}} <br>Size : {{this.size}}</td>
+                            <td class="column-2 prod" hidden>{{this.productId}}</td>
+                            <td class="column-8 size" hidden>{{this.size}}</td>
+                            <td class="column-3">{{this.price}}</td>
+                            <td class="column-7">{{lookup productstock size}}</td>
+                            <td class="column-4">
+                                <div class="wrap-num-product flex-w  m-r-0 w-50">
+                                    <input class="mtext-104 cl3 txt-center num-product qtyinput w-100"  type="number" name="qty" value="{{this.quantity}}">
+                                </div>
+                            </td>
+                            <td class="column-5 tp">{{this.totalPrice}}</td>
+                        </tr>
+                        <p id="out-of-stock-message" hidden>Out Of Stock</p>
+                        {{/each}}
+                    </table>
+                </div>
 
-			<span class="stext-109 cl4">
-				Shopping Cart
-			</span>
-		</div>
-	</div>
-		
+                <div class="flex-w flex-sb-m bor15 p-t-18 p-b-15 p-lr-40 p-lr-15-sm">
+                    <div class="flex-w flex-m m-r-20 m-tb-5">
+                        <input id="tcoupon" class="tcoupon stext-104 cl2 plh4 size-117 bor13 p-lr-20 m-r-10 m-tb-5" type="text"  name="coupon" placeholder="Coupon Code">
+                        <div class="d-flex justify-content-center align-items-center">
+                            <div id="coupbtn" class=" flex-c-m stext-101 cl2 size-118 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-5" onclick="applyCoupon()">
+                            Apply coupon
+                            </div>
+                            <small style="color: red;" id="CouponMessage"></small>
+                            <small style="color: green;" id="CouponMessageSuccess"></small>
+                            <div id="CouponRemove" style="display: none;" class="ml-2 flex-c-m stext-101 cl2 size-118 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-5" onclick="RemoveCoupon()">
+                            Remove Coupon
+                            </div>
+                        </div>
+                        <select class="form-select" aria-label="Default select example" onchange="codeApply()" id="couponCodeSelect">
+                            {{#each coupon}}
+                            <option value="{{this.couponCode}}">{{this.couponCode}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                </div>
 
-	<!-- Shoping Cart -->
-	 
+            </div>
+        </div>
 
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
-					<div class="m-l-25 m-r--38 m-lr-0-xl">
-						<div class="wrap-table-shopping-cart">
-							<table class="table-shopping-cart">
-								<tr class="table_head">
-									<th class="column-1">Product</th>
-									<th class="column-2"></th>
-									<th class="column-3">Price</th>
-									<th class="column-4">Quantity</th>
-									<th class="column-5">Total</th>
-								</tr>
-								{{#each items}}
-								<tr class="table_row">
-									<td class="column-1">
-										<div class="how-itemcart1">
-											<img src="{{this.productImage}}" alt="IMG">
-										</div>
-										<form action="removeItem" method="post">
-											<input name="id" value="{{this.productId}}" hidden type="text">
-											<input name="size" value="{{this.size}}" hidden type="text">
-											<button class="btn" type="submit">Remove</button>
-										</form>
-									</td>
-									<td class="column-2">{{this.productName}} <br>Size : {{this.size}}</td>
-									<td class="column-2 prod" hidden>{{this.productId}}</td>
-									<td class="column-8 size" hidden>{{this.size}}</td>
-									<td class="column-3">{{this.price}}</td>
-									<td class="column-7">{{lookup productstock size}}</td>
-									<td class="column-4">
-										<div class="wrap-num-product flex-w  m-r-0 w-50">
-											<input class="mtext-104 cl3 txt-center num-product qtyinput w-100"  type="number" name="qty" value="{{this.quantity}}">
-										</div>
-									</td>
-									<td class="column-5 tp">{{this.totalPrice}}</td>
-								</tr>
-								<p id="out-of-stock-message" hidden>Out Of Stock</p>
-								{{/each}}
-							</table>
-						</div>
+        <div class="col-sm-10 col-lg-7 col-xl-5 m-lr-auto m-b-50">
+            <div class="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm">
+                <h4 class="mtext-109 cl2 p-b-30">
+                    Cart Totals
+                </h4>
 
-						<div class="flex-w flex-sb-m bor15 p-t-18 p-b-15 p-lr-40 p-lr-15-sm">
-							<div class="flex-w flex-m m-r-20 m-tb-5">
-								<input id="tcoupon" class="tcoupon stext-104 cl2 plh4 size-117 bor13 p-lr-20 m-r-10 m-tb-5" type="text"  name="coupon" placeholder="Coupon Code">
-								<div class="d-flex justify-content-center align-items-center">
-									<div id="coupbtn" class=" flex-c-m stext-101 cl2 size-118 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-5" onclick="applyCoupon()">
-									Apply coupon
-									</div>
-									<small style="color: red;" id="CouponMessage"></small>
-									<small style="color: green;" id="CouponMessageSuccess"></small>
-									<div id="CouponRemove" style="display: none;" class="ml-2 flex-c-m stext-101 cl2 size-118 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-5" onclick="RemoveCoupon()">
-									Remove Coupon
-									</div>
-								</div>
-							<select class="form-select" aria-label="Default select example" onchange="codeApply()" id="couponCodeSelect">
-							{{#each coupon}}
-    						<option value="{{this.couponCode}}">{{this.couponCode}}</option>
-    						{{/each}}
-							</select>		
-							</div>
-						</div>
-						
-					</div>
-				</div>
+                <div class="flex-w flex-t bor12 p-t-15 p-b-30">
+                    <div class="size-208 w-full-ssm">
 
-				<div class="col-sm-10 col-lg-7 col-xl-5 m-lr-auto m-b-50">
-					<div class="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm">
-						<h4 class="mtext-109 cl2 p-b-30">
-							Cart Totals
-						</h4>
+                    </div>
 
+                    <div class="size-209 p-r-18 p-r-0-sm w-full-ssm">
+                        <p class="stext-111 cl6 p-t-2">
 
+                        <div class="p-t-15">
 
-						<div class="flex-w flex-t bor12 p-t-15 p-b-30">
-							<div class="size-208 w-full-ssm">
+                                
+                        </div>
+                    </div>
+                </div>
+                <div class="flex-w flex-t p-t-27 p-b-33">
+                    <div class="size-208">
+                        <span class="mtext-101 cl2">
+                            Total:
+                        </span>
+                    </div>
 
-							</div>
+                    <div class="size-209 p-t-1">
+                        <span class="mtext-110 cl2 d-flex">
+                            <p>INR</p> &nbsp;
+                            <p id="cart-total">{{totalPrice}}</p>
+                            <p id="cart-total-real" style="display: none;">{{totalPrice}}</p>
+                        </span>
+                    </div>
+                </div>
 
-							<div class="size-209 p-r-18 p-r-0-sm w-full-ssm">
-								<p class="stext-111 cl6 p-t-2">
+                <a href="checkout"><button type="submit" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">
+                    Proceed to Checkout
+                </button>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 
-								
-								<div class="p-t-15">
-
-										
-								</div>
-							</div>
-						</div>
-						<div class="flex-w flex-t p-t-27 p-b-33">
-							<div class="size-208">
-								<span class="mtext-101 cl2">
-									Total:
-								</span>
-							</div>
-
-							<div class="size-209 p-t-1">
-								<span class="mtext-110 cl2 d-flex">
-									<p>INR</p> &nbsp;
-									<p id="cart-total">{{totalPrice}}</p>
-									<p id="cart-total-real" style="display: none;">{{totalPrice}}</p>
-								</span>
-							</div>
-						</div>
-
-						<a href="checkout"><button type="submit" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">
-							Proceed to Checkout
-						</button>
-						</a>
-					</div>
-				</div>
-			</div>
-		</div>
-
-
-
+<!-- JavaScript -->
 <script>
-	 function codeApply() {
+    function codeApply() {
         var select = document.getElementById("couponCodeSelect");
         var input = document.getElementById("tcoupon");
         var selectedCouponCode = select.value;
         input.value = selectedCouponCode;
     }
-$(document).ready(function() {
 
-	    function checkQuantityMatchStock() {
-        $('.qtyinput').each(function() {
-            var $tableRow = $(this).closest('.table_row');
-            var stock = parseInt($tableRow.find('.column-7').text());
-            var newQuantity = parseInt($(this).val());
-            
-            if (newQuantity > stock) {
-                Swal.fire(`Available Stock Is ${stock}, Please Adjust Quantity Accordingly`, '', 'warning');
-                $(this).val(stock);
+    $(document).ready(function() {
+        function checkQuantityMatchStock() {
+            $('.qtyinput').each(function() {
+                var $tableRow = $(this).closest('.table_row');
+                var stock = parseInt($tableRow.find('.column-7').text());
+                var newQuantity = parseInt($(this).val());
+                
+                if (newQuantity > stock) {
+                    Swal.fire(`Available Stock Is ${stock}, Please Adjust Quantity Accordingly`, '', 'warning');
+                    $(this).val(stock);
+                }
+            });
+        }
+
+        // Call the function when the page loads
+        checkQuantityMatchStock();
+    });
+
+    $('.qtyinput').on('change', function() {
+        console.log("button clicked");
+        
+        // Find the closest table row
+        var $tableRow = $(this).closest('.table_row');
+        
+        // Retrieve the product ID and size from the table row
+        var productId = $tableRow.find('.column-2.prod').text();
+        var size = $tableRow.find('.column-8.size').text();
+        var stock = $tableRow.find('.column-7').text()
+        stock = parseInt(stock);
+        console.log(stock)
+
+        var newQuantity = $(this).val();
+        if(newQuantity > parseInt(stock)) {
+            Swal.fire(`Available Stock Is ${parseInt(stock)},Please Adjust Quantity Accordingly` , '','warning')
+            $(this).val(parseInt(stock));
+            return;
+        }
+
+        if (newQuantity <= 0 ) {
+            // Show error message
+            $(this).val(1);
+            Swal.fire("Product Quantity Should Be Greater Than 1")
+            return;
+        } 
+
+        $.ajax({
+            url: '/updateQuantity',
+            method: 'POST',
+            data: { productId: productId, size: size, quantity: newQuantity },
+            success: function(response) {
+                $(this).closest('.table_row').find('.column-5').text('$' + response.totalPrice);
+                window.location.reload()
+            },
+            error: function(error) {
+                console.error('Error updating quantity:', error);
             }
+        });
+    });
+
+    $('.remove-item-btn').on('click', function() {
+        // Retrieve product ID and size from data attributes
+        var productId = $(this).data('product-id');
+
+        var size = $(this).data('size');
+        console.log(productId,size)
+        
+        // Send AJAX request to remove item
+        $.ajax({
+            url: '/removeItem',
+            method: 'POST',
+            data: { productId: productId, size: size },
+            success: function(response) {
+                $(this).closest('.cart-item').remove();
+            },
+            error: function(error) {
+                console.error('Error removing item from cart:', error);
+            }
+        });
+    });
+
+    function applyCoupon() {
+        const couponCode = $("#tcoupon").val();
+        const cartTotal = getCartTotal(); // Implement this function to retrieve the current cart total
+        console.log(couponCode,cartTotal)
+
+        // Prepare data to send in the POST request body
+        const data = {
+            couponCode: couponCode,
+            cartTotal: cartTotal
+        };
+
+        // Send POST request to the server
+        fetch('/apply-coupon', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Update cart total with the discounted amount
+                updateCartTotal(data.discountedTotal);
+
+                // Display success message to the user
+                document.getElementById( "CouponMessageSuccess" ).textContent = data.message
+                document.getElementById("coupbtn").style.display = "none"
+                document.getElementById("CouponRemove").style.display = ""
+				var select = document.getElementById("couponCodeSelect").style.display= "none"
+            } else {
+                // Display error message to the user
+                document.getElementById( "CouponMessage" ).textContent = data.message
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while applying the coupon');
         });
     }
 
-    // Call the function when the page loads
-    checkQuantityMatchStock();
-
-
-})
-$('.qtyinput').on('change', function() {
-    console.log("button clicked");
-    
-    // Find the closest table row
-    var $tableRow = $(this).closest('.table_row');
-    
-    // Retrieve the product ID and size from the table row
-    var productId = $tableRow.find('.column-2.prod').text();
-    var size = $tableRow.find('.column-8.size').text();
-    var stock = $tableRow.find('.column-7').text()
-	stock = parseInt(stock);
-	console.log(stock)
-
-    var newQuantity = $(this).val();
-	if(newQuantity > parseInt(stock))
-	{
-		 Swal.fire(`Available Stock Is ${parseInt(stock)},Please Adjust Quantity Accordingly` , '','warning')
-		 $(this).val(parseInt(stock));
-        return;
-	}
-
-
-    if (newQuantity <= 0 ) {
-        // Show error message
-        $(this).val(1);
-        Swal.fire("Product Quantity Should Be Greater Than 1")
-        return;
-    } 
-
-
-    $.ajax({
-        url: '/updateQuantity',
-        method: 'POST',
-        data: { productId: productId, size: size, quantity: newQuantity },
-        success: function(response) {
-            $(this).closest('.table_row').find('.column-5').text('$' + response.totalPrice);
-			window.location.reload()
-        },
-        error: function(error) {
-            console.error('Error updating quantity:', error);
-        }
-    });
-});
-
-$('.remove-item-btn').on('click', function() {
-    // Retrieve product ID and size from data attributes
-    var productId = $(this).data('product-id');
-
-    var size = $(this).data('size');
-	console.log(productId,size)
-    
-    // Send AJAX request to remove item
-    $.ajax({
-        url: '/removeItem',
-        method: 'POST',
-        data: { productId: productId, size: size },
-        success: function(response) {
-            $(this).closest('.cart-item').remove();
-        },
-        error: function(error) {
-            console.error('Error removing item from cart:', error);
-        }
-    });
-});
-
-
- function applyCoupon() {
-    const couponCode = $("#tcoupon").val();
-    const cartTotal = getCartTotal(); // Implement this function to retrieve the current cart total
-	console.log(couponCode,cartTotal)
-
-    // Prepare data to send in the POST request body
-    const data = {
-        couponCode: couponCode,
-        cartTotal: cartTotal
-    };
-
-    // Send POST request to the server
-    fetch('/apply-coupon', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Update cart total with the discounted amount
-            updateCartTotal(data.discountedTotal);
-
-            // Display success message to the user
-            document.getElementById( "CouponMessageSuccess" ).textContent = data.message
-			document.getElementById("coupbtn").style.display = "none"
-			document.getElementById("CouponRemove").style.display = ""
-
+    function getCartTotal() {
+        // Assuming you have a variable or a DOM element that contains the cart total
+        const cartTotalElement = document.getElementById('cart-total');
+        if (cartTotalElement) {
+            return parseFloat(cartTotalElement.textContent);
         } else {
-            // Display error message to the user
-			document.getElementById( "CouponMessage" ).textContent = data.message
+            // If the cart total element is not found or unavailable, return 0
+            return 0;
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('An error occurred while applying the coupon');
-    });
-}
-function getCartTotal() {
-    // Assuming you have a variable or a DOM element that contains the cart total
-    const cartTotalElement = document.getElementById('cart-total');
-    if (cartTotalElement) {
-        return parseFloat(cartTotalElement.textContent);
-    } else {
-        // If the cart total element is not found or unavailable, return 0
-        return 0;
     }
-}
 
-function updateCartTotal(value,input.value)
-{
-	document.getElementById('cart-total').textContent = value
-}
-function RemoveCoupon()
-{
-	window.location.reload()
-}
+    function updateCartTotal(value) {
+        document.getElementById('cart-total').textContent = value;
+    }
 
+    function RemoveCoupon() {
+        window.location.reload();
+    }
 </script>
-
-		
-	
-		

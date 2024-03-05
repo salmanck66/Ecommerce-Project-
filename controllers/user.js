@@ -420,12 +420,10 @@ let addtocart = async (req, res) => {
       }
       
       const userId = tokenExracted.userId;
-      console.log(userId);
-
       // Find the user's cart
       const cart = await Cart.findOne({ user: userId }).populate('items.product');
       const coupon = await Coupon.find()
-      console.log(coupon)
+      console.log(cart)
 
       // Prepare the response data
       const cartItems = cart.items.map(item => {
@@ -525,6 +523,11 @@ let userprofile =async (req, res) => {
 };
 let checkout = async(req, res) => {
   console.log("checkout");
+  if (req.cookies.jwt) {
+    let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
+    var userName = tokenExracted.userName;
+    console.log(userName);
+  } 
   res.render("user/checkout",{userName});
 };
 let ordercomplete =async (req, res) => {
