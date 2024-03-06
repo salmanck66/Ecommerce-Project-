@@ -1,31 +1,49 @@
 <main>
     <div class="container">
-        <h1>Order Details</h1>
-        <p>Order ID: {{ order.orderId }}</p>
-        <p>Customer Name: {{ order.shippingAddress.firstName }} {{ order.shippingAddress.lastName }}</p>
-        <p>Email: {{ order.shippingAddress.email }}</p>
-        <p>Address: {{ order.shippingAddress.address }}</p>
-        <p>Address 2: {{ order.shippingAddress.address2 }}</p>
-        <p>State: {{ order.shippingAddress.state }}</p>
-        <p>Zip: {{ order.shippingAddress.zip }}</p>
-        <p>Order Date: {{ order.orderDate }}</p>
-        <p>Total Amount: {{ order.totalAmount }}</p>
-        <p>Payment Method: {{ order.paymentMethod }}</p>
-        
-        <h2>Items</h2>
+        <h1 class="mt-4 mb-3">Order Details</h1>
         <div class="row">
-            {{#each order.items}}
-            <div class="col-md-4">
-                <div class="card mb-3">
-                    <img src="{{ this.product.image }}" class="card-img-top" alt="Product Image">
+            <div class="col-lg-6">
+                <div class="card mb-4">
                     <div class="card-body">
-                        <h5 class="card-title">Product Name :{{ this.product.name }}</h5>
-                        <p class="card-text">Quantity: {{ this.quantity }}</p>
-                        <p class="card-text">Size: {{ this.size }}</p>
+                        <h5 class="card-title">Order Information</h5>
+                        <p class="card-text">Order ID: {{ order.orderId }}</p>
+                        <p class="card-text">Customer Name: {{ order.shippingAddress.firstName }} {{ order.shippingAddress.lastName }}</p>
+                        <p class="card-text">Email: {{ order.shippingAddress.email }}</p>
+                        <p class="card-text">Address: {{ order.shippingAddress.address }}</p>
+                        <p class="card-text">Address 2: {{ order.shippingAddress.address2 }}</p>
+                        <p class="card-text">State: {{ order.shippingAddress.state }}</p>
+                        <p class="card-text">Zip: {{ order.shippingAddress.zip }}</p>
+                        <p class="card-text">Order Date: {{ order.orderDate }}</p>
+                        <p class="card-text">Total Amount: {{ order.totalAmount }}</p>
+                        <p class="card-text">Payment Method: {{ order.paymentMethod }}</p>
                     </div>
                 </div>
             </div>
-            {{/each}}
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Items</h5>
+                        <div class="row">
+                            {{#each order.items}}
+                            <div class="col-md-6 mb-3">
+                                <div class="card">
+                                    <img src="{{ this.product.image }}" class="card-img-top" alt="Product Image">
+                                    <div class="card-body">
+                                        <h6 class="card-title">Product Name: {{ this.product.name }}</h6>
+                                        <p class="card-text">Quantity: {{ this.quantity }}</p>
+                                        <p class="card-text">Size: {{ this.size }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-4">
+            <button class="btn btn-success mx-2">Ship Order</button>
+            <button class="btn btn-danger mx-2">Reject Order</button>
         </div>
     </div>
 </main>
