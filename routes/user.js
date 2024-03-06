@@ -5,6 +5,7 @@ const {userLogined} = require('../middleware/jwt')
 const {authMiddleware} = require('../middleware/auth')
 const { isInWishlist } = require('../helpers/userhelper');
 
+
 const passport = require('passport');
 require("../passport")
 router.use(passport.initialize())
@@ -20,7 +21,6 @@ router.get( '/auth/google/callback',
 		successRedirect: '/', 
 		failureRedirect: '/login'
 }));
-
 
 router.get('/',userControllers.homePage)
 

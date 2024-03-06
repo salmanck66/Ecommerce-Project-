@@ -23,21 +23,21 @@
 				<li>
 					<i class='bx bxs-calendar-check' ></i>
 					<span class="text">
-						<h3>1020</h3>
+						<h3>{{order.length}}</h3>
 						<p>Total Orders</p>
 					</span>
 				</li>
 				<li>
 					<i class='bx bxs-group' ></i>
 					<span class="text">
-						<h3>2834</h3>
+						<h3>{{visit.count}}</h3>
 						<p>Visitors</p>
 					</span>
 				</li>
 				<li>
 					<i class='bx bxs-dollar-circle' ></i>
 					<span class="text">
-						<h3>$2543</h3>
+						<h3>{{totalAmount}}</h3>
 						<p>Total Sales</p>
 					</span>
 				</li>
@@ -61,50 +61,21 @@
 							</tr>
 						</thead>
 						<tbody>
+							{{#each order}}
 			<tr>
-    			<td>OD1535</td>
+				
+    			<td>{{this.orderId}}</td>
     				<td>
     			    
-     			   <p>John Doe</p>
+     			   <p>{{this.shippingAddress.firstName}} {{this.shippingAddress.lastName}}</p>
  			   </td>
-    			<td>01-10-2021</td>
-    		<td><button type="button" class="btn btn-outline-secondary">View order</button></td>
+    			<td class="col-4">{{this.orderDate}}</td>
+    		<td><button type="button" class="view-order-btn btn btn-outline-secondary" data-order-id="{{this.orderId}}">View order</button></td>
 			</tr>
-			<tr>
-    			<td>OD1535</td>
-    				<td>
-     			   <p>John Doe</p>
- 			   </td>
-    			<td>01-10-2021</td>
-    		<td><button type="button" class="btn btn-outline-secondary">View order</button></td>
-			</tr>
-			<tr>
-    			<td>OD1535</td>
-    				<td>
-     			   <p>John Doe</p>
- 			   </td>
-    			<td>01-10-2021</td>
-    		<td><button type="button" class="btn btn-outline-secondary">View order</button></td>
-			</tr>
-			<tr>
-    			<td>OD1535</td>
-    				<td>
-     			   <p>John Doe</p>
- 			   </td>
-    			<td>01-10-2021</td>
-    		<td><button type="button" class="btn btn-outline-secondary">View order</button></td>
-			</tr>
+			{{/each}}
+			
 
 <!-- Missing OrderID in the third row -->
-<tr>
-    <td>OD6489</td> <!-- Randomly generated OrderID -->
-    <td>
-        
-        <p>John Doe</p>
-    </td>
-    <td>01-10-2021</td>
-    <td><button type="button" class="btn btn-outline-secondary">View order</button></td>
-</tr>
 						</tbody>
 					</table>
 				</div>
@@ -174,6 +145,18 @@ const monthlySalesChart = new Chart(document.getElementById('monthlySalesChart')
     data: monthlySalesData,
     options: {}
 });
+
+ document.addEventListener('DOMContentLoaded', function() {
+        const viewOrderButtons = document.querySelectorAll('.view-order-btn');
+        
+        viewOrderButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const orderId = button.dataset.orderId;
+                const url = `/order?orderId=${orderId}`; // Construct the URL with the order ID as a query parameter
+                window.location.href = url; // Redirect to the order details page
+            });
+        });
+    });
 
 	</script>
 	

@@ -9,13 +9,26 @@ const { product } = require('./user');
 const Coupon = require('../models/coupon');
 const Banner = require('../models/banner');
 const Order = require('../models/order');
+const Visit = require('../models/visit');
 
 
 
 
-  let homePage = (req, res) => {
+
+  let homePage =async (req, res) => {
     console.log("admin dashbord page");
-    res.render('admin/index',{layout:"adminLayout.hbs"})
+    const order = await Order.find().sort({ orderDate: -1 });
+    const result = await Order.aggregate([
+      {
+          $group: {
+              _id: null,
+              totalAmount: { $sum: "$totalAmount" }
+          }
+      }
+  ]);
+    console.log("admin order management");
+    const visit = await Visit.findOne();
+    res.render('admin/index',{layout:"adminLayout.hbs",order,visit,totalAmount: result[0].totalAmount})
   }
 
 let logIn = (req, res) => {
@@ -26,14 +39,18 @@ let Forget = (req, res) => {
     console.log("admin forget page");
     res.render('admin/forget',{layout:false})
   }
-let order =async (req, res) => {
-    const order = await  Order.find().sort({date:-1});
-
-  
-    console.log(order);
-    console.log("admin order management");
-    res.render('admin/order',{layout:"adminLayout.hbs",order})
-  }
+  let order = async (req, res) => {
+    try {
+        const order = await Order.find().sort({ orderDate: -1 });
+        console.log(order);
+        console.log("admin order management");
+        res.render('admin/order', { layout: "adminLayout.hbs", order });
+    } catch (error) {
+        console.error("Error fetching orders:", error);
+        // Handle error response
+        res.status(500).send("Error fetching orders");
+    }
+}
 let productm = async (req, res) => {
   const product  = await Product.find()
     console.log("admin product management");

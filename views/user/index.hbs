@@ -675,7 +675,15 @@
 				ps.update();
 			})
 		});
-
+if(sessionStorage.setItem("visit")===null)
+{
+updateCounter('type=visit-pageview')
+}
+function updateCounter(type)
+{
+	fetch('/?'+type)
+}
+sessionStorage.setItem("visit","x")
 	</script>
 <!--===============================================================================================-->
 	<script src="js/main.js"></script>

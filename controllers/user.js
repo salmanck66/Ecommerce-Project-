@@ -12,6 +12,11 @@ const Wishlist = require("../models/wishlist");
 const { session } = require("passport");
 const url = require('url');
 const uuid = require('uuid');
+const Visit = require('../models/visit');
+
+
+
+
 
 let loginGetPage = async (req, res) => {
   console.log("User login page");
@@ -117,7 +122,7 @@ let loginPostPage = async (req, res) => {
 
 let homePage = async (req, res) => {
   console.log("Home page");
-
+  await Visit.findOneAndUpdate({}, { $inc: { count: 1 } }, { upsert: true });
   if (req.cookies.jwt) {
     let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
     var userName = tokenExracted.userName;
@@ -130,8 +135,9 @@ let homePage = async (req, res) => {
     const products = await Product.find();
     const category = await Category.find();
     const banner = await Banner.find();
+    const userln = await User.find();
     return res.render("user/index", {
-      userId,
+      userId,userln,
       userName,
       category,
       banner,
@@ -143,6 +149,7 @@ let homePage = async (req, res) => {
     const products = await Product.find();
     const category = await Category.find();
     const banner = await Banner.find();
+    const users = await User.find();
     res.render("user/index", { data: products, category, banner,userId });
   }
 };
