@@ -50,8 +50,7 @@
                                         <div class="form-floating mb-3">
                                             <input type="text" class="form-control" name="otp" id="otp" placeholder="OTP">
                                             <label for="otp" class="form-label">OTP</label>
-                                            <button id="generateBtn" class="btn btn-sm btn-primary" onclick="generateOTP()" type="button">Generate OTP</button>
-
+                                            <button id="generateBtn" class="btn btn-sm btn-primary" onclick="generateOTP()" type="button" >Generate OTP</button>
                                         </div>
                                         <div id="timer" style="display:none;">
                                             <p>OTP will expire in <span id="countdown">60</span> seconds</p>
@@ -93,6 +92,7 @@
             // Show the timer
             var timer = document.getElementById('timer');
             timer.style.display = 'block';
+            document.getElementById('resetPasswordBtn').removeAttribute("disabled")
 
             // Start the countdown
             var seconds = 60;
@@ -103,7 +103,7 @@
                 if (seconds <= 0) {
                     clearInterval(countdownInterval);
                     timer.style.display = 'none';
-                    generateBtn.style.display = 'block';
+                    generateBtn.style.display = 'block'
                     enableGenerateButton(); // Enable the Generate OTP button again
                     countdownElement.textContent = '60';
                 }
