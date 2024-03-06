@@ -77,16 +77,21 @@ function signupHelper(recievedUserData) {
       }
     });
   };
-  let getNextOrderNumber = async ()=> {
-    // Find and increment the counter
-    const counter = await Counter.findOneAndUpdate(
+  let getNextOrderNumber = async () => {
+    // Find the counter
+    let counter = await Counter.findOne({ name: 'orderNumber' });
+
+    // If the counter doesn't exist, create it with an initial value of 5000
+    if (!counter) {
+        counter = await Counter.create({ name: 'orderNumber', value: 5000 });
+    }
+
+    // Increment the counter value and return the incremented value
+    return Counter.findOneAndUpdate(
         { name: 'orderNumber' },
         { $inc: { value: 1 } },
-        { new: true, upsert: true }
-    );
-
-    // Return the incremented counter value as the order number
-    return counter.value;
+        { new: true }
+    ).then(updatedCounter => updatedCounter.value);
 }
   
 module.exports = {

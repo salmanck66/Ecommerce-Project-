@@ -360,7 +360,7 @@ let fcheckout = async (req, res) => {
       // This step depends on your application's logic
 
       // Send a success response
-      res.status(200).json({ message: 'Order completed successfully.', orderId: savedOrder._id });
+      res.render('user/ordercomplete',{ message: 'Order completed successfully.', orderId: savedOrder.orderId });
   } catch (error) {
       console.log(error);
       // Send an error response
@@ -596,6 +596,26 @@ let ordercomplete =async (req, res) => {
   console.log("ordercomplete");
   res.render("user/ordercomplete",{userName});
 };
+let orderview = async (req, res) => {
+  try {
+    if (req.cookies.jwt) {
+      let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
+      var userName = tokenExracted.userName;
+      var userId = tokenExracted.userId;
+      console.log(userName);
+      let order = await Order.find({"user":userId})
+      .populate('product')
+      .exec();
+      console.log(order);
+      console.log("ordercomplete");
+      res.render("user/orders",{userName});
+    }
+    
+  } catch (error) {
+    console.log(error);
+  }
+ 
+};
 
 // let signin = (req, res) => {
 //     console.log("login");
@@ -655,5 +675,5 @@ module.exports = {delwish,
   loginGetPage,
   logoutPage,
   addtocart,
-  viewCart,updatecart,removeCartItem,addtowishlist,discount  ,pcheckout,fcheckout
+  viewCart,updatecart,removeCartItem,addtowishlist,discount  ,pcheckout,fcheckout,orderview
 };
