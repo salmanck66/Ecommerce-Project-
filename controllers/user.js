@@ -603,12 +603,11 @@ let orderview = async (req, res) => {
       var userName = tokenExracted.userName;
       var userId = tokenExracted.userId;
       console.log(userName);
-      let order = await Order.find({"user":userId})
-      .populate('product')
-      .exec();
-      console.log(order);
+      let order = await Order.find({"user":userId}).populate('items.product').exec();
+      console.log(order)
+  
       console.log("ordercomplete");
-      res.render("user/orders",{userName});
+      res.render("user/orders",{order});
     }
     
   } catch (error) {

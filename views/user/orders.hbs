@@ -4,49 +4,65 @@
       Home
       <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
     </a>
-    <a href="wishlist" class="stext-109 cl8 hov-cl1 trans-04">
+    <a href="My orders" class="stext-109 cl8 hov-cl1 trans-04">
       Orders
     </a>
   </div>
 </div>
 
 <div class="container py-5 mt-0">
-
-      <div class="row ">
-        <div class="col-lg-8 mx-auto">
-          <!-- List group-->
-          <ul class="list-group shadow">
-            <!-- list group item-->
-            <li class="list-group-item">
-              <!-- Custom content-->
-
-                <div class="media align-items-lg-center flex-column flex-lg-row p-3">
-                  <div class="media-body order-2 order-lg-1">
-                    <h5 class="mt-0 font-weight-bold mb-2">{{this.name}}</h5>
-                    <p class="font-italic text-muted mb-0 small">{{this.variant}}</p>
-                    <div class="d-flex align-items-center justify-content-start mt-1">
-                      <h6 class="font-weight-bold my-2" style="text-decoration: line-through;">{{this.mrp}}</h6>
-                      <h6 class="font-weight-bold my-2">{{this.price}}</h6>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-end mt-1">
-                      <a href="productdetail?id={{this._id}}" class="btn flex-c-m  cl2  ">
-                        View Product
-                      </a>
-                      <a href="#" class="btn flex-c-m cl2 remove-from-wishlist" data-product-id="{{this._id}}">
-                        Remove From Wishlist
-                      </a>
+  <div class="row">
+    <div class="col-lg-8 mx-auto">
+      <!-- List group-->
+      <ul class="list-group shadow">
+        <!-- list group item-->
+        {{#each order}}
+        <li class="list-group-item">
+          <!-- Custom content-->
+          <div class="media align-items-lg-center flex-column flex-lg-row p-3">
+            <div class="media-body order-2 order-lg-1">
+              <h5 class="mt-0 font-weight-bold mb-2">Order ID: {{this.orderId}}</h5>
+              <h5 class="mt-0 font-weight-bold mb-2">{{this.name}}</h5>
+              <p class="font-italic text-muted mb-0 small">{{this.paymentMethod}}</p>
+              <div class="row mt-3">
+                <div class="col-lg-12 mx-auto">
+                  <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title">Product Details</h5>
+                      <hr>
+                      {{#each this.items}}
+                      <div class="row mb-3">
+                        <div class="col-md-3">
+                          <img src="{{this.product.image}}" class="img-fluid" alt="Product Image">
+                        </div>
+                        <div class="col-md-9">
+                          <h6 class="card-subtitle mb-2 text-muted">{{this.product.name}}</h6>
+                          <p class="card-text">Quantity: {{this.quantity}}</p>
+                          <p class="card-text">Size: {{this.size}}</p>
+                          <p class="card-text">Price: {{this.product.price}}</p>
+                        </div>
+                      </div>
+                      {{/each}}
                     </div>
                   </div>
-                  <img src="{{this.image}}" alt="Generic placeholder image" width="200" class="ml-lg-5 order-1 order-lg-2">
                 </div>
-                <hr>
-    
-              <!-- End -->
-            </li>
-          </ul>
-        </div>
-      </div>
-
- 
-
+              </div>
+              <hr>
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <h6 class="font-weight-bold mt-2">Order Total: INR {{this.totalAmount}}</h6>
+                </div>
+                <div class="mt-2">
+                  <a href="productdetail?id={{this._id}}" class="btn flex-c-m  cl2  ">Track Order</a>
+                  <a href="productdetail?id={{this._id}}" class="btn flex-c-m  cl2  ">View Order</a>
+                  <a href="#" class="btn flex-c-m cl2 remove-from-wishlist" data-product-id="{{this._id}}">Cancel Order</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+        {{/each}}
+      </ul>
+    </div>
+  </div>
 </div>
