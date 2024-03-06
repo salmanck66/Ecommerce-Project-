@@ -8,6 +8,7 @@ const mongoose = require('mongoose');
 const { product } = require('./user');
 const Coupon = require('../models/coupon');
 const Banner = require('../models/banner');
+const Order = require('../models/order');
 
 
 
@@ -25,9 +26,13 @@ let Forget = (req, res) => {
     console.log("admin forget page");
     res.render('admin/forget',{layout:false})
   }
-let order = (req, res) => {
+let order =async (req, res) => {
+    const order = await  Order.find().sort({date:-1});
+
+  
+    console.log(order);
     console.log("admin order management");
-    res.render('admin/order',{layout:"adminLayout.hbs"})
+    res.render('admin/order',{layout:"adminLayout.hbs",order})
   }
 let productm = async (req, res) => {
   const product  = await Product.find()
@@ -638,7 +643,29 @@ let editCoupon = async (req,res)=>
 res.status(200).redirect('/coupon'); // Redirect to product management page
 }
 
+let orderview = async (req, res) => {
+  const orderId = req.query.orderId;
+  try {
+    
+    const order = await Order.findOne({ orderId }); // Find the order by its ID
+    if (!order) {
+      return res.status(404).send('Order not found');
+  }
+  for (const item of order.items) {
+    const product = await Product.findById(item.product);
+    if (product) {
+        // Assign product details to the item
+        item.product = product;
+    }
+}
+
+    res.render('admin/orderDetails', {layout :"adminLayout.hbs", order });
+} catch (error) {
+    console.error(error);
+    res.status(500).send('Error retrieving order details');
+}
+}
 
 
 
-module.exports = {updatebannerpost,updatebanner,deletebanner,addbanner,editCoupon,updatecoupon,deletecoupon,addCoupon,updatesubcategory,subcategoryeditpage,categoryeditpage,editproduct,deleteprod,deletesubcat,updatecategory,producteditpage,updateProduct,addSubcategory,deletecat,postcategory,postaddproduct,homePage,logIn,Forget,order,productm,addproduct,coupon,categories,banner,payments,settings,profile}
+module.exports = {orderview,updatebannerpost,updatebanner,deletebanner,addbanner,editCoupon,updatecoupon,deletecoupon,addCoupon,updatesubcategory,subcategoryeditpage,categoryeditpage,editproduct,deleteprod,deletesubcat,updatecategory,producteditpage,updateProduct,addSubcategory,deletecat,postcategory,postaddproduct,homePage,logIn,Forget,order,productm,addproduct,coupon,categories,banner,payments,settings,profile}

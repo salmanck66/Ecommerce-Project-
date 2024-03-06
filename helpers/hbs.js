@@ -32,4 +32,8 @@ Handlebars.registerHelper('ifEquals', function(arg1, arg2, options) {
 Handlebars.registerHelper('lookup', function(obj, key) {
     return obj[key];
   });
+Handlebars.registerHelper('formatDate', function(date) {
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    return new Date(date).toLocaleDateString('en-US', options);
+});
 

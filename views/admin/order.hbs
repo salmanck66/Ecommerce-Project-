@@ -1,22 +1,20 @@
-<!-- MAIN CONTENT -->
 <main>
     <div class="container-fluid order-management">
         <div class="d-flex justify-content-between align-content-center align-items-center">
             <div>
                 <ul class="breadcrumb">
-						<li>
-							<a href="/dashboard">Dashboard</a>
-						</li>
-						<li><i class='bx bx-chevron-right' ></i></li>
-						<li>
-							<a class="active" href="#">Order Management</a>
-						</li>
-					</ul>
+                    <li>
+                        <a href="/dashboard">Dashboard</a>
+                    </li>
+                    <li><i class='bx bx-chevron-right'></i></li>
+                    <li>
+                        <a class="active" href="#">Order Management</a>
+                    </li>
+                </ul>
             </div>
-            
-            <i class='bx bx-sort-down' ></i>
+            <i class='bx bx-sort-down'></i>
         </div>
-        
+
         <!-- Add your order management content here -->
         <!-- For example, order list, filters, search, etc. -->
         <div class="table-responsive">
@@ -31,38 +29,36 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Sample order rows -->
+                    {{#each order}}
                     <tr>
-                        <td>OD001</td>
-                        <td>John Doe</td>
-                        <td>2024-02-03</td>
-                        <td>Processing</td>
+                        <td>{{this.orderId}}</td>
+                        <td>{{this.shippingAddress.firstName}} {{this.shippingAddress.lastName}}</td>
+                        <td class="col-3">{{this.orderDate}}</td>
+                        <td>{{this.paymentMethod}}</td>
                         <td>
-                            <button class="btn btn-primary">View Order</button>
+                            <button class="btn btn-primary view-order-btn" data-order-id="{{this.orderId}}">View Order</button>
                             <button class="btn btn-success">Ship Order</button>
                             <button class="btn btn-danger">Reject Order</button>
                         </td>
                     </tr>
-                    <tr>
-                        <td>OD002</td>
-                        <td>Jane Smith</td>
-                        <td>2024-02-03</td>
-                        <td>Shipped</td>
-                        <td>
-                            <button class="btn btn-primary">View Order</button>
-                            <button class="btn btn-success">Ship Order</button>
-                            <button class="btn btn-danger">Reject Order</button>
-                        </td>
-                    </tr>
-                    <!-- Add more order rows as needed -->
+                    {{/each}}
                 </tbody>
             </table>
         </div>
     </div>
 </main>
-<!-- Assuming you have a variable `currentRoute` that holds the current route -->
 <script>
-
+    document.addEventListener('DOMContentLoaded', function() {
+        const viewOrderButtons = document.querySelectorAll('.view-order-btn');
+        
+        viewOrderButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const orderId = button.dataset.orderId;
+                const url = `/order?orderId=${orderId}`; // Construct the URL with the order ID as a query parameter
+                window.location.href = url; // Redirect to the order details page
+            });
+        });
+    });
 </script>
 
-<!-- MAIN CONTENT -->
+

@@ -20,6 +20,7 @@ router.get('/banner',adminControllers.banner)
 router.get('/payments',adminControllers.payments)
 router.get('/settings',adminControllers.settings)
 router.get('/profile',adminControllers.profile)
+router.get('/order',adminControllers.orderview)
 
 router.get('/edit-product/:id',adminControllers.producteditpage)
 router.post('/add-product',upload.single('productImage'),adminControllers.postaddproduct)

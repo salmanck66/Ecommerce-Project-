@@ -328,45 +328,61 @@ let pcheckout = async (req, res) => {
 }
 let fcheckout = async (req, res) => {
   try {
-      // Verify user and get user ID
-      let tokenExtracted = await verifyUser(req.cookies.jwt);
-      const userId = tokenExtracted.userId;
-      const orderNumber = await Userhelpers.getNextOrderNumber();
-      // Get user's cart
-      const cart = await Cart.findOne({ user: userId });
+    // Verify user and get user ID
+    let tokenExtracted = await verifyUser(req.cookies.jwt);
+    const userId = tokenExtracted.userId;
+    const orderNumber = await Userhelpers.getNextOrderNumber();
+    // Get user's cart
+    const cart = await Cart.findOne({ user: userId });
 
-      // Create a new order instance
-      const newOrder = new Order({
-          orderId:orderNumber,
-          user: userId,
-          items: cart.items,
-          totalAmount: cart.carttotal,
-          shippingAddress: {
-              firstName: req.body.fname[0],
-              lastName: req.body.fname[1],
-              email: req.body.mail,
-              address: req.body.adress,
-              address2: req.body.adress2,
-              state: req.body.state,
-              zip: req.body.zip
-          },
-          paymentMethod: req.body.paymentMethod
-      });
+    // Check and reduce stock of products
+    for (const item of cart.items) {
+      const product = await Product.findById(item.product);
+      if (!product) {
+        throw new Error(`Product with ID ${item.product} not found.`);
+      }
+      const size = item.size;
+      if (!product.stock[size] || product.stock[size] < item.quantity) {
+        throw new Error(`Insufficient stock for product: ${product.name}`);
+      }
+      // Deduct quantity from stock for the specific size
+      product.stock[size] -= item.quantity;
+      await product.save();
+    }
 
-      // Save the new order to the database
-      const savedOrder = await newOrder.save();
+    // Create a new order instance
+    const newOrder = new Order({
+      orderId: orderNumber,
+      user: userId,
+      items: cart.items,
+      totalAmount: cart.carttotal,
+      shippingAddress: {
+        firstName: req.body.fname[0],
+        lastName: req.body.fname[1],
+        email: req.body.mail,
+        address: req.body.adress,
+        address2: req.body.adress2,
+        state: req.body.state,
+        zip: req.body.zip
+      },
+      paymentMethod: req.body.paymentMethod
+    });
 
-      // Clear the cart items or mark them as purchased
-      // This step depends on your application's logic
+    // Save the new order to the database
+    const savedOrder = await newOrder.save();
 
-      // Send a success response
-      res.render('user/ordercomplete',{ message: 'Order completed successfully.', orderId: savedOrder.orderId });
+    // Clear the cart items or mark them as purchased
+    // This step depends on your application's logic
+
+    // Send a success response
+    res.render('user/ordercomplete', { message: 'Order completed successfully.', orderId: savedOrder.orderId });
   } catch (error) {
-      console.log(error);
-      // Send an error response
-      res.status(500).json({ error: 'An error occurred while completing the order.' });
+    console.log(error);
+    // Send an error response
+    res.status(500).json({ error: 'An error occurred while completing the order.' });
   }
 };
+
 let discount = async (req, res) => {
   try {
       const { couponCode, cartTotal } = req.body;
@@ -605,7 +621,6 @@ let orderview = async (req, res) => {
       console.log(userName);
       let order = await Order.find({"user":userId}).populate('items.product').exec();
       console.log(order)
-  
       console.log("ordercomplete");
       res.render("user/orders",{order});
     }

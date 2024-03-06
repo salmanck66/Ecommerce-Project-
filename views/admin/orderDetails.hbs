@@ -1,0 +1,31 @@
+<main>
+    <div class="container">
+        <h1>Order Details</h1>
+        <p>Order ID: {{ order.orderId }}</p>
+        <p>Customer Name: {{ order.shippingAddress.firstName }} {{ order.shippingAddress.lastName }}</p>
+        <p>Email: {{ order.shippingAddress.email }}</p>
+        <p>Address: {{ order.shippingAddress.address }}</p>
+        <p>Address 2: {{ order.shippingAddress.address2 }}</p>
+        <p>State: {{ order.shippingAddress.state }}</p>
+        <p>Zip: {{ order.shippingAddress.zip }}</p>
+        <p>Order Date: {{ order.orderDate }}</p>
+        <p>Total Amount: {{ order.totalAmount }}</p>
+        <p>Payment Method: {{ order.paymentMethod }}</p>
+        
+        <h2>Items</h2>
+        <div class="row">
+            {{#each order.items}}
+            <div class="col-md-4">
+                <div class="card mb-3">
+                    <img src="{{ this.product.image }}" class="card-img-top" alt="Product Image">
+                    <div class="card-body">
+                        <h5 class="card-title">Product Name :{{ this.product.name }}</h5>
+                        <p class="card-text">Quantity: {{ this.quantity }}</p>
+                        <p class="card-text">Size: {{ this.size }}</p>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+</main>
