@@ -3,11 +3,13 @@ const Cart = require('../models/cart')
 const bcrypt = require('bcrypt')
 const dotenv = require('dotenv')
 dotenv.config();
+const mongoose = require('mongoose');
 var objectId =require('mongodb').ObjectId
 const util = require('util');
 const { product } = require('../controllers/user');
 const { response } = require('express');
 const Wishlist = require("../models/wishlist")
+const Counter = require("../models/counter")
 const Handlebars = ("handlebars");
 
 function signupHelper(recievedUserData) {
@@ -75,8 +77,18 @@ function signupHelper(recievedUserData) {
       }
     });
   };
+  let getNextOrderNumber = async ()=> {
+    // Find and increment the counter
+    const counter = await Counter.findOneAndUpdate(
+        { name: 'orderNumber' },
+        { $inc: { value: 1 } },
+        { new: true, upsert: true }
+    );
 
+    // Return the incremented counter value as the order number
+    return counter.value;
+}
   
 module.exports = {
-     signupHelper, loginHelper,addToCart
+     signupHelper, loginHelper,addToCart,getNextOrderNumber
   }

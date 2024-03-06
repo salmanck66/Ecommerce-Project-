@@ -116,7 +116,7 @@
                     </div>
                 </div>
 
-                <a href="checkout"><button type="submit" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">
+                <a href="checkout"><button type="submit" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer" onclick="carttot()">
                     Proceed to Checkout
                 </button>
                 </a>
@@ -272,5 +272,21 @@
 
     function RemoveCoupon() {
         window.location.reload();
+    }
+
+    function carttot()
+    {
+        
+        const carttotal = getCartTotal()
+        console.log(carttotal)
+        const data ={carttotal}
+         fetch('/proceed-checkout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+
     }
 </script>

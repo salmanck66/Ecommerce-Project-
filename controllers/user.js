@@ -7,9 +7,11 @@ const Banner = require("../models/banner");
 const Cart = require("../models/cart");
 const Coupon = require("../models/coupon");
 const User = require("../models/users");
+const Order = require("../models/order");
 const Wishlist = require("../models/wishlist");
 const { session } = require("passport");
 const url = require('url');
+const uuid = require('uuid');
 
 let loginGetPage = async (req, res) => {
   console.log("User login page");
@@ -310,6 +312,61 @@ let addtowishlist = async (req, res) => {
   }
 }
 
+let pcheckout = async (req, res) => {
+  try {
+    let tokenExracted = await verifyUser(req.cookies.jwt)
+    const userId = tokenExracted.userId; // Assuming you have a function to extract the user ID from the JWT token
+    console.log("post checkout");
+    const {carttotal} = req.body
+    const cart = await Cart.findOne({user: userId});
+    await Cart.findOneAndUpdate({ "user": userId },  { "carttotal": carttotal } );
+    await cart.save()
+    res.redirect("ordercomplete")
+  } catch (error) {
+    console.log(error);
+  }
+}
+let fcheckout = async (req, res) => {
+  try {
+      // Verify user and get user ID
+      let tokenExtracted = await verifyUser(req.cookies.jwt);
+      const userId = tokenExtracted.userId;
+      const orderNumber = await Userhelpers.getNextOrderNumber();
+      // Get user's cart
+      const cart = await Cart.findOne({ user: userId });
+
+      // Create a new order instance
+      const newOrder = new Order({
+          orderId:orderNumber,
+          user: userId,
+          items: cart.items,
+          totalAmount: cart.carttotal,
+          shippingAddress: {
+              firstName: req.body.fname[0],
+              lastName: req.body.fname[1],
+              email: req.body.mail,
+              address: req.body.adress,
+              address2: req.body.adress2,
+              state: req.body.state,
+              zip: req.body.zip
+          },
+          paymentMethod: req.body.paymentMethod
+      });
+
+      // Save the new order to the database
+      const savedOrder = await newOrder.save();
+
+      // Clear the cart items or mark them as purchased
+      // This step depends on your application's logic
+
+      // Send a success response
+      res.status(200).json({ message: 'Order completed successfully.', orderId: savedOrder._id });
+  } catch (error) {
+      console.log(error);
+      // Send an error response
+      res.status(500).json({ error: 'An error occurred while completing the order.' });
+  }
+};
 let discount = async (req, res) => {
   try {
       const { couponCode, cartTotal } = req.body;
@@ -598,5 +655,5 @@ module.exports = {delwish,
   loginGetPage,
   logoutPage,
   addtocart,
-  viewCart,updatecart,removeCartItem,addtowishlist,discount
+  viewCart,updatecart,removeCartItem,addtowishlist,discount  ,pcheckout,fcheckout
 };
