@@ -13,10 +13,14 @@ const { session } = require("passport");
 const url = require('url');
 const uuid = require('uuid');
 const Visit = require('../models/visit');
+const nodemailer = require('nodemailer');
 
 
 
-
+function generateOTP() {
+  return Math.floor(100000 + Math.random() * 900000);
+}
+const otpDB = {};
 
 let loginGetPage = async (req, res) => {
   console.log("User login page");
