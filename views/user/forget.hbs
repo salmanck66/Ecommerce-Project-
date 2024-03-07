@@ -61,7 +61,7 @@
                                     </div>
                                     <div class="col-12">
                                         <div class="d-grid">
-                                            <button class="btn bsb-btn-2xl btn-primary" type="submit" id="resetPasswordBtn" disabled>Reset Password</button>
+                                            <button class="btn bsb-btn-2xl btn-primary" type="button" id="resetPasswordBtn" onclick="PasswordChange()" disabled>Reset Password</button>
                                         </div>
                                     </div>
                                 </div>
@@ -74,15 +74,42 @@
     </section>
 
     <script>
-        function verifyOTP()
+function verifyOTP() {
+    var otp = document.getElementById('otp').value;
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/verify-otp-reset-pass');
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            console.log('OTP verified successfully');
+            document.getElementById('generateBtn').style.display = 'none'; // Hide the Generate OTP button
+            document.getElementById('VerifyBtn').style.display = 'none'; // Hide the Verify OTP button
+            document.getElementById('timer').style.display = 'none'; // Hide the timer
+            document.getElementById('otp').style.display = 'none'; // Hide the timer
+            document.getElementById('resetPasswordBtn').style.display = 'none'; // Display success message
+        } else {
+            console.error('Error verifying OTP:', xhr.responseText);
+        }
+    };
+    xhr.onerror = function () {
+        console.error('Request failed');
+    };
+    xhr.send(JSON.stringify({ otp: otp }));
+}
+
+
+
+        function PasswordChange()
         {
-            var otp = document.getElementById('otp').value;
+            var password = document.getElementById('password').value;
+            var gmail = document.getElementById('email').value;
             var xhr = new XMLHttpRequest();
-             xhr.open('POST', '/verify-otp-reset-pass');
+             xhr.open('POST', '/resetpassload');
              xhr.setRequestHeader('Content-Type', 'application/json');
                      xhr.onload = function () {
             if (xhr.status === 200) {
-                console.log('Opt verifed successfully');
+                console.log('password reset success ');
+
             } else {
                 console.error('Error sending Otp:', xhr.responseText);
             }
