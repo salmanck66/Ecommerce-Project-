@@ -81,6 +81,8 @@
             </div>
         </div>
     </section>
+<div class="btn -btn-primary" onclick="toast()">click</div>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
 function verifyOTP() {
@@ -208,6 +210,24 @@ function verifyOTP() {
         document.getElementById('email').addEventListener('input', enableGenerateButton);
         document.getElementById('password').addEventListener('input', enableGenerateButton);
         document.getElementById('confirmPassword').addEventListener('input', enableGenerateButton);
+
+        function toast()
+        {
+            Toastify({
+  text: "This is a toast",
+  duration: 3000,
+  destination: "https://github.com/apvarun/toastify-js",
+  newWindow: true,
+  close: true,
+  gravity: "top", // `top` or `bottom`
+  position: "left", // `left`, `center` or `right`
+  stopOnFocus: true, // Prevents dismissing of toast on hover
+  style: {
+    background: "linear-gradient(to right, #00b09b, #96c93d)",
+  },
+  onClick: function(){} // Callback after click
+}).showToast();
+        }
     </script>
 </body>
 </html>
