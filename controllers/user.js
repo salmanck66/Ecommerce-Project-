@@ -86,7 +86,9 @@ let verifyotp =async(req,res,email)=>{
     res.status(500).json({ error: 'Internal Server Error' });
   }
 }
-  
+let loginotp = async  (req, res) => {
+  res.render("user/loginotp",{layout:false})
+}
 
 let ResetPasswordPost = async(req,res,email)=>{
   
@@ -160,11 +162,11 @@ let loginPostPage = async (req, res) => {
   try {
     console.log("entered in login post section");
 
-    let resolved = await  Userhelpers.loginHelper(req.body);
+    let resolved = await Userhelpers.loginHelper(req.body);
     if (resolved.invalidUsername) {
       console.log("invalid user name");
       return res.render("user/login", {
-        layout:false,
+        layout: false,
         mailError: "Mail id not registered",
         mail: req.body.mail,
         password: req.body.password,
@@ -172,14 +174,14 @@ let loginPostPage = async (req, res) => {
     } else if (resolved.passwordMismatch) {
       console.log("password not match");
       return res.render("user/login", {
-        layout:false,
+        layout: false,
         passwordError: "Wrong Password",
         password: req.body.password,
         mail: req.body.mail,
       });
     } else if (resolved.blockedUser) {
       return res.render("user/login", {
-        layout:false,
+        layout: false,
         mailError: "This user has been temporarily BLOCKED",
         password: req.body.password,
         mail: req.body.mail,
@@ -199,6 +201,7 @@ let loginPostPage = async (req, res) => {
     res.render("error", { print: error });
   }
 };
+
 
 let homePage = async (req, res) => {
   console.log("Home page");
@@ -775,6 +778,6 @@ module.exports = {delwish,
   loginPostPage,
   loginGetPage,
   logoutPage,verifyotp,
-  addtocart,
+  addtocart,loginotp,
   viewCart,updatecart,removeCartItem,addtowishlist,discount  ,pcheckout,fcheckout,orderview,ResetPasswordPost,ResetPasswordPostFinal
 };

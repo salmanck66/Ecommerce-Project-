@@ -38,15 +38,15 @@
                                         <div class="form-floating mb-3">
                                             <input type="text" class="form-control" name="mail" id="mail" placeholder="name@example.com" required>
                                             <label for="mail" class="form-label">Phone number / email</label>
-                                        </div>
-                                        <p id="mailError" style="font-size: .8rem;" class="text-danger">{{mailError}}</p>
+                                        </div> 
+                                        <p id="mailError" style="font-size: .8rem;" class="text-danger" hidden>{{mailError}}</p>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
                                             <input type="password" class="form-control" name="password" id="password" value="" placeholder="password" required>
                                             <label for="password" class="form-label">Password</label>
                                         </div>
-                                        <p id="passwordError" style="color: red;" class="text-danger">{{passwordError}}</p> <!-- Error message for password -->
+                                        <p id="passwordError" style="color: red;" class="text-danger" hidden>{{passwordError}}</p> <!-- Error message for password -->
                                     </div>
                                     <div class="col-12">
                                         <div class="form-check">
@@ -73,7 +73,12 @@
                             </div>
                             <div class="row">
                                 <div class="col-12">
-                                    <a href="signup"><p class="mt-1 mb-3 link-secondary">New to jcclub?</p></a>
+                                    <a href="loginotp"><p class="mt-1 mb-3 link-secondary">New to jcclub?</p></a>
+                                    <div class="d-flex gap-3 mb-2 flex-column">
+                                        <a href="signotp" class="btn bsb-btn-xl btn-dark">
+                                            <span class="ms-2 fs-6 text-uppercase">Sign In With Otp</span>
+                                        </a>
+                                    </div>
                                     <div class="d-flex gap-3 flex-column">
                                         <a href="signup" class="btn bsb-btn-xl btn-dark">
                                             <span class="ms-2 fs-6 text-uppercase">Create your account</span>
@@ -110,15 +115,38 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
+
 <script>
-    // Function to clear the error message when typing in the email input field
-    $('#mail').on('input', function() {
-        var error = document.getElementById('mailError');
-        error.style.display = 'none'
-    });
-    $('#password').on('input', function() {
-        var error = document.getElementById('passwordError');
-        error.style.display = 'none'
+    $(document).ready(function() {
+        // Function to show toast notifications
+        function showToast(message, type) {
+            Toastify({
+                text: message,
+                duration: 3000,
+                close: true,
+                gravity: "bottom", // `top` or `bottom`
+                position: "right", // `left`, `center` or `right`
+                backgroundColor: type === "error" ? "#081f37" : "#33cc33",
+            }).showToast();
+        }
+
+        // Check if there are any error messages on page load and show toast notifications accordingly
+        var mailError = $("#mailError").text();
+        var passwordError = $("#passwordError").text();
+        if (mailError) {
+            showToast(mailError, "error");
+        }
+        if (passwordError) {
+            showToast(passwordError, "error");
+        }
+
+        // Clear error messages when typing in input fields
+        $("#mail").on("input", function() {
+            $("#mailError").text("");
+        });
+        $("#password").on("input", function() {
+            $("#passwordError").text("");
+        });
     });
 </script>
 </body>

@@ -37,6 +37,7 @@ router.get('/orderview',authMiddleware,userControllers.orderview)
 router.get('/login',userControllers.loginGetPage)
 router.get('/signup',userControllers.signup)
 router.get('/forget',userControllers.forgetpass)
+router.get('/signotp',userControllers.loginotp)
 
 router.get('/cart',authMiddleware,userControllers.viewCart)
 router.post('/add-to-cart',authMiddleware,userControllers.addtocart)
