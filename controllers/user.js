@@ -53,11 +53,33 @@ let ResetPassword = (req, res) => {
   res.render("user/forget", { layout: false });
 };
 
+let ResetPasswordPostFinal = async(req,res)=>{
+  console.log(req.body)
+}
+let verifyotp =async(req,res,email)=>{
+
+  
+  try {
+  const otp = parseInt(req.body.otp)
+  const storedOTP = otpDB[email]
+  if (!storedOTP || storedOTP !== otp) {
+    return res.status(400).json({ error: 'Invalid OTP' });
+  }
+
+  // If OTP is valid, allow the user to reset their password
+  res.status(200).json({ message: 'OTP verified successfully', email });
+  } catch (error) {
+    console.error('Error in VerifyOTP:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
+  
+
 let ResetPasswordPost = async(req,res,email)=>{
   
   const mail = req.body.email
-  console.log(mail);
   const otp = generateOTP();
+  console.log(otp);
 
   // Store OTP in memory or database
   otpDB[email] = otp;
@@ -736,7 +758,7 @@ module.exports = {delwish,
   signUpPostPage,
   loginPostPage,
   loginGetPage,
-  logoutPage,
+  logoutPage,verifyotp,
   addtocart,
-  viewCart,updatecart,removeCartItem,addtowishlist,discount  ,pcheckout,fcheckout,orderview,ResetPasswordPost
+  viewCart,updatecart,removeCartItem,addtowishlist,discount  ,pcheckout,fcheckout,orderview,ResetPasswordPost,ResetPasswordPostFinal
 };

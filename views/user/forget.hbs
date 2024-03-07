@@ -26,7 +26,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <form action="#!">
+                            <form action="resetpassload" method="post">
                                 <div class="row gy-1 overflow-hidden">
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
@@ -42,7 +42,7 @@
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
-                                            <input type="password" class="form-control" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" required>
+                                            <input type="password" class="form-control"  id="confirmPassword" placeholder="Confirm Password" required>
                                             <label for="confirmPassword" class="form-label">Confirm Password</label>
                                         </div>
                                     </div>
@@ -51,6 +51,7 @@
     <input type="text" class="form-control" name="otp" id="otp" placeholder="OTP">
     <label for="otp" class="form-label">OTP</label>
     <button id="generateBtn" class="btn btn-sm btn-primary mt-3" onclick="generateOTP()" type="button">Generate OTP</button>
+    <button id="VerifyBtn" class="btn btn-sm btn-primary mt-3" onclick="verifyOTP()" type="button" hidden>Verify OTP</button>
   
 </div>
 
@@ -73,6 +74,25 @@
     </section>
 
     <script>
+        function verifyOTP()
+        {
+            var otp = document.getElementById('otp').value;
+            var xhr = new XMLHttpRequest();
+             xhr.open('POST', '/verify-otp-reset-pass');
+             xhr.setRequestHeader('Content-Type', 'application/json');
+                     xhr.onload = function () {
+            if (xhr.status === 200) {
+                console.log('Opt verifed successfully');
+            } else {
+                console.error('Error sending Otp:', xhr.responseText);
+            }
+        };
+        xhr.onerror = function () {
+            console.error('Request failed');
+        };
+        xhr.send(JSON.stringify({ otp: otp }));
+        }
+
         function enableGenerateButton() {
             var email = document.getElementById('email').value;
             var password = document.getElementById('password').value;
@@ -104,33 +124,34 @@
     }
 
 
-        function generateOTP() {
-            // Hide the generate button
-            var generateBtn = document.getElementById('generateBtn');
-            generateBtn.style.display = 'none';
+       function generateOTP() {
+    // Hide the generate button
+    var generateBtn = document.getElementById('generateBtn');
+    generateBtn.style.display = 'none';
 
-            // Show the timer
-            var timer = document.getElementById('timer');
-            timer.style.display = 'block';
-            document.getElementById('resetPasswordBtn').removeAttribute("disabled")
+    // Show the timer
+    var timer = document.getElementById('timer');
+    timer.style.display = 'block';
+    document.getElementById('resetPasswordBtn').removeAttribute("disabled");
+    document.getElementById('VerifyBtn').removeAttribute("hidden"); // Show the Verify OTP button
 
-            // Start the countdown
-            var seconds = 60;
-            var countdownElement = document.getElementById('countdown');
-            var countdownInterval = setInterval(function () {
-                seconds--;
-                countdownElement.textContent = seconds;
-                if (seconds <= 0) {
-                    clearInterval(countdownInterval);
-                    timer.style.display = 'none';
-                    generateBtn.style.display = 'block'
-                    enableGenerateButton(); // Enable the Generate OTP button again
-                    countdownElement.textContent = '60';
-                }
-            }, 1000);
-            sendEmailForOTP()
-
+    // Start the countdown
+    var seconds = 60;
+    var countdownElement = document.getElementById('countdown');
+    var countdownInterval = setInterval(function () {
+        seconds--;
+        countdownElement.textContent = seconds;
+        if (seconds <= 0) {
+            clearInterval(countdownInterval);
+            timer.style.display = 'none';
+            generateBtn.style.display = 'block';
+            document.getElementById('VerifyBtn').setAttribute("hidden");
+            enableGenerateButton(); // Enable the Generate OTP button again
+            countdownElement.textContent = '60';
         }
+    }, 1000);
+    sendEmailForOTP();
+}
 
         document.getElementById('email').addEventListener('input', enableGenerateButton);
         document.getElementById('password').addEventListener('input', enableGenerateButton);
