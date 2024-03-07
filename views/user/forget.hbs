@@ -47,11 +47,13 @@
                                         </div>
                                     </div>
                                     <div class="col-12">
-                                        <div class="form-floating mb-3">
-                                            <input type="text" class="form-control" name="otp" id="otp" placeholder="OTP">
-                                            <label for="otp" class="form-label">OTP</label>
-                                            <button id="generateBtn" class="btn btn-sm btn-primary" onclick="generateOTP()" type="button" >Generate OTP</button>
-                                        </div>
+<div class="form-floating mb-3">
+    <input type="text" class="form-control" name="otp" id="otp" placeholder="OTP">
+    <label for="otp" class="form-label">OTP</label>
+    <button id="generateBtn" class="btn btn-sm btn-primary mt-3" onclick="generateOTP()" type="button">Generate OTP</button>
+  
+</div>
+
                                         <div id="timer" style="display:none;">
                                             <p>OTP will expire in <span id="countdown">60</span> seconds</p>
                                         </div>
@@ -83,6 +85,24 @@
                 generateBtn.setAttribute('disabled', 'disabled');
             }
         }
+        function sendEmailForOTP() {
+        var email = document.getElementById('email').value;
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/forgot-password'); // Change the URL to the appropriate endpoint
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                console.log('Email sent successfully');
+            } else {
+                console.error('Error sending email:', xhr.responseText);
+            }
+        };
+        xhr.onerror = function () {
+            console.error('Request failed');
+        };
+        xhr.send(JSON.stringify({ email: email }));
+    }
+
 
         function generateOTP() {
             // Hide the generate button
@@ -108,6 +128,8 @@
                     countdownElement.textContent = '60';
                 }
             }, 1000);
+            sendEmailForOTP()
+
         }
 
         document.getElementById('email').addEventListener('input', enableGenerateButton);

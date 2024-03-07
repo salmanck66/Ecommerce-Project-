@@ -14,13 +14,15 @@ const url = require('url');
 const uuid = require('uuid');
 const Visit = require('../models/visit');
 const nodemailer = require('nodemailer');
+const {parsed:config} = require('dotenv').config()
+global.config = config
 
 
 
 function generateOTP() {
   return Math.floor(100000 + Math.random() * 900000);
 }
-const otpDB = {};
+var otpDB = {};
 
 let loginGetPage = async (req, res) => {
   console.log("User login page");
@@ -50,6 +52,42 @@ let logoutPage = (req, res) => {
 let ResetPassword = (req, res) => {
   res.render("user/forget", { layout: false });
 };
+
+let ResetPasswordPost = async(req,res,email)=>{
+  
+  const mail = req.body.email
+  console.log(mail);
+  const otp = generateOTP();
+
+  // Store OTP in memory or database
+  otpDB[email] = otp;
+
+  // Send OTP to user's email
+  const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.APP_SPECIFIC_PASSWORD // Use the generated app-specific password here
+      }
+  });
+
+  const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: mail,
+      subject: 'Password Reset OTP',
+      text: `Your OTP for password reset is: ${otp}`
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+          console.error('Error sending email:', error);
+          res.status(500).json({ error: 'Failed to send OTP' });
+      } else {
+          console.log('Email sent:', info.response);
+          res.status(200).json({ message: 'OTP sent successfully' });
+      }
+  });
+}
 
 let signUpPostPage = async (req, res) => {
   try {
@@ -700,5 +738,5 @@ module.exports = {delwish,
   loginGetPage,
   logoutPage,
   addtocart,
-  viewCart,updatecart,removeCartItem,addtowishlist,discount  ,pcheckout,fcheckout,orderview
+  viewCart,updatecart,removeCartItem,addtowishlist,discount  ,pcheckout,fcheckout,orderview,ResetPasswordPost
 };

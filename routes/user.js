@@ -37,7 +37,7 @@ router.get('/orderview',authMiddleware,userControllers.orderview)
 router.get('/login',userControllers.loginGetPage)
 router.get('/signup',userControllers.signup)
 router.get('/forget',userControllers.forgetpass)
-router.post('/forget',userControllers.forgetpass)
+
 router.get('/cart',authMiddleware,userControllers.viewCart)
 router.post('/add-to-cart',authMiddleware,userControllers.addtocart)
 router.post('/updateQuantity',authMiddleware,userControllers.updatecart)
@@ -54,5 +54,6 @@ router.post('/login', userControllers.loginPostPage);
 
 router.get('/logout',userControllers.logoutPage)
 router.get('/resetpass',userControllers.ResetPassword)
+router.post('/forgot-password',userControllers.ResetPasswordPost)
 router.delete('/wishlist/:productId',authMiddleware,userControllers.delwish)
 module.exports=router;
