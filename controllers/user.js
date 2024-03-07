@@ -54,8 +54,21 @@ let ResetPassword = (req, res) => {
 };
 
 let ResetPasswordPostFinal = async(req,res)=>{
-  console.log(req.body)
-}
+  try {
+    console.log("entered password change section");
+    let resolved = await Userhelpers.changePasswordHelper(req.body);
+    if (resolved.userNotFound) {
+        console.log("Wrong  email or username entered!");
+        res.status(200).json({ userNotFound: true }); // Send JSON response
+    } else {
+        console.log("Password changed successfully");
+        res.status(200).json({ success: true }); // Send JSON response
+    }
+  } catch (error) {
+    res.render("error", { print: error });
+  }
+};
+
 let verifyotp =async(req,res,email)=>{
 
   

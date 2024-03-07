@@ -93,7 +93,27 @@ function signupHelper(recievedUserData) {
         { new: true }
     ).then(updatedCounter => updatedCounter.value);
 }
+
+function changePasswordHelper(userData) {
+  const { email, newPassword } = userData;
+  return new Promise(async (resolve, reject) => {
+      try {
+          const existingUser = await User.findOne({ mail: email });
+          if (existingUser) {
+              const hashedPassword = await bcrypt.hash(newPassword, 10);
+              existingUser.password = hashedPassword;
+              await existingUser.save();
+              resolve({ success: true });
+          } else {
+              resolve({ userNotFound: true });
+          }
+      } catch (error) {
+          reject(error);
+      }
+  });
+}
+
   
 module.exports = {
-     signupHelper, loginHelper,addToCart,getNextOrderNumber
+     signupHelper, loginHelper,addToCart,getNextOrderNumber,changePasswordHelper
   }

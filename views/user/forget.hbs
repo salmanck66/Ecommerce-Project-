@@ -18,8 +18,17 @@
             <div class="row justify-content-center">
                 <div class="col-12 col-md-9 col-lg-7 col-xl-6 col-xxl-6">
                     <div class="card border-0 shadow-lg rounded-4">
+                        
                         <div class="card-body p-3 p-md-4 p-xl-5">
+                            <div class="align align-items-end d-flex justify-content-end">
+                            <a href="/login"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">
+                                <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z"/>
+                            </svg>
+                            </a>
+                            </div>
+
                             <div class="row">
+                                
                                 <div class="col-12">
                                     <div class="mb-3">
                                         <h3>Recover Account</h3>
@@ -50,8 +59,8 @@
 <div class="form-floating mb-3">
     <input type="text" class="form-control" name="otp" id="otp" placeholder="OTP">
     <label for="otp" class="form-label">OTP</label>
-    <button id="generateBtn" class="btn btn-sm btn-primary mt-3" onclick="generateOTP()" type="button">Generate OTP</button>
-    <button id="VerifyBtn" class="btn btn-sm btn-primary mt-3" onclick="verifyOTP()" type="button" hidden>Verify OTP</button>
+    <button id="generateBtn" class="btn btn-sm btn-dark mt-3" onclick="generateOTP()" type="button">Generate OTP</button>
+    <button id="VerifyBtn" class="btn btn-sm btn-dark mt-3" onclick="verifyOTP()" type="button" hidden>Verify OTP</button>
   
 </div>
 
@@ -61,7 +70,7 @@
                                     </div>
                                     <div class="col-12">
                                         <div class="d-grid">
-                                            <button class="btn bsb-btn-2xl btn-primary" type="button" id="resetPasswordBtn" onclick="PasswordChange()" disabled>Reset Password</button>
+                                            <button class="btn bsb-btn-2xl btn-dark" type="button" id="resetPasswordBtn" onclick="PasswordChange()" disabled>Reset Password</button>
                                         </div>
                                     </div>
                                 </div>
@@ -72,7 +81,7 @@
             </div>
         </div>
     </section>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
 function verifyOTP() {
     var otp = document.getElementById('otp').value;
@@ -86,7 +95,7 @@ function verifyOTP() {
             document.getElementById('VerifyBtn').style.display = 'none'; // Hide the Verify OTP button
             document.getElementById('timer').style.display = 'none'; // Hide the timer
             document.getElementById('otp').style.display = 'none'; // Hide the timer
-            document.getElementById('resetPasswordBtn').style.display = 'none'; // Display success message
+            document.getElementById('resetPasswordBtn').removeAttribute("disabled","disabled") // Display success message
         } else {
             console.error('Error verifying OTP:', xhr.responseText);
         }
@@ -97,28 +106,43 @@ function verifyOTP() {
     xhr.send(JSON.stringify({ otp: otp }));
 }
 
-
-
-        function PasswordChange()
-        {
-            var password = document.getElementById('password').value;
-            var gmail = document.getElementById('email').value;
-            var xhr = new XMLHttpRequest();
-             xhr.open('POST', '/resetpassload');
-             xhr.setRequestHeader('Content-Type', 'application/json');
-                     xhr.onload = function () {
-            if (xhr.status === 200) {
-                console.log('password reset success ');
-
+        function PasswordChange() {
+    var newPassword = document.getElementById('password').value;
+    var email = document.getElementById('email').value;
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/resetpassload');
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            var response = JSON.parse(xhr.responseText);
+            if (response.userNotFound) {
+                // Display error message if user is not found
+                Swal.fire({
+                    text: "Wrong  email or username entered!",
+                    icon: "error",
+                    showConfirmButton: false
+                });
             } else {
-                console.error('Error sending Otp:', xhr.responseText);
+                // Display success message if password is changed successfully
+                Swal.fire({
+                    text: "Password Changed Successfully",
+                    icon: "success",
+                    showConfirmButton: false
+                });
+                // Redirect to login page after a delay
+                setTimeout(() => {
+                    window.location.href = "/login";
+                }, 2000);
             }
-        };
-        xhr.onerror = function () {
-            console.error('Request failed');
-        };
-        xhr.send(JSON.stringify({ otp: otp }));
+        } else {
+            console.error('Error changing password:', xhr.responseText);
         }
+    };
+    xhr.onerror = function () {
+        console.error('Request failed');
+    };
+    xhr.send(JSON.stringify({ email, newPassword }));
+}
 
         function enableGenerateButton() {
             var email = document.getElementById('email').value;
@@ -159,7 +183,6 @@ function verifyOTP() {
     // Show the timer
     var timer = document.getElementById('timer');
     timer.style.display = 'block';
-    document.getElementById('resetPasswordBtn').removeAttribute("disabled");
     document.getElementById('VerifyBtn').removeAttribute("hidden"); // Show the Verify OTP button
 
     // Start the countdown
@@ -169,12 +192,14 @@ function verifyOTP() {
         seconds--;
         countdownElement.textContent = seconds;
         if (seconds <= 0) {
-            clearInterval(countdownInterval);
-            timer.style.display = 'none';
-            generateBtn.style.display = 'block';
-            document.getElementById('VerifyBtn').setAttribute("hidden");
-            enableGenerateButton(); // Enable the Generate OTP button again
-            countdownElement.textContent = '60';
+        clearInterval(countdownInterval);
+        if (document.getElementById('resetPasswordBtn').disabled) {
+        timer.style.display = 'none';
+        generateBtn.style.display = 'block';
+        document.getElementById('VerifyBtn').setAttribute("hidden", "hidden");
+        enableGenerateButton(); // Enable the Generate OTP button again
+        countdownElement.textContent = '60';
+    }
         }
     }, 1000);
     sendEmailForOTP();
