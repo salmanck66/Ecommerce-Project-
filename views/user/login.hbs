@@ -38,14 +38,14 @@
                                             <input type="text" class="form-control" name="mail" id="mail" placeholder="name@example.com" required>
                                             <label for="mail" class="form-label">Phone number / email</label>
                                         </div>
-                                        <p id="mailError" class="text-danger"></p> <!-- Error message for email -->
+                                        <p id="mailError" style="font-size: .8rem;" class="text-danger">{{mailError}}</p>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
                                             <input type="password" class="form-control" name="password" id="password" value="" placeholder="password" required>
                                             <label for="password" class="form-label">Password</label>
                                         </div>
-                                        <p id="passwordError" class="text-danger"></p> <!-- Error message for password -->
+                                        <p id="passwordError" style="color: red;" class="text-danger">{{passwordError}}</p> <!-- Error message for password -->
                                     </div>
                                     <div class="col-12">
                                         <div class="form-check">
@@ -72,7 +72,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-12">
-                                    <p class="mt-1 mb-3">New to jcclub?</p>
+                                    <a href="signup"><p class="mt-1 mb-3 link-secondary">New to jcclub?</p></a>
                                     <div class="d-flex gap-3 flex-column">
                                         <a href="signup" class="btn bsb-btn-xl btn-dark">
                                             <span class="ms-2 fs-6 text-uppercase">Create your account</span>
@@ -80,7 +80,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
+                            {{!-- <div class="row">
                                 <div class="col-12">
                                     <p class="mt-1 mb-3">Or continue with</p>
                                     <div class="d-flex gap-3 flex-column">
@@ -98,7 +98,7 @@
                                         </a>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>
@@ -106,34 +106,18 @@
         </div>
     </section>
 
-   <script>
-    function validateForm() {
-        var mailOrPhone = document.getElementById('mail').value;
-        var password = document.getElementById('password').value;
-        var mailError = document.getElementById('mailError');
-        var passwordError = document.getElementById('passwordError');
-        var valid = true;
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-        mailError.textContent = ''; // Clear previous error messages
-        passwordError.textContent = '';
-
-        // Email or Phone validation
-        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        var phoneRegex = /^\d{10}$/; // 10 numbers exactly
-        if (!(emailRegex.test(mailOrPhone) || phoneRegex.test(mailOrPhone))) {
-            mailError.textContent = 'Please enter a valid email address or a phone number with exactly 10 numbers.';
-            valid = false;
-        }
-
-        // Password validation
-        if (password.trim() === '') {
-            passwordError.textContent = 'Please enter a password.';
-            valid = false;
-        }
-
-        return valid;
-    }
+<script>
+    // Function to clear the error message when typing in the email input field
+    $('#mail').on('input', function() {
+        var error = document.getElementById('mailError');
+        error.style.display = 'none'
+    });
+    $('#password').on('input', function() {
+        var error = document.getElementById('passwordError');
+        error.style.display = 'none'
+    });
 </script>
-
 </body>
 </html>

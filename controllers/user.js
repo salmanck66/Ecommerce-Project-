@@ -164,19 +164,22 @@ let loginPostPage = async (req, res) => {
     if (resolved.invalidUsername) {
       console.log("invalid user name");
       return res.render("user/login", {
-        mailError: "invalid user Mail",
+        layout:false,
+        mailError: "Mail id not registered",
         mail: req.body.mail,
         password: req.body.password,
       });
     } else if (resolved.passwordMismatch) {
       console.log("password not match");
       return res.render("user/login", {
+        layout:false,
         passwordError: "Wrong Password",
         password: req.body.password,
         mail: req.body.mail,
       });
     } else if (resolved.blockedUser) {
       return res.render("user/login", {
+        layout:false,
         mailError: "This user has been temporarily BLOCKED",
         password: req.body.password,
         mail: req.body.mail,
