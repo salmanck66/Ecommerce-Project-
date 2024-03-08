@@ -596,9 +596,15 @@
         body: JSON.stringify({ userId, productId })
     })
     .then(response => {
+		console.log(response)
         if (!response.ok) {
             throw new Error('Failed to add/remove product to/from wishlist');
         }
+		if(response.redirected)
+		{
+			window.location.href = "/login";
+		}
+		
         return response.json(); // parse JSON response
     })
     .then(data => {

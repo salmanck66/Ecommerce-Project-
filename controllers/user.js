@@ -358,8 +358,8 @@ let addtowishlist = async (req, res) => {
     const product = await Product.findById(productId);
 
     if (!user) {
-      return res.status(401).redirect("/login", { error: 'User not authenticated' });
-    }
+      return res.status(401).json({ error: 'User not authenticated' });
+  }
 
     if (!product) {
       return res.status(404).json({ error: 'Product not found' });
