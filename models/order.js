@@ -37,7 +37,7 @@ const orderSchema = new mongoose.Schema({
     },
     paymentMethod: {
         type: String,
-        enum: ['COD', 'Razopay' ], // Add other payment methods as needed
+        enum: ['COD', 'Online'], // Add other payment methods as needed
         required: true
     },
     orderDate: {

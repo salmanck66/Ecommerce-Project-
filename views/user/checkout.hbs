@@ -58,10 +58,15 @@
     <input id="COD" name="paymentMethod" type="radio" class="custom-control-input" value="COD" required>
     <label class="custom-control-label" for="COD">COD</label>
 </div>
+<div class="custom-control custom-radio">
+    <input id="Online" name="paymentMethod" type="radio" class="custom-control-input" value="Online" required>
+    <label class="custom-control-label" for="Online">Online Payment</label>
+    <button class="btn btn-dark btn-sm mx-4" type="button">Pay Now</button>
+</div>
 
                 </div>
                 <hr class="mb-4">
-                <button class="btn btn-dark btn-lg btn-block" type="submit">Continue to checkout</button>
+                <button class="btn btn-dark btn-lg btnsubmit btn-block" type="submit">Continue to checkout</button>
             </form>
         </div>
     </div>
@@ -69,6 +74,13 @@
 
 <script>
     $(document).ready(function() {
+        $('#Online').on('change', function(event) {
+        // Prevent form submission if validation fails
+        if ($(this).is(":checked")) {
+            $('.btnsubmit').hide();
+        }
+    });
+});
         // Function to validate the form
         function validateForm() {
             const firstName = $('#firstName').val().trim();
@@ -156,4 +168,6 @@
             }
         });
     });
+
+    
 </script>
