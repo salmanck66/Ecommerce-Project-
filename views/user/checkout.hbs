@@ -74,13 +74,18 @@
 
 <script>
     $(document).ready(function() {
+          $('.btn-pay-now').hide();
+
         $('#Online').on('change', function(event) {
-        // Prevent form submission if validation fails
-        if ($(this).is(":checked")) {
-            $('.btnsubmit').hide();
-        }
-    });
-});
+            // Show or hide the "Pay Now" button based on checkbox state
+            if ($(this).is(":checked")) {
+                $('.btn-pay-now').show();
+                $('.btnsubmit').prop('disabled', true); // Disable the "Continue to checkout" button
+            } else {
+                $('.btn-pay-now').hide();
+                $('.btnsubmit').prop('disabled', false); // Enable the "Continue to checkout" button
+            }
+        });
         // Function to validate the form
         function validateForm() {
             const firstName = $('#firstName').val().trim();

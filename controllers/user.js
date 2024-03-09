@@ -269,10 +269,14 @@ let product =async (req, res) => {
   if (req.cookies.jwt) {
     let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
     var userName = tokenExracted.userName;
+    var userId = tokenExracted.userId
     console.log(userName);
   }
-  console.log("product");
-  res.render("user/product",{userName});
+  console.log("product page");
+  const category = await Category.find({})
+  const product = await Product.find({})
+  console.log(product);
+  res.render("user/product",{userName,category,product,userId});
 };
 let productdetail = async (req, res) => {
   try {
