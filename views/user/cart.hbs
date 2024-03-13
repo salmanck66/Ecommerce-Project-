@@ -20,7 +20,7 @@
             <div class="m-l-25 m-r--38 m-lr-0-xl">
                 <div class="wrap-table-shopping-cart">
                     <table class="table-shopping-cart">
-                        <tr class="table_head">
+                        <tr class="table_head te">
                             <th class="column-1">Product</th>
                             <th class="column-2"></th>
                             <th class="column-3">Price</th>
@@ -43,9 +43,9 @@
                             <td class="column-2 prod" hidden>{{this.productId}}</td>
                             <td class="column-8 size" hidden>{{this.size}}</td>
                             <td class="column-3">{{this.price}}</td>
-                            <td class="column-7">{{lookup productstock size}}</td>
-                            <td class="column-4">
-                                <div class="wrap-num-product flex-w  m-r-0 w-50">
+                            <td class="column-7" hidden>{{lookup productstock size}}</td>
+                            <td class="column-4 ">
+                                <div class="wrap-num-product flex-w  m-r-0 w-50" style="display: flex; align-items: center;">
                                     <input class="mtext-104 cl3 txt-center num-product qtyinput w-100"  type="number" name="qty" value="{{this.quantity}}">
                                 </div>
                             </td>
@@ -74,6 +74,7 @@
                             <option value="{{this.couponCode}}">{{this.couponCode}}</option>
                             {{/each}}
                         </select>
+                        
                     </div>
                 </div>
 
@@ -125,6 +126,7 @@
     </div>
 </div>
 
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <!-- JavaScript -->
 <script>
     function codeApply() {
@@ -133,6 +135,16 @@
         var selectedCouponCode = select.value;
         input.value = selectedCouponCode;
     }
+    function showToast(message, type) {
+            Toastify({
+                text: message,
+                duration: 3000,
+                close: true,
+                gravity: "bottom", // `top` or `bottom`
+                position: "right", // `left`, `center` or `right`
+                backgroundColor: type === "error" ? "#ff0000" : "#33cc33",
+            }).showToast();
+        }
 
     $(document).ready(function() {
         function checkQuantityMatchStock() {
@@ -240,18 +252,18 @@
                 updateCartTotal(data.discountedTotal);
 
                 // Display success message to the user
-                document.getElementById( "CouponMessageSuccess" ).textContent = data.message
+                showToast(data.message, "success");
                 document.getElementById("coupbtn").style.display = "none"
                 document.getElementById("CouponRemove").style.display = ""
 				var select = document.getElementById("couponCodeSelect").style.display= "none"
             } else {
                 // Display error message to the user
-                document.getElementById( "CouponMessage" ).textContent = data.message
+                showToast(data.message, "error");
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('An error occurred while applying the coupon');
+            showToast(error, "error");
         });
     }
 
