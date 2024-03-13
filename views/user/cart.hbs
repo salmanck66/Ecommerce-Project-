@@ -1,4 +1,27 @@
 <!-- HTML -->
+<style>.form-select {
+  padding: 8px 16px; /* Adjust padding as needed */
+  font-size: 16px; /* Adjust font size as needed */
+  border: 1px solid #ccc; /* Add border */
+  border-radius: 5px; /* Add border radius */
+  background-color: #fff; /* Set background color */
+  color: #333; /* Set text color */
+}
+
+/* Style the options */
+.form-select option {
+  padding: 8px 16px; /* Adjust padding as needed */
+  font-size: 16px; /* Adjust font size as needed */
+  background-color: #fff; /* Set background color */
+  color: #333; /* Set text color */
+}
+
+/* Style the select box when focused */
+.form-select:focus {
+  outline: none; /* Remove default focus outline */
+  border-color: #007bff; /* Add focus border color */
+  box-shadow: 0 0 0 0.15rem rgba(0, 123, 255, 0.25); /* Add focus box shadow */
+}</style>
 <!-- Breadcrumb -->
 <div class="container" style="margin-top: 12vh;">
     <div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
@@ -69,7 +92,7 @@
                             Remove Coupon
                             </div>
                         </div>
-                        <select class="form-select" aria-label="Default select example" onchange="codeApply()" id="couponCodeSelect">
+                        <select class="ml-4 form-select" aria-label="Default select example" onchange="codeApply()" id="couponCodeSelect">
                             {{#each coupon}}
                             <option value="{{this.couponCode}}">{{this.couponCode}}</option>
                             {{/each}}

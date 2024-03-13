@@ -11,6 +11,7 @@ const { response } = require('express');
 const Wishlist = require("../models/wishlist")
 const Counter = require("../models/counter")
 const Handlebars = ("handlebars");
+const razorpay = require('razorpay');
 
 function signupHelper(recievedUserData) {
     const { firstName, lastName, mail, phoneNumber, password } = recievedUserData
@@ -113,7 +114,15 @@ function changePasswordHelper(userData) {
   });
 }
 
+let razorpayInstanceHelp = async  function (data) {
+  return new razorpay(
+  {
+    key_id :process.env.RZPAY_KEY,
+    key_secret:process.env.RZPAY_KEY_SECRET
+  }
+  )
+};
   
 module.exports = {
-     signupHelper, loginHelper,addToCart,getNextOrderNumber,changePasswordHelper
+     signupHelper, loginHelper,addToCart,getNextOrderNumber,changePasswordHelper,razorpayInstanceHelp
   }

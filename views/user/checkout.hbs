@@ -52,17 +52,17 @@
                 <hr class="mb-4">
                 <h4 class="mb-3">Payment</h4>
                 <div class="d-block my-3">
+
+                <div class="custom-control custom-radio">
+                    <input id="COD" name="paymentMethod" type="radio" class="custom-control-input" value="COD" required>
+                <label class="custom-control-label" for="COD">COD</label>
+            </div>
                     <div class="custom-control custom-radio">
-                    
-<div class="custom-control custom-radio">
-    <input id="COD" name="paymentMethod" type="radio" class="custom-control-input" value="COD" required>
-    <label class="custom-control-label" for="COD">COD</label>
-</div>
-<div class="custom-control custom-radio">
-    <input id="Online" name="paymentMethod" type="radio" class="custom-control-input" value="Online" required>
-    <label class="custom-control-label" for="Online">Online Payment</label>
-    <button class="btn btn-dark btn-sm mx-4" type="button">Pay Now</button>
-</div>
+            <input id="Online" name="paymentMethod" type="radio" class="custom-control-input" value="Online" required>
+                 <label class="custom-control-label" for="Online">Online Payment</label>
+             <button class="btn btn-dark btn-pay-now btn-sm mx-4" onclick="payNow({{cart.carttotal}})" type="button">Pay Now</button>
+
+                </div>
 
                 </div>
                 <hr class="mb-4">
@@ -71,21 +71,27 @@
         </div>
     </div>
 </div>
-
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
     $(document).ready(function() {
-          $('.btn-pay-now').hide();
-
-        $('#Online').on('change', function(event) {
-            // Show or hide the "Pay Now" button based on checkbox state
-            if ($(this).is(":checked")) {
-                $('.btn-pay-now').show();
-                $('.btnsubmit').prop('disabled', true); // Disable the "Continue to checkout" button
-            } else {
+        $('.btn-pay-now').hide  ();
+        function togglePayNowButton() {
+        if ($('#Online').is(":checked")) {
+            $('.btn-pay-now').show();
+            $('.btnsubmit').prop('disabled', true); // Disable the "Continue to checkout" button
+        } else 
+        if($('#COD').is(":checked"))
+        {
                 $('.btn-pay-now').hide();
                 $('.btnsubmit').prop('disabled', false); // Enable the "Continue to checkout" button
-            }
-        });
+        }
+        
+    }
+        togglePayNowButton();
+        $("#Online,#COD").on('change', function(event) {
+        togglePayNowButton();
+    });
+
         // Function to validate the form
         function validateForm() {
             const firstName = $('#firstName').val().trim();
@@ -174,5 +180,35 @@
         });
     });
 
-    
+    function payNow(amount) {
+    console.log(amount);
+    var formData = {
+        amount: amount
+    };
+    $.ajax({
+        url: "/payment",
+        method:"POST",
+        data: formData,
+        success: function (data) {
+            var options = {
+                key: data.key_id,
+                amount: data.amount,
+                currency: "INR",
+                order_id: data.order_id,
+                handler: function (response) {
+                    alert("Payment successful");
+                }
+            };
+            var razorpayObject = new Razorpay(options);
+            razorpayObject.on('payment.failed', function (response) {
+                alert("Payment Failed");
+            });
+            razorpayObject.open();
+        },
+        error: function (err) {
+            alert("Error occurred: " + err);
+        }
+    });
+}
+
 </script>
