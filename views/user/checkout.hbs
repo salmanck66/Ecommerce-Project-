@@ -35,18 +35,46 @@
                     <input type="text" class="form-control" name="adress2" id="address2" placeholder="Apartment or suite">
                 </div>
                 <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <label for="state">State</label>
-                        <select class="custom-select d-block w-100" name="state" id="state" required>
-                            <option value="">Choose...</option>
-                            <option>Kerala</option>
-                        </select>
-                        <div class="invalid-feedback"> Please provide a valid state. <span class="error-message"></span></div>
-                    </div>
+<div class="col-md-4 mb-3">
+    <label for="state">State</label>
+    <select class="custom-select d-block w-100" name="state" id="state" required>
+        <option value="">Choose...</option>
+        <option value="Andhra Pradesh">Andhra Pradesh</option>
+        <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+        <option value="Assam">Assam</option>
+        <option value="Bihar">Bihar</option>
+        <option value="Chhattisgarh">Chhattisgarh</option>
+        <option value="Goa">Goa</option>
+        <option value="Gujarat">Gujarat</option>
+        <option value="Haryana">Haryana</option>
+        <option value="Himachal Pradesh">Himachal Pradesh</option>
+        <option value="Jharkhand">Jharkhand</option>
+        <option value="Karnataka">Karnataka</option>
+        <option value="Kerala">Kerala</option>
+        <option value="Madhya Pradesh">Madhya Pradesh</option>
+        <option value="Maharashtra">Maharashtra</option>
+        <option value="Manipur">Manipur</option>
+        <option value="Meghalaya">Meghalaya</option>
+        <option value="Mizoram">Mizoram</option>
+        <option value="Nagaland">Nagaland</option>
+        <option value="Odisha">Odisha</option>
+        <option value="Punjab">Punjab</option>
+        <option value="Rajasthan">Rajasthan</option>
+        <option value="Sikkim">Sikkim</option>
+        <option value="Tamil Nadu">Tamil Nadu</option>
+        <option value="Telangana">Telangana</option>
+        <option value="Tripura">Tripura</option>
+        <option value="Uttar Pradesh">Uttar Pradesh</option>
+        <option value="Uttarakhand">Uttarakhand</option>
+        <option value="West Bengal">West Bengal</option>
+    </select>
+    <div class="invalid-feedback"> Please provide a valid state. <span class="error-message"></span></div>
+</div>
+
                     <div class="col-md-3 mb-3">
                         <label for="zip">Zip</label>
                         <input type="text" class="form-control" id="zip" name="zip" placeholder="" required>
-                        <small class="invalid-feedbackff text-danger"></small>
+                        <small class="invalid-feedbacksda text-danger"></small>
                     </div>
                 </div>
                 <hr class="mb-4">
@@ -77,6 +105,7 @@
         </div>
     </div>
 </div>
+<script src="https://unpkg.com/indian-states-cities@1.0.1/dist/index.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
@@ -162,12 +191,18 @@
             }
 
             // Validate zip code
-            if (zip === '' && zip.length !==6) {
-                isValid = false;
-                $('#zip').next('.invalid-feedback').text('Zip code should be 6 charecters');
-            } else {
-                $('#zip').next('.invalid-feedback').text('');
-            }
+             if (zip === '') {
+        isValid = false;
+        $('.invalid-feedbacksda').text('Zip code is required.');
+    } else if (zip.length !== 6) {
+        isValid = false;
+        $('.invalid-feedbacksda').text('Zip code should be 6 digits');
+    } else if (isNaN(zip)) {
+        isValid = false;
+        $('.invalid-feedbacksda').text('Zip code should be digits');
+    } else {
+        $('.invalid-feedbacksda').text('');
+    }
 
             return isValid;
         }
