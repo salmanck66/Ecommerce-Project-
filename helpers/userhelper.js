@@ -114,15 +114,14 @@ function changePasswordHelper(userData) {
   });
 }
 
-let razorpayInstanceHelp = async  function (data) {
-  return new razorpay(
+let razorpayInstanceHelp =  new razorpay(
   {
     key_id :process.env.RZPAY_KEY,
     key_secret:process.env.RZPAY_KEY_SECRET
   }
   )
-};
-  
+
+
 module.exports = {
      signupHelper, loginHelper,addToCart,getNextOrderNumber,changePasswordHelper,razorpayInstanceHelp
   }

@@ -764,31 +764,40 @@ const delwish = async (req, res) => {
   }
 }
 
-let paymetController = async (req,res)=>
-{
-  console.log(req.body);
- const amount =req.body.amount*100
-    const options = {
-      amount : amount,
-      currency:"INR",
-      receipt:"razorUser@gmail.com"
-    }
-Userhelpers.razorpayInstanceHelp(options, 
-  (err, order)=>{
-      if(!err){
-          res.status(200).send({
-              success:true,
-              msg:'Order Created',
-              order_id:order.id,
-              amount:amount,
-              key_id:RAZORPAY_ID_KEY,
-          });
+let paymetController = async(req,res)=>{
+  try {
+      const amount = req.body.amount*100
+      const options = {
+          amount: amount,
+          currency: 'INR',
+          receipt: 'razorUser@gmail.com'
       }
-      else{
-          res.status(400).send({success:false,msg:'Something went wrong!'});
-      }
+
+      Userhelpers.razorpayInstanceHelp.orders.create(options, 
+          (err, order)=>{
+              if(!err){
+                  res.status(200).send({
+                      success:true,
+                      msg:'Order Created',
+                      order_id:order.id,
+                      amount:amount,
+                      key_id:process.env.RZPAY_KEY,
+                      product_name:req.body.name,
+                      description:req.body.description,
+                      contact:"8567345632",
+                      name: "Sandeep Sharma",
+                      email: "sandeep@gmail.com"
+                  });
+              }
+              else{
+                  res.status(400).send({success:false,msg:'Something went wrong!'});
+              }
+          }
+      );
+
+  } catch (error) {
+      console.log(error.message);
   }
-);
 }
 
 module.exports = {delwish,paymetController,
