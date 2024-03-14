@@ -60,29 +60,33 @@
                     <div class="custom-control custom-radio">
             <input id="Online" name="paymentMethod" type="radio" class="custom-control-input" value="Online" required>
                  <label class="custom-control-label" for="Online">Online Payment</label>
-             <button class="btn btn-dark btn-pay-now btn-sm mx-4" onclick="payNow({{cart.carttotal}})" type="button">Pay Now</button>
+             {{!-- <button class="btn btn-dark btn-pay-now btn-sm mx-4" onclick="payNow({{cart.carttotal}})" type="button">Pay Now</button> --}}
 
                 </div>
 
                 </div>
                 <hr class="mb-4">
-                <button class="btn btn-dark btn-lg btnsubmit btn-block" type="submit">Continue to checkout</button>
+                <button class="btn btn-dark btn-lg btnsubmit btn-COD  btn-block" type="submit">Continue to checkout</button>
+                <button class="btn btn-dark btn-lg btnsubmit btn-pay-now  btn-block" onclick="payNow({{cart.carttotal}})" type="submit">Pay And Checkout</button>
             </form>
         </div>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
     $(document).ready(function() {
-        $('.btn-pay-now').hide  ();
+        $('.btn-pay-now').hide();
         function togglePayNowButton() {
         if ($('#Online').is(":checked")) {
+            $('.btn-COD').hide();
             $('.btn-pay-now').show();
-            $('.btnsubmit').prop('disabled', true); // Disable the "Continue to checkout" button
+// Disable the "Continue to checkout" button
         } else 
         if($('#COD').is(":checked"))
         {
                 $('.btn-pay-now').hide();
+                $('.btn-COD').show();
                 $('.btnsubmit').prop('disabled', false); // Enable the "Continue to checkout" button
         }
         
@@ -197,6 +201,7 @@
                 order_id: data.order_id,
                 handler: function (response) {
                     alert("Payment successful");
+
                 }
             };
             var razorpayObject = new Razorpay(options);

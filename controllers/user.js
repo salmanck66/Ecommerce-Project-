@@ -437,7 +437,8 @@ let fcheckout = async (req, res) => {
       }
       const size = item.size;
       if (!product.stock[size] || product.stock[size] < item.quantity) {
-        throw new Error(`Insufficient stock for product: ${product.name}`);
+        
+        res.json("Out of Stock");
       }
       // Deduct quantity from stock for the specific size
       product.stock[size] -= item.quantity;
