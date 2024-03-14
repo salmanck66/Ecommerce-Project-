@@ -68,7 +68,7 @@
         <option value="Uttarakhand">Uttarakhand</option>
         <option value="West Bengal">West Bengal</option>
     </select>
-    <div class="invalid-feedback"> Please provide a valid state. <span class="error-message"></span></div>
+    <small class="invalid-feedbacksav text-danger"></small>
 </div>
 
                     <div class="col-md-3 mb-3">
@@ -108,8 +108,10 @@
 <script src="https://unpkg.com/indian-states-cities@1.0.1/dist/index.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script>
     $(document).ready(function() {
+
         $('.btn-pay-now').hide();
         function togglePayNowButton() {
         if ($('#Online').is(":checked")) {
@@ -131,6 +133,12 @@
     });
 
         // Function to validate the form
+
+
+
+        // Function to validate name format
+
+    });
         function validateForm() {
             const firstName = $('#firstName').val().trim();
             console.log(firstName)
@@ -144,6 +152,9 @@
             console.log(address)
             const zip = $('#zip').val().trim();
             console.log(zip)
+            const state = $('#state').val();
+            console.log(state)
+            
 
             let isValid = true;
 
@@ -203,12 +214,16 @@
     } else {
         $('.invalid-feedbacksda').text('');
     }
+        if (state === '') {
+        isValid = false;
+        $('.invalid-feedbacksav').text('Please select a state.'); // Display error message for state selection
+    } else {
+        $('.invalid-feedbacksav').text(''); // Clear error message if state is selected
+    }
 
             return isValid;
         }
-
-        // Function to validate name format
-        function isValidName(name) {
+                function isValidName(name) {
             const nameRegex = /^[a-zA-Z\s]*$/;
             return nameRegex.test(name) && name.length < 10;
         }
@@ -236,10 +251,24 @@
                 event.preventDefault();
             }
         });
-    });
+
+            function showToast(message, type) {
+            Toastify({
+                text: message,
+                duration: 3000,
+                close: true,
+                gravity: "bottom", // `top` or `bottom`
+                position: "right", // `left`, `center` or `right`
+                backgroundColor: type === "error" ? "#ff0000" : "#33cc33",
+            }).showToast();
+        }
 
     function payNow(amount) {
     console.log(amount);
+    if (!validateForm()) {
+    event.preventDefault();
+    return showToast("Please fill form correctly", "error")
+    }
     var formData = {
         amount: amount
     };
@@ -254,7 +283,6 @@
                 currency: "INR",
                 order_id: data.order_id,
                 handler: function (response) {
-                alert("Payment successful");
                 document.getElementById('payment-form').submit();
                 }
             };
