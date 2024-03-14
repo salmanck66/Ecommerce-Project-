@@ -2,7 +2,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8 order-md-1">
             <h4 class="mb-3">Billing address</h4>
-            <form  action="/final-checkout" method="post">
+            <form  action="/final-checkout" id="payment-form" method="post">
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="firstName">First name</label>
@@ -67,7 +67,7 @@
                 </div>
                 <hr class="mb-4">
                 <button class="btn btn-dark btn-lg btnsubmit btn-COD  btn-block" type="submit">Continue to checkout</button>
-                <button class="btn btn-dark btn-lg btnsubmit btn-pay-now  btn-block" onclick="payNow({{cart.carttotal}})" type="submit">Pay And Checkout</button>
+                <button class="btn btn-dark btn-lg btnsubmit btn-pay-now  btn-block" onclick="payNow({{cart.carttotal}})" type="button">Pay And Checkout</button>
             </form>
         </div>
     </div>
@@ -200,8 +200,8 @@
                 currency: "INR",
                 order_id: data.order_id,
                 handler: function (response) {
-                    alert("Payment successful");
-
+                alert("Payment successful");
+                document.getElementById('payment-form').submit();
                 }
             };
             var razorpayObject = new Razorpay(options);
