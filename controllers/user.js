@@ -452,10 +452,11 @@ let fcheckout = async (req, res) => {
       items: cart.items,
       totalAmount: cart.carttotal,
       shippingAddress: {
-        firstName: req.body.fname[0],
-        lastName: req.body.fname[1],
-        email: req.body.mail,
+        firstName: req.body.fname,
+        lastName: req.body.lname,
+        email: req.body.email,
         address: req.body.adress,
+        phonenumber: req.body.number,
         address2: req.body.adress2,
         state: req.body.state,
         zip: req.body.zip

@@ -30,6 +30,7 @@ const orderSchema = new mongoose.Schema({
         firstName: String,
         lastName: String,
         email: String,
+        phonenumber: String,
         address: String,
         address2: String,
         state: String,

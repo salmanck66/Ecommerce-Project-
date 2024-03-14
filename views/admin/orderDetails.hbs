@@ -8,7 +8,8 @@
                         <h5 class="card-title">Order Information</h5>
                         <p class="card-text">Order ID: {{ order.orderId }}</p>
                         <p class="card-text">Customer Name: {{ order.shippingAddress.firstName }} {{ order.shippingAddress.lastName }}</p>
-                        <p class="card-text">Email: {{ order.shippingAddress.email }}</p>
+                        <p class="card-text">Email: {{ order.shippingAddress.email}}</p>
+                        <p class="card-text">Phone Number: {{ order.shippingAddress.phonenumber}}</p>
                         <p class="card-text">Address: {{ order.shippingAddress.address }}</p>
                         <p class="card-text">Address 2: {{ order.shippingAddress.address2 }}</p>
                         <p class="card-text">State: {{ order.shippingAddress.state }}</p>
