@@ -6,24 +6,29 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="firstName">First name</label>
-                        <input type="text" class="form-control" id="firstName" name="fname" placeholder="" value="" required="">
-                        <small class="invalid-feedbacks"></small>
+                        <input type="text" class="form-control" id="firstName" name="fname" placeholder="" value="" required>
+                        <small class="text-danger invalid-feedbacks"></small>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="lastName">Last name</label>
-                        <input type="text" class="form-control" id="lastName" name="fname" placeholder="" value="" required="">
-                        <small class="invalid-feedback"></small>
+                        <input type="text" class="form-control" id="lastName" name="lname" placeholder="" value="" required>
+                        <small class="invalid-feedbackd text-danger"></small>
                     </div>
                 </div>
                 <div class="mb-3">
                     <label for="email">Email <span class="text-muted">(Optional)</span></label>
-                    <input type="email" class="form-control" name="mail" id="email" placeholder="you@example.com">
-                    <div class="invalid-feedback"> Please enter a valid email address for shipping updates. <span class="error-message"></span></div>
+                    <input type="email" class="form-control" name="email" id="email" placeholder="you@example.com">
+                    <small class="invalid-feedbacke text-danger"></small>
+                </div>
+                <div class="mb-3">
+                    <label for="number">Contact Number </label>
+                    <input type="tel" class="form-control" name="number" id="number" placeholder="9999999999">
+                    <small class="invalid-feedbackdd text-danger"></small>
                 </div>
                 <div class="mb-3">
                     <label for="address">Address</label>
-                    <input type="text" class="form-control" id="address" name="adress" placeholder="1234 Main St" required="">
-                    <div class="invalid-feedback"> Please enter your shipping address. <span class="error-message"></span></div>
+                    <input type="text" class="form-control" id="address" name="adress" placeholder="1234 Main St" required>
+                    <small class="invalid-feedbackv text-danger"></small>
                 </div>
                 <div class="mb-3">
                     <label for="address2">Address 2 <span class="text-muted">(Optional)</span></label>
@@ -32,7 +37,7 @@
                 <div class="row">
                     <div class="col-md-4 mb-3">
                         <label for="state">State</label>
-                        <select class="custom-select d-block w-100" name="state" id="state" required="">
+                        <select class="custom-select d-block w-100" name="state" id="state" required>
                             <option value="">Choose...</option>
                             <option>Kerala</option>
                         </select>
@@ -40,8 +45,8 @@
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="zip">Zip</label>
-                        <input type="text" class="form-control" id="zip" name="zip" placeholder="" required="">
-                        <div class="invalid-feedback"> Zip code required. <span class="error-message"></span></div>
+                        <input type="text" class="form-control" id="zip" name="zip" placeholder="" required>
+                        <small class="invalid-feedbackff text-danger"></small>
                     </div>
                 </div>
                 <hr class="mb-4">
@@ -103,8 +108,13 @@
             const lastName = $('#lastName').val().trim();
             console.log(lastName)
             const email = $('#email').val().trim();
+            console.log(email)
+            const phno = $('#number').val().trim();
+            console.log(phno)
             const address = $('#address').val().trim();
+            console.log(address)
             const zip = $('#zip').val().trim();
+            console.log(zip)
 
             let isValid = true;
 
@@ -118,38 +128,43 @@
             } else {
                 $('#firstName').next('.invalid-feedbacks').text('');
             }
-
-            // Validate last name
-            if (lastName === '') {
+            if (lastName === '' )  {
                 isValid = false;
-                $('#lastName').next('.invalid-feedback').text('Last name should not be empty');
+                $('.invalid-feedbackd').text('Last name should not be empty');
             } else if (!isValidName(lastName)) {
                 isValid = false;
-                document.querySelector('invalid-feedback').textContent= 'Last name should not contain numbers and be less than 15 characte'
+                $('.invalid-feedbackd').text('Last name should not contain numbers and be less than 15 characters.');
             } else {
-                document.querySelector('#lastName + .invalid-feedback').textContent = ""
+                $('.invalid-feedbackd').text('');
             }
 
             // Validate email
-            if (email !== '' && !isValidEmail(email)) {
+            if (email === '' || !isValidEmail(email)) {
                 isValid = false;
-                $('#email').next('.invalid-feedback').text('Please enter a valid email address.');
+                $('.invalid-feedbacke').text('Please enter a valid email address.');
             } else {
-                $('#email').next('.invalid-feedback').text('');
+                $('.invalid-feedbacke').text('');
+            }
+
+            if (phno === '' || ! isValidNumber(phno) ) {
+                isValid = false;
+                $('.invalid-feedbackdd').text('Please enter a valid phone number ');
+            } else {
+                $('.invalid-feedbackdd').text('');
             }
 
             // Validate address
-            if (address === '') {
+            if (address === '' && address.length  < 10) {
                 isValid = false;
-                $('#address').next('.invalid-feedback').text('Address is required.');
+                $('.invalid-feedbackv').text('Address is required.');
             } else {
-                $('#address').next('.invalid-feedback').text('');
+                $('.invalid-feedbackv').text('');
             }
 
             // Validate zip code
-            if (zip === '') {
+            if (zip === '' && zip.length !==6) {
                 isValid = false;
-                $('#zip').next('.invalid-feedback').text('Zip code is required.');
+                $('#zip').next('.invalid-feedback').text('Zip code should be 6 charecters');
             } else {
                 $('#zip').next('.invalid-feedback').text('');
             }
@@ -162,6 +177,10 @@
             const nameRegex = /^[a-zA-Z\s]*$/;
             return nameRegex.test(name) && name.length < 10;
         }
+        function isValidNumber(phoneNumber) {
+         const phoneRegex = /^\d{10}$/;
+        return phoneRegex.test(phoneNumber);
+        }
 
         // Function to validate email format
         function isValidEmail(email) {
@@ -171,7 +190,7 @@
         }
 
         // Event listeners for input fields
-        $('#firstName, #lastName, #email, #address, #zip').on('input', function() {
+        $('#firstName, #lastName, #email, #address, #zip,#number').on('input', function() {
             validateForm();
         });
 
