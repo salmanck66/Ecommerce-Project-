@@ -42,9 +42,12 @@
         </div>
         <div class="mb-3">
           <label for="productMedia" class="form-label">Existing Media</label>
+          <div class="container-fluid d-flex">
           {{#each data.image}}
           <img src="{{this}}" class="form-control img-thumbnail" style="height: 10rem; width:10rem" alt="" srcset="" id="eximg">
           {{/each}}
+          </div>
+
         </div>
 
         <!-- Variant -->
