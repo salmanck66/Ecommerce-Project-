@@ -157,7 +157,9 @@ let profile =  (req, res) => {
   let postaddproduct = async (req, res) => {
     try {
       // Upload image to Cloudinary
-      const result = await cloudinary.uploader.upload(req.file.path);
+      const uploadPromises = req.files.map(file => cloudinary.uploader.upload(file.path));
+      const results = await Promise.all(uploadPromises);
+      const imageUrls = results.map(result => result.secure_url);
   
       // Log received request body
       console.log("Received body:", req.body);
@@ -178,7 +180,7 @@ let profile =  (req, res) => {
       const newProduct = {
         name,
         variant,
-        image: result.secure_url,
+        image: imageUrls,
         mrp,
         price,
         stock,
