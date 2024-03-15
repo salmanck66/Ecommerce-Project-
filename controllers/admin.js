@@ -10,6 +10,8 @@ const Coupon = require('../models/coupon');
 const Banner = require('../models/banner');
 const Order = require('../models/order');
 const Visit = require('../models/visit');
+const Userhelpers = require('../helpers/userhelper');
+
 
 
 
@@ -682,7 +684,18 @@ let orderview = async (req, res) => {
     res.status(500).send('Error retrieving order details');
 }
 }
+ let placeorder = async (req, res) => {
+  try {
+    
+      // Assuming req.body contains the order data
+      const orderData = req.body;
+      const result = await Userhelpers.pushOrder(orderData);
+      res.json({ success: true, result });
+  } catch (error) {
+      console.error('Failed to push order:', error);
+      res.status(500).json({ success: false, error: 'Failed to push order' });
+  }
+}
 
 
-
-module.exports = {orderview,updatebannerpost,updatebanner,deletebanner,addbanner,editCoupon,updatecoupon,deletecoupon,addCoupon,updatesubcategory,subcategoryeditpage,categoryeditpage,editproduct,deleteprod,deletesubcat,updatecategory,producteditpage,updateProduct,addSubcategory,deletecat,postcategory,postaddproduct,homePage,logIn,Forget,order,productm,addproduct,coupon,categories,banner,payments,settings,profile}
+module.exports = {orderview,updatebannerpost,updatebanner,deletebanner,addbanner,editCoupon,updatecoupon,deletecoupon,addCoupon,updatesubcategory,subcategoryeditpage,categoryeditpage,editproduct,deleteprod,deletesubcat,updatecategory,producteditpage,updateProduct,addSubcategory,deletecat,postcategory,postaddproduct,homePage,logIn,Forget,order,productm,addproduct,coupon,categories,banner,payments,settings,profile,placeorder}

@@ -43,8 +43,82 @@
             </div>
         </div>
         <div class="text-center mt-4">
-            <button class="btn btn-success mx-2">Ship Order</button>
+            <button id="ship-order-button" class="btn btn-success mx-2">Ship Order</button>
             <button class="btn btn-danger mx-2">Reject Order</button>
         </div>
     </div>
 </main>
+<script>
+  const shipOrderButton = document.getElementById('ship-order-button');
+
+  shipOrderButton.addEventListener('click', () => {
+    const orderId = '{{ order.orderId }}';
+    const shippingAddress = {
+      firstName: '{{ order.shippingAddress.firstName }}',
+      lastName: '{{ order.shippingAddress.lastName }}',
+      email: '{{ order.shippingAddress.email}}',
+      phonenumber: '{{ order.shippingAddress.phonenumber}}',
+      address: '{{ order.shippingAddress.address }}',
+      address2: '{{ order.shippingAddress.address2 }}',
+      state: '{{ order.shippingAddress.state }}',
+      zip: '{{ order.shippingAddress.zip }}'
+    };
+    const orderDate = '{{ order.orderDate }}';
+    const totalAmount = '{{ order.totalAmount }}';
+    const paymentMethod = '{{ order.paymentMethod }}';
+
+   const orderDetails = {
+  "order_id": "ordID",
+  "order_date": "2024-01-06",
+  "order_type": "ESSENTIALS",
+  "consignee_name": "John",
+  "consignee_phone": 8000042323,
+  "consignee_email": "johnhelp@gmail.com",
+  "consignee_address_line_one": "Sector 49",
+  "consignee_address_line_two": "Sohna Road",
+  "consignee_pin_code": 122001,
+  "consignee_city": "Gurgaon",
+  "consignee_state": "Haryana",
+  "product_detail": [
+    {
+      "name": "Laptop",
+      "sku_number": "22",
+      "quantity": 1,
+      "discount": "",
+      "hsn": "#123",
+      "unit_price": 1000,
+      "product_category": "Other"
+    }
+  ],
+  "payment_type": "PREPAID",
+  "cod_amount": "",
+  "weight": 200,
+  "length": 10,
+  "width": 20,
+  "height": 15,
+  "warehouse_id": "",
+  "gst_ewaybill_number": "",
+  "gstin_number": ""
+};
+
+
+    fetch('/place-order', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(orderDetails)
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Order pushed to shipping API:', data);
+      // Handle successful order push response
+      // You can add code here to show a success message or redirect the user
+    })
+    .catch(error => {
+      console.error('Error pushing order to shipping API:', error);
+      // Handle error response
+      // You can add code here to show an error message to the user
+    });
+  });
+</script>

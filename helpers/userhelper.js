@@ -12,6 +12,7 @@ const Wishlist = require("../models/wishlist")
 const Counter = require("../models/counter")
 const Handlebars = ("handlebars");
 const razorpay = require('razorpay');
+const axios = require('axios');
 
 function signupHelper(recievedUserData) {
     const { firstName, lastName, mail, phoneNumber, password } = recievedUserData
@@ -122,6 +123,38 @@ let razorpayInstanceHelp =  new razorpay(
   )
 
 
+  const API_BASE_URL = 'https://shipping-api.com/app/api/v1';
+
+  async function pushOrder(orderData) {
+      try {
+          const response = await axios.post(`${API_BASE_URL}/push-order`, orderData, {
+              headers: {
+                  'public-key':process.env.PUBLIC_KEY_SHIP,
+                  'private-key': process.env.PRIVATE_KEY_SHIP,
+                  'Content-Type': 'application/json'
+              }
+          });
+          return response.data;
+      } catch (error) {
+          console.error('Error pushing order:', error.response ? error.response.data : error.message);
+          throw error;
+      }
+  }
+  
+  // Example order data
+  const orderData = {
+      // Fill with your order data according to your schema
+  };
+  
+  pushOrder(orderData)
+      .then(result => {
+          console.log('Order pushed successfully:', result);
+      })
+      .catch(error => {
+          console.error('Failed to push order:', error);
+      });
+  
+
 module.exports = {
-     signupHelper, loginHelper,addToCart,getNextOrderNumber,changePasswordHelper,razorpayInstanceHelp
+     signupHelper, loginHelper,addToCart,getNextOrderNumber,changePasswordHelper,razorpayInstanceHelp,pushOrder
   }
