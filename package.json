@@ -34,6 +34,7 @@
     "passport-facebook": "^3.0.0",
     "passport-google-oauth2": "^0.2.0",
     "razorpay": "^2.9.2",
+    "springedge": "^1.0.6",
     "sweetalert2": "^11.10.5",
     "toastify-js": "^1.12.0"
   },

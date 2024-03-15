@@ -2,6 +2,7 @@ const User = require('../models/users')
 const Cart = require('../models/cart')
 const bcrypt = require('bcrypt')
 const dotenv = require('dotenv')
+const springedge = require("springedge");
 dotenv.config();
 const mongoose = require('mongoose');
 var objectId =require('mongodb').ObjectId
@@ -146,15 +147,35 @@ let razorpayInstanceHelp =  new razorpay(
       // Fill with your order data according to your schema
   };
   
-  pushOrder(orderData)
-      .then(result => {
-          console.log('Order pushed successfully:', result);
-      })
-      .catch(error => {
-          console.error('Failed to push order:', error);
-      });
-  
+  // pushOrder(orderData)
+  //     .then(result => {
+  //         console.log('Order pushed successfully:', result);
+  //     })
+  //     .catch(error => {
+  //         console.error('Failed to push order:', error);
+  //     });
+
+
+      function sendOTP(phoneNumber, otp) {
+        const message = `Hello ${otp}, This is a test message from spring edge`
+      
+        const params = {
+          sender: "SEDEMO",
+          apikey: process.env.SPRING_EDGE_KEY,
+          to: [`${phoneNumber}`],
+          message: message,
+          format: "json",
+        };
+      
+        springedge.messages.send(params, 5000, function (err, response) {
+          if (err) {
+            return console.log(err);
+          }
+          console.log(response);
+        });
+      }
+      
 
 module.exports = {
-     signupHelper, loginHelper,addToCart,getNextOrderNumber,changePasswordHelper,razorpayInstanceHelp,pushOrder
+  sendOTP, signupHelper, loginHelper,addToCart,getNextOrderNumber,changePasswordHelper,razorpayInstanceHelp,pushOrder
   }

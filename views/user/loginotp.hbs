@@ -32,7 +32,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <form action="/login-with-otp" method="post">
+                            <form>
                                 <div class="row gy-1 overflow-hidden">
                                     <div class="col-12">
                                         <div class="form-floating mb-3 phnodiv">
@@ -69,11 +69,13 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-
-<script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
     $(document).ready(function() {
         // Function to show toast notifications
-        function showToast(message, type) {
+        
+    });
+function showToast(message, type) {
             Toastify({
                 text: message,
                 duration: 3000,
@@ -83,15 +85,28 @@
                 backgroundColor: type === "error" ? "#ff4444" : "#33cc33",
             }).showToast();
         }
-    });
-
-    function otp(){
-        document.querySelector(".phnodiv").style.display = "none"
-        document.querySelector(".otpdiv").style.display = ""
-        document.querySelector(".otpbtn").style.display = "none"
-        document.querySelector(".loginbtn").style.display = ""
+    async function otp(){
+        // Extract phone number input value
+        const phoneNumber = document.getElementById("phone").value;
+        
+        // Send request to server
+        try {
+            const response = await axios.post('/send-otp-phone', { phone: phoneNumber });
+            // Handle response if needed
+            showToast(response.data.message, "success");
+        } catch (error) {
+            // Handle error
+            showToast("Failed to send OTP", "error");
+        }
+        
+        // Hide phone number input and show OTP input and login button
+        document.querySelector(".phnodiv").style.display = "none";
+        document.querySelector(".otpdiv").style.display = "";
+        document.querySelector(".otpbtn").style.display = "none";
+        document.querySelector(".loginbtn").style.display = "";
     }
-    
 </script>
+
+
 </body>
 </html>

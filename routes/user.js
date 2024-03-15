@@ -58,7 +58,11 @@ router.get('/resetpass',userControllers.ResetPassword)
 router.post('/resetpassload',userControllers.ResetPasswordPostFinal)
 router.post('/forgot-password',userControllers.ResetPasswordPost)
 router.post('/verify-otp-reset-pass',userControllers.verifyotp)
+
+router.post('/send-otp-phone',userControllers.loginRequestOTP)
+
 router.delete('/wishlist/:productId',authMiddleware,userControllers.delwish)
 
 router.post('/payment',userControllers.paymetController)
+
 module.exports=router;

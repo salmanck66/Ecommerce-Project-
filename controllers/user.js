@@ -803,6 +803,35 @@ let paymetController = async(req,res)=>{
   }
 }
 
+const loginRequestOTP = async (req, res) => {
+  console.log("Requesting OTP");
+  const { phone } = req.body;
+  console.log(req.body);
+
+  try {
+
+    const user = await User.findOne({ phoneNumber: phone });
+    console.log("found");
+
+    if (!user) {
+      return res.status(404,{ error: "User not found" })
+    }
+
+    const otp = generateOTP();
+
+    // Send OTP asynchronously and wait for completion
+    await Userhelpers.sendOTP("+919567267515", otp);
+    console.log("OTP SMS sent");
+    
+    // Render response after sending OTP
+    res.status(200).render("user/ ", { phone });
+    
+  } catch (error) {
+    console.error("Error requesting OTP:", error);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
 module.exports = {delwish,paymetController,
   payment,
   ResetPassword,
@@ -825,5 +854,5 @@ module.exports = {delwish,paymetController,
   loginGetPage,
   logoutPage,verifyotp,
   addtocart,loginotp,
-  viewCart,updatecart,removeCartItem,addtowishlist,discount  ,pcheckout,fcheckout,orderview,ResetPasswordPost,ResetPasswordPostFinal
+  viewCart,updatecart,removeCartItem,addtowishlist,discount  ,pcheckout,fcheckout,orderview,ResetPasswordPost,ResetPasswordPostFinal,loginRequestOTP
 };
