@@ -284,12 +284,13 @@ let productdetail = async (req, res) => {
     if (req.cookies.jwt) {
       let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
       var userName = tokenExracted.userName;
+      var userId = tokenExracted.userId;
       console.log(userName);
     }
   
     const productsss = await Product.findById(id); // Adding await here to wait for the query to complete
     console.log(productsss)
-    res.render("user/product-detail", { layout: "layout.hbs" ,productsss,userName}); // Adding await here as well
+    res.render("user/product-detail", { layout: "layout.hbs" ,productsss,userName,userId}); // Adding await here as well
 
   } catch (error) {
     console.log(error);
@@ -445,7 +446,7 @@ let fcheckout = async (req, res) => {
       await product.save();
     }
 
-    // Create a new order instance
+    // Create a new order instanceaddToWishlistinde
     const newOrder = new Order({
       orderId: orderNumber,
       user: userId,
