@@ -1,74 +1,180 @@
-<div class="container rounded bg-white mt-5 mb-5">
-    <div class="row">
-        <div class="col-md-3 border-right">
+<div class="container" style="margin-top: 4vh;">
+  <div class="bread-crumb flex-w p-l-25 p-r-15 p-t-10 p-lr-0-lg">
+    <a href="/" class="stext-109 cl8 hov-cl1 trans-04">
+      Home
+      <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+    </a>
+    <a href="profile" class="stext-109 cl8 hov-cl1 trans-04">
+      Profile
+    </a>
+  </div>
+</div>
+
+<div class="container rounded bg-white  mb-1">
+    <div class="row ">
+        {{#each user}}
+        <div class="col-md-3 col-12 border-right">
             <div class="d-flex flex-column align-items-center text-center p-3 py-5">
-                <span class="font-weight-bold">Hello Edogaru</span>
-                <span class="text-black-50">edogaru@mail.com.my</span><span> </span></div>
+                <span class="font-weight-bold">Hello {{this.userName}}</span>
+                <span class="text-black-50">{{this.mail}}</span><span> </span></div>
                 <div class="row">
-        <div class="col">
+        {{!-- <div class="col">
             <h2>ACCOUNT SETTINGS</h2>
             <ul class="list-group">
                 <li class="list-group-item">Profile Information</li>
                 <li class="list-group-item">Manage Addresses</li>
                 <li class="list-group-item">PAN Card Information</li>
             </ul>
-        </div>
-        <div class="col">
+        </div> --}}
+        {{!-- <div class="col">
             <h2>PAYMENTS</h2>
             <ul class="list-group">
                 <li class="list-group-item">Gift Cards ₹0</li>
                 <li class="list-group-item">Saved UPI</li>
                 <li class="list-group-item">Saved Cards</li>
             </ul>
-        </div>
+        </div> --}}
         <div class="col">
-            <h2>MY STUFF</h2>
+            <h2>Profile</h2>
             <ul class="list-group">
-               <a href="orderview"><li class="list-group-item">My Orders</li></a> 
-                <li class="list-group-item">My Coupons</li>
-                <li class="list-group-item">My Reviews & Ratings</li>
-                <li class="list-group-item">All Notifications</li>
-                <li class="list-group-item">My Wishlist</li>
-                <li class="list-group-item">Logout</li>
+               <a style="text-decoration: none;" href=""><li class="list-group-item text-dark">Profile Settings</li></a>
+               <a style="text-decoration: none;" href=""><li class="list-group-item text-dark" id="myOrdersLink">My Orders</li></a>
+                <a style="text-decoration: none;" href=""><li class="list-group-item text-dark" id="wishList"> My Wishlist</li></a>
+                <a style="text-decoration: none;" href="logout"><li class="list-group-item text-dark">Logout</li></a>
             </ul>
         </div>
     </div>
-        </div>
-        <div class="col-md-5 border-right">
-            <div class="p-3 py-5">
+    </div>
+        <div class="col-12 col-sm-12 col-md-9 border-right profile">
+            <div class="p-3 ">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h4 class="text-right">Profile Settings</h4>
                 </div>
 
                 <div class="row mt-2">
-                    <div class="col-md-6"><label class="labels">Name</label><input type="text" class="form-control" placeholder="first name" value=""></div>
-                    <div class="col-md-6"><label class="labels">Surname</label><input type="text" class="form-control" value="" placeholder="surname"></div>
+                    <div class="col-12"><label class="labels">User Name</label><input type="text" class="form-control" id="username" placeholder="" value="{{this.userName}}"></div>
                 </div>
                 <div class="row mt-3">
-                    <div class="col-md-12"><label class="labels">Mobile Number</label><input type="text" class="form-control" placeholder="enter phone number" value=""></div>
-                    <div class="col-md-12"><label class="labels">Address Line 1</label><input type="text" class="form-control" placeholder="enter address line 1" value=""></div>
-                    <div class="col-md-12"><label class="labels">Address Line 2</label><input type="text" class="form-control" placeholder="enter address line 2" value=""></div>
-                    <div class="col-md-12"><label class="labels">Postcode</label><input type="text" class="form-control" placeholder="enter address line 2" value=""></div>
-                    <div class="col-md-12"><label class="labels">State</label><input type="text" class="form-control" placeholder="enter address line 2" value=""></div>
-                    <div class="col-md-12"><label class="labels">Area</label><input type="text" class="form-control" placeholder="enter address line 2" value=""></div>
-                    <div class="col-md-12"><label class="labels">Email ID</label><input type="text" class="form-control" placeholder="enter email id" value=""></div>
-                    <div class="col-md-12"><label class="labels">Education</label><input type="text" class="form-control" placeholder="education" value=""></div>
+                    <div class="col-md-12"><label class="labels">Mobile Number</label><input type="text" class="form-control" id="phonenumber" placeholder="enter phone number" value="{{this.phoneNumber}}"></div>
+                    <div class="col-md-12 mt-3"><label class="labels">Email ID</label><input type="text" class="form-control" id="mail" placeholder="enter email id" value="{{this.mail}}"></div>
                 </div>
-                <div class="row mt-3">
-                    <div class="col-md-6"><label class="labels">Country</label><input type="text" class="form-control" placeholder="country" value=""></div>
-                    <div class="col-md-6"><label class="labels">State/Region</label><input type="text" class="form-control" value="" placeholder="state"></div>
-                </div>
-                <div class="mt-5 text-center"><button class="btn btn-primary profile-button" type="button">Save Profile</button></div>
+                <div class="mt-5 text-center"><button class="btn btn-primary profile-button" id="saveProfileButton" type="button">Save Profile</button></div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="p-3 py-5">
-                <div class="d-flex justify-content-between align-items-center experience"><span>Saved Adress</span></div><br>
-                <div class="col-md-12" >
-                </div><br>
-            </div>
-        </div>
+ 
     </div>
+    {{/each}}
 </div>
 </div>
 </div>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    function showToast(message, type) {
+            Toastify({
+                text: message,
+                duration: 3000,
+                close: true,
+                gravity: "bottom", // `top` or `bottom`
+                position: "right", // `left`, `center` or `right`
+                backgroundColor: type === "error" ? "#ff0000" : "#008000",
+            }).showToast();
+        }
+  document.getElementById('myOrdersLink').addEventListener('click', function(event) {
+    console.log("clicked")
+    event.preventDefault();
+    axios.get('orderview')
+      .then(function(response) {
+        document.querySelector('.profile').innerHTML = response.data;
+        console.log(response.data)
+        if(window.innerWidth<768)
+        {
+                window.scrollBy({
+            top: 300, // Change this value to adjust scrolling distance
+            behavior: 'smooth' // You can change this to 'auto' for instant scrolling
+        });
+        }
+
+      })
+      .catch(function(error) {
+        console.error(error);
+        // Handle error if necessary
+      });
+  });
+  document.getElementById('wishList').addEventListener('click', function(event) {
+    console.log("clicked")
+    event.preventDefault();
+    axios.get('wishlistprofile')
+      .then(function(response) {
+        document.querySelector('.profile').innerHTML = response.data;
+        console.log(response.data)
+        if(window.innerWidth<768)
+        {
+                window.scrollBy({
+            top: 400, // Change this value to adjust scrolling distance
+            behavior: 'smooth' // You can change this to 'auto' for instant scrolling
+        });
+        }
+
+      })
+      .catch(function(error) {
+        console.error(error);
+        // Handle error if necessary
+      });
+  });
+  function validateUsername(username) {
+        return /^[a-zA-Z ]+$/.test(username);
+    }
+
+    function validatePhoneNumber(phoneNumber) {
+        return /^\d{10}$/.test(phoneNumber);
+    }
+
+    function validateEmail(email) {
+        return /\S+@\S+\.\S+/.test(email);
+    }
+
+    document.getElementById('saveProfileButton').addEventListener('click', async () => {
+        console.log("clicked")
+        const username = document.getElementById("username").value
+        const phonenumber = document.getElementById("phonenumber").value
+        const mail = document.getElementById("mail").value
+        console.log(username,phonenumber,mail)
+        if (!validateUsername(username)) {
+            showToast("Please enter a valid username", "error");
+            return;
+        }
+
+        if (!validatePhoneNumber(phonenumber)) {
+            showToast("Please enter a valid phone number (10 digits)", "error");
+            return;
+        }
+
+        if (!validateEmail(mail)) {
+            showToast("Please enter a valid email address", "error");
+            return;
+        }
+        const profileData = {
+        username,
+        phonenumber,
+        mail
+        };
+
+        try {
+          // Send POST request to save profile
+          const response = await axios.post('/updateprofile', profileData);
+          showToast(response.data.message, "success");
+          setTimeout(function(){ location.reload() }, 1000);
+
+          // Optionally, you can show a success message or perform any other action upon successful save
+        } catch (error) {
+          console.error('Error saving profile:', error);
+          // Optionally, you can show an error message or perform any other action upon error
+        }
+      });
+
+
+});
+
+</script>

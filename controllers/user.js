@@ -253,8 +253,9 @@ let contact = async (req, res) => {
     var userName = tokenExracted.userName;
     console.log(userName);
   }
+  const category = await Category.find({})
   console.log("contact");
-  res.render("user/contact", { userName,layout: "layout" });
+  res.render("user/contact", { userName,layout: "layout" ,category});
 };
 let about =async (req, res) => {
   if (req.cookies.jwt) {
@@ -263,7 +264,8 @@ let about =async (req, res) => {
     console.log(userName);
   }
   console.log("about");
-  res.render("user/about",{userName});
+  const category = await Category.find({})
+  res.render("user/about",{userName,category});
 };
 let product =async (req, res) => {
   if (req.cookies.jwt) {
@@ -583,7 +585,7 @@ let addtocart = async (req, res) => {
       console.log(tokenExracted.userId);
         var userName = tokenExracted.userName;
         console.log(userName);
-      
+        const category = await Category.find()
       // Check if user is authenticated
       if (!tokenExracted.userId) {
         return res.status(401).redirect("/login", { error: 'User not authenticated' });
@@ -623,13 +625,31 @@ let addtocart = async (req, res) => {
     
 
       await cart.save();
-      res.render("user/cart",{ items: cartItems, totalPrice: totalPrice,userName,coupon});
+      res.render("user/cart",{ items: cartItems, totalPrice: totalPrice,userName,coupon,category});
 
     } catch (error) {
       console.error('Error viewing cart:', error);
       res.render("user/cart");
     }
   }
+let updateprofile = async(req,res)=>
+{
+  try {
+    let tokenExracted = await verifyUser(req.cookies.jwt);
+    let userid = tokenExracted.userId;
+    let profile=await User.findById(userid)
+    console.log(userid,profile)
+    profile.userName = req.body.username;
+    profile.mail = req.body.mail;
+    profile.phoneNumber = req.body.phonenumber;
+    await profile.save();
+    console.log("updated");
+    res.status(200).json({ message: 'Profile updated successfully' }); 
+  } catch (error) {
+    console.log(error)
+  }
+
+}
 
 let removeCartItem = async (req,res)=>
 {
@@ -659,8 +679,9 @@ let help =async (req, res) => {
     var userName = tokenExracted.userName;
     console.log(userName);
   }
+  const category = await Category.find({})
   console.log("help");
-  res.render("user/help",{userName});
+  res.render("user/help",{userName,category});
 };
 let wishlist = async (req, res) => {
   if (req.cookies.jwt) {
@@ -672,10 +693,32 @@ let wishlist = async (req, res) => {
       
       const wishlists = await Wishlist.find({ user: userid }).populate('products');
       // Use populate to retrieve the product details associated with each wishlist item
+      const category = await Category.find()
 
       console.log(wishlists);
 
-      res.render("user/wishlist", { wishlists, userName });
+      res.render("user/wishlist", { wishlists, userName ,category});
+    } catch (error) {
+      res.render("error", { print: error });
+    }
+  }
+};
+
+let wishlistprofile = async (req, res) => {
+  if (req.cookies.jwt) {
+    try {
+      let tokenExracted = await verifyUser(req.cookies.jwt);
+      let userName = tokenExracted.userName;
+      let userid = tokenExracted.userId;
+      console.log("wishid", userid);
+      
+      const wishlists = await Wishlist.find({ user: userid }).populate('products');
+      // Use populate to retrieve the product details associated with each wishlist item
+      const category = await Category.find()
+
+      console.log(wishlists);
+
+      res.render("user/wishlistprofile", { wishlists, userName ,category,layout:false});
     } catch (error) {
       res.render("error", { print: error });
     }
@@ -685,11 +728,13 @@ let wishlist = async (req, res) => {
 let userprofile =async (req, res) => {
   if (req.cookies.jwt) {
     let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
-    var userName = tokenExracted.userName;
-    console.log(userName);
+    var userId = tokenExracted.userId;
   }
+  const user =await User.find({_id:userId})
+  const userName =user.userName
+  const category =await Category.find()
   console.log("userprofile");
-  res.render("user/userprofile",{userName});
+  res.render("user/userprofile",{userName,user,category});
 };
 let checkout = async(req, res) => {
   console.log("checkout");
@@ -723,7 +768,7 @@ let orderview = async (req, res) => {
       let order = await Order.find({"user":userId}).populate('items.product').exec();
       console.log(order)
       console.log("ordercomplete");
-      res.render("user/orders",{order});
+      res.render("user/orders",{order,layout:false});
     }
     
   } catch (error) {
@@ -741,6 +786,10 @@ let orderview = async (req, res) => {
 let signup = (req, res) => {
   console.log("signup");
   res.render("user/signup", { layout: false });
+};
+let tracking = (req, res) => {
+  console.log("tracking");
+  res.render("user/tracking", {});
 };
 let forgetpass = (req, res) => {
   console.log("forgetpass");
@@ -832,7 +881,9 @@ const loginRequestOTP = async (req, res) => {
   }
 };
 
-module.exports = {delwish,paymetController,
+
+
+module.exports = {delwish,paymetController,tracking,updateprofile,
   payment,
   ResetPassword,
   homePage,
@@ -854,5 +905,5 @@ module.exports = {delwish,paymetController,
   loginGetPage,
   logoutPage,verifyotp,
   addtocart,loginotp,
-  viewCart,updatecart,removeCartItem,addtowishlist,discount  ,pcheckout,fcheckout,orderview,ResetPasswordPost,ResetPasswordPostFinal,loginRequestOTP
+  viewCart,updatecart,removeCartItem,addtowishlist,discount  ,pcheckout,fcheckout,orderview,ResetPasswordPost,ResetPasswordPostFinal,loginRequestOTP,wishlistprofile
 };

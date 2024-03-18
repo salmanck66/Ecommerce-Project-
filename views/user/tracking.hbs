@@ -1,0 +1,31 @@
+<div class="container">
+  <div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
+    <a href="/" class="stext-109 cl8 hov-cl1 trans-04">
+      Home
+      <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+    </a>
+    <a href="trackorder" class="stext-109 cl8 hov-cl1 trans-04">
+      Tracking
+    </a>
+  </div>
+</div>
+<div class="container mt-5">
+  <h2 class="mb-4">Order Tracking</h2>
+  <form>
+    <div class="form-group">
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="trackingOption" id="orderIdRadio" checked>
+        <label class="form-check-label" for="orderIdRadio">Order ID</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="trackingOption" id="awbRadio">
+        <label class="form-check-label" for="awbRadio">AWB Number</label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="inputField">Enter ID or Number</label>
+      <input type="text" class="form-control" id="inputField" placeholder="Enter ID or Number">
+    </div>
+    <button type="submit" class="btn btn-dark">Track Order</button>
+  </form>
+</div>

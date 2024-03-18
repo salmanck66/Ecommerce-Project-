@@ -1,18 +1,4 @@
-<div class="container" style="margin-top: 8vh;">
-  <div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
-    <a href="/" class="stext-109 cl8 hov-cl1 trans-04">
-      Home
-      <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
-    </a>
-    <a href="My orders" class="stext-109 cl8 hov-cl1 trans-04">
-      Orders
-    </a>
-  </div>
-</div>
 
-<div class="container py-5 mt-0">
-  <div class="row">
-    <div class="col-lg-8 mx-auto">
       <!-- List group-->
       <ul class="list-group shadow">
         <!-- list group item-->
@@ -58,7 +44,20 @@
         {{/each}}
       </ul>
       
-    </div>
-  </div>
-</div>
 
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('myOrdersLink').addEventListener('click', function(event) {
+    event.preventDefault();
+    axios.get('url_to_my_orders_page')
+      .then(function(response) {
+        document.getElementById('myOrdersContainer').innerHTML = response.data;
+      })
+      .catch(function(error) {
+        console.error(error);
+        // Handle error if necessary
+      });
+  });
+});
+</script>
