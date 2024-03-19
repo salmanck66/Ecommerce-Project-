@@ -12,7 +12,7 @@ const { response } = require('express');
 const Wishlist = require("../models/wishlist")
 const Counter = require("../models/counter")
 const Handlebars = ("handlebars");
-const razorpay = require('razorpay');
+
 const axios = require('axios');
 
 function signupHelper(recievedUserData) {
@@ -116,13 +116,6 @@ function changePasswordHelper(userData) {
   });
 }
 
-let razorpayInstanceHelp =  new razorpay(
-  {
-    key_id :process.env.RZPAY_KEY,
-    key_secret:process.env.RZPAY_KEY_SECRET
-  }
-  )
-
 
   const API_BASE_URL = 'https://shipping-api.com/app/api/v1';
 
@@ -177,5 +170,5 @@ let razorpayInstanceHelp =  new razorpay(
       
 
 module.exports = {
-  sendOTP, signupHelper, loginHelper,addToCart,getNextOrderNumber,changePasswordHelper,razorpayInstanceHelp,pushOrder
+  sendOTP, signupHelper, loginHelper,addToCart,getNextOrderNumber,changePasswordHelper,pushOrder
   }

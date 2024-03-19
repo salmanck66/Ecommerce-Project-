@@ -16,6 +16,7 @@ const Visit = require('../models/visit');
 const nodemailer = require('nodemailer');
 const {parsed:config} = require('dotenv').config()
 global.config = config
+const razorpay = require('razorpay');
 
 
 
@@ -429,6 +430,7 @@ let fcheckout = async (req, res) => {
     let tokenExtracted = await verifyUser(req.cookies.jwt);
     const userId = tokenExtracted.userId;
     const orderNumber = await Userhelpers.getNextOrderNumber();
+
     // Get user's cart
     const cart = await Cart.findOne({ user: userId });
 
@@ -440,7 +442,6 @@ let fcheckout = async (req, res) => {
       }
       const size = item.size;
       if (!product.stock[size] || product.stock[size] < item.quantity) {
-        
         res.json("Out of Stock");
       }
       // Deduct quantity from stock for the specific size
@@ -448,7 +449,7 @@ let fcheckout = async (req, res) => {
       await product.save();
     }
 
-    // Create a new order instanceaddToWishlistinde
+    // Create a new order instance
     const newOrder = new Order({
       orderId: orderNumber,
       user: userId,
@@ -470,6 +471,20 @@ let fcheckout = async (req, res) => {
     // Save the new order to the database
     const savedOrder = await newOrder.save();
 
+    // Save shipping address to user's profile
+    const user = await User.findById(userId);
+    user.addresses.push({
+      firstName: req.body.fname,
+      lastName: req.body.lname,
+      email: req.body.email,
+      address: req.body.adress,
+      phonenumber: req.body.number,
+      address2: req.body.adress2,
+      state: req.body.state,
+      zip: req.body.zip
+    });
+    await user.save();
+
     // Clear the cart items or mark them as purchased
     // This step depends on your application's logic
 
@@ -481,6 +496,7 @@ let fcheckout = async (req, res) => {
     res.status(500).json({ error: 'An error occurred while completing the order.' });
   }
 };
+
 
 let discount = async (req, res) => {
   try {
@@ -839,14 +855,22 @@ const delwish = async (req, res) => {
 
 let paymetController = async(req,res)=>{
   try {
+    console.log("payment logging");
       const amount = req.body.amount*100
       const options = {
           amount: amount,
           currency: 'INR',
           receipt: 'razorUser@gmail.com'
       }
+      console.log(req.body);
+      let razorpayInstanceHelp =  new razorpay(
+        {
+          key_id :process.env.RZPAY_KEY,
+          key_secret:process.env.RZPAY_KEY_SECRET
+        }
+        )
 
-      Userhelpers.razorpayInstanceHelp.orders.create(options, 
+      razorpayInstanceHelp.orders.create(options, 
           (err, order)=>{
               if(!err){
                   res.status(200).send({
@@ -861,9 +885,12 @@ let paymetController = async(req,res)=>{
                       name: "Sandeep Sharma",
                       email: "sandeep@gmail.com"
                   });
+                  console.log("created");
               }
+              
               else{
                   res.status(400).send({success:false,msg:'Something went wrong!'});
+                  console.log("not created");
               }
           }
       );
