@@ -15,6 +15,7 @@
                         <p class="card-text"><strong>Description:</strong> {{this.couponDescription}}</p>
                         <p class="card-text"><strong>Discount Type:</strong> {{this.discountType}}</p>
                         <p class="card-text"><strong>Discount Value:</strong> {{this.discountValue}}</p>
+                        <p class="card-text"><strong>Starting Date:</strong> {{this.startingDate}}</p>
                         <p class="card-text"><strong>Expiry Date:</strong> {{this.expiryDate}}</p>
                         <a href="/update-coupon/{{this._id}}"><button class="btn btn-dark">Update</button></a>
                         <button class="btn btn-danger" onclick="deleteCouponCat('{{this._id}}')">Remove</button>
@@ -35,7 +36,7 @@
         <form method="post" action="add-coupon">
             <div class="mb-3">
                 <label for="couponCode" class="form-label">Coupon Code</label>
-                <input type="text" class="form-control" name="couponCode" id="couponCode" placeholder="Enter coupon code">
+                <input type="text" class="form-control" name="couponCode" id="couponCode" placeholder="Enter coupon code" required>
             </div>
             <div class="mb-3">
                 <label for="couponDescription" class="form-label">Coupon Description</label>
@@ -43,7 +44,7 @@
             </div>
             <div class="mb-3">
                 <label for="discountType" class="form-label">Discount Type</label>
-                <select class="form-select" name="discountType"  id="discountType">
+                <select class="form-select" name="discountType"  id="discountType" required>
                     <option selected>Select discount type</option>
                     <option value="percentage">Percentage</option>
                     <option value="fixedAmount">Fixed Amount</option>
@@ -51,18 +52,112 @@
             </div>
             <div class="mb-3">
                 <label for="discountValue" class="form-label">Discount Value</label>
-                <input type="text" class="form-control" name="discountValue" id="discountValue" placeholder="Enter discount value">
+                <input type="text" class="form-control" name="discountValue" id="discountValue" placeholder="Enter discount value" required>
             </div>
             <div class="mb-3">
                 <label for="expiryDate" class="form-label">Expiry Date</label>
-                <input type="date" class="form-control" name="expiryDate" id="expiryDate">
+                <input type="date" class="form-control" name="expiryDate" id="expiryDate" required>
+            </div>
+            <div class="mb-3">
+                <label for="statingDate" class="form-label">starting Date</label>
+                <input type="date" class="form-control" name="startingDate" id="statingDate">
             </div>
             <button type="submit" class="btn btn-primary">Add Coupon</button>
         </form>
     </div>
 </section>
-
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+$(document).ready(function() {
+    // Live validation for coupon code
+    $('#couponCode').on('input', function() {
+      $(this).val($(this).val().toUpperCase()); // Convert to uppercase
+      if ($(this).val().length > 6) {
+        $(this).addClass('is-invalid');
+        showToast("Charecter Limit Is 5", "error")
+      } else {
+        $(this).removeClass('is-invalid');
+      }
+    });
+
+    // Live validation for discount value
+    $('#discountValue').on('input', function() {
+      const discountType = $('#discountType').val();
+      const discountValue = parseInt($(this).val());
+      if (discountType === 'percentage' && (discountValue < 0 || discountValue > 100)) {
+        $(this).addClass('is-invalid');
+      } else {
+        $(this).removeClass('is-invalid');
+      }
+    });
+     $('#expiryDate').on('change', function() {
+        const expiryDate = $(this).val();
+        const startingDate = $('#startingDate').val();
+        if (startingDate !== '' && expiryDate !== '' && startingDate > expiryDate) {
+            $(this).addClass('is-invalid');
+            showToast("Expiry date must be after starting date", "error");
+        } else {
+            $(this).removeClass('is-invalid');
+        }
+    });
+
+    // Live validation for starting date
+    $('#startingDate').on('change', function() {
+        const startingDate = $(this).val();
+        const expiryDate = $('#expiryDate').val();
+        if (expiryDate !== '' && startingDate !== '' && startingDate > expiryDate) {
+            $(this).addClass('is-invalid');
+            showToast("Starting date must be before expiry date", "error");
+        } else {
+            $(this).removeClass('is-invalid');
+        }
+    });
+
+    // Form submission
+    $('form').submit(function(event) {
+      event.preventDefault(); // Prevent form submission
+      const couponCode = $('#couponCode').val();
+      const discountValue = $('#discountValue').val();
+      const discountType = $('#discountType').val();
+      const expiryDate = $('#expiryDate').val();
+      const startingDate = $('#startingDate').val();
+
+      // Perform final validation before submission
+      let isValid = true;
+      if (couponCode.length > 6) {
+        $('#couponCode').addClass('is-invalid');
+        isValid = false;
+      }
+      if (discountType === 'percentage' && (discountValue < 0 || discountValue > 100)) {
+        $('#discountValue').addClass('is-invalid');
+        showToast("Value should be less than 100", "error")
+        isValid = false;
+      }
+
+      if (isValid) {
+        // If all validations pass, submit the form
+        this.submit();
+        showToast("Coupon Added Successfully", "success")
+      } else {
+        // Show error message to the user
+        showToast("Please fix the errors in the form", "error")
+      }
+    });
+  });
+        // Function to show toast notifications
+        function showToast(message, type) {
+            Toastify({
+                text: message,
+                duration: 3000,
+                close: true,
+                gravity: "bottom", // `top` or `bottom`
+                position: "right", // `left`, `center` or `right`
+                backgroundColor: type === "error" ? "#ff0000" : "#008000",
+            }).showToast();
+        }
+
 
     async function deleteCouponCat(catId) {
         console.log("del fun called");

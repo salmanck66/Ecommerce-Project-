@@ -20,17 +20,31 @@
                 <label for="couponDescription">Coupon Description</label>
                 <textarea class="form-control" id="couponDescription" name="couponDescription" rows="3">{{coupon.couponDescription}}</textarea>
             </div>
-            <div class="form-group">
-                <label for="discountType">Discount Type</label>
-                <select class="form-select" name="discountType" id="discountType">
-                <option value="percentage" selected>{{coupon.discountType}}</option>
-                <option value="fixedAmount">Fixed Amount</option>
-                <option value="percentage">Percentage</option>
-</select>
-            </div>
+<div class="form-group">
+    <label for="discountType">Discount Type</label>
+    <select class="form-select" name="discountType" id="discountType">
+        <option value="{{coupon.discountType}}" selected>{{coupon.discountType}}</option>
+        <script>
+            const discountType = "{{coupon.discountType}}";
+            if (discountType === "fixedAmount") {
+                document.write('<option value="percentage">Percentage</option>');
+            } else {
+                document.write('<option value="fixedAmount">Fixed Amount</option>');
+            }
+        </script>
+    </select>
+</div>
+
+
+
             <div class="form-group">
                 <label for="discountValue">Discount Value</label>
                 <input type="text" class="form-control" id="discountValue" name="discountValue" value="{{coupon.discountValue}}">
+            </div>
+            <div class="form-group">
+                <label for="expiryDate">starting Date</label>
+                <input type="text" class="form-control"  value="{{coupon.startingDate}}" readonly>
+                <input type="date" class="form-control" id="startingDate" name="startingDate" value="{{coupon.startingDate}}">
             </div>
             <div class="form-group">
                 <label for="expiryDate">Expiry Date</label>
@@ -45,20 +59,100 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        window.onload = function() {
-    removeDuplicateOptions();
-    };  
-    var dataVariant = "{{coupon.discountType}}";
-    var selectElement = document.getElementById("discountType");
-    var options = selectElement.options;
-     for (var i = options.length - 1; i >= 0; i--) {
-        if (options[i].value === dataVariant) {
-            // Remove the option if it matches the data.variant
-            selectElement.remove(i);
-			break;
+        $(document).ready(function() {
+    // Live validation for coupon code
+    $('#couponCode').on('input', function() {
+        $(this).val($(this).val().toUpperCase()); // Convert to uppercase
+        if ($(this).val().length > 6) {
+            $(this).addClass('is-invalid');
+            showToast("Character Limit Is 6", "error")
+        } else {
+            $(this).removeClass('is-invalid');
         }
+    });
+
+    // Live validation for discount value
+    $('#discountValue').on('input', function() {
+        const discountType = $('#discountType').val();
+        const discountValue = parseInt($(this).val());
+        if (discountType === 'percentage' && (discountValue < 0 || discountValue > 100)) {
+            $(this).addClass('is-invalid');
+            showToast("Value should be between 0 and 100", "error");
+        } else {
+            $(this).removeClass('is-invalid');
+        }
+    });
+     $('#expiryDate').on('change', function() {
+        const expiryDate = $(this).val();
+        const startingDate = $('#startingDate').val();
+        if (startingDate !== '' && expiryDate !== '' && startingDate > expiryDate) {
+            $(this).addClass('is-invalid');
+            showToast("Expiry date must be after starting date", "error");
+        } else {
+            $(this).removeClass('is-invalid');
+        }
+    });
+
+    // Live validation for starting date
+    $('#startingDate').on('change', function() {
+        const startingDate = $(this).val();
+        const expiryDate = $('#expiryDate').val();
+        if (expiryDate !== '' && startingDate !== '' && startingDate > expiryDate) {
+            $(this).addClass('is-invalid');
+            showToast("Starting date must be before expiry date", "error");
+        } else {
+            $(this).removeClass('is-invalid');
+        }
+    });
+
+    // Form submission for Update Coupon
+    $('form[action="/update-coupon"]').submit(function(event) {
+        event.preventDefault(); // Prevent form submission
+        const couponCode = $('#couponCode').val();
+        const discountValue = $('#discountValue').val();
+        const discountType = $('#discountType').val();
+        const expiryDate = $('#expiryDate').val();
+        const startingDate = $('#startingDate').val();
+
+        // Perform final validation before submission
+        let isValid = true;
+        if (couponCode.length > 6) {
+            $('#couponCode').addClass('is-invalid');
+            showToast("Character Limit Is 6", "error");
+            isValid = false;
+        }
+        if (discountType === 'percentage' && (discountValue < 0 || discountValue > 100)) {
+            $('#discountValue').addClass('is-invalid');
+            showToast("Value should be between 0 and 100", "error");
+            isValid = false;
+        }
+
+        if (isValid) {
+            // If all validations pass, submit the form
+            this.submit();
+            showToast("Coupon Updated Successfully", "success");
+        } else {
+            // Show error message to the user
+            showToast("Please fix the errors in the form", "error");
+        }
+    });
+
+    // Function to show toast notifications
+    function showToast(message, type) {
+        Toastify({
+            text: message,
+            duration: 3000,
+            close: true,
+            gravity: "bottom", // `top` or `bottom`
+            position: "right", // `left`, `center` or `right`
+            backgroundColor: type === "error" ? "#ff0000" : "#008000",
+        }).showToast();
     }
+});
     </script>
 </body>
 </html>

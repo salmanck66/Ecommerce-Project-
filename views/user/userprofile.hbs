@@ -40,6 +40,7 @@
                <a style="text-decoration: none;" href=""><li class="list-group-item text-dark">Profile Settings</li></a>
                <a style="text-decoration: none;" href=""><li class="list-group-item text-dark" id="myOrdersLink">My Orders</li></a>
                 <a style="text-decoration: none;" href=""><li class="list-group-item text-dark" id="wishList"> My Wishlist</li></a>
+                <a style="text-decoration: none;" href=""><li class="list-group-item text-dark" id="shippingadr"> My Addresses</li></a>
                 <a style="text-decoration: none;" href="logout"><li class="list-group-item text-dark">Logout</li></a>
             </ul>
         </div>
@@ -102,6 +103,29 @@ document.addEventListener('DOMContentLoaded', function() {
         // Handle error if necessary
       });
   });
+
+  document.getElementById('shippingadr').addEventListener('click', function(event) {
+    console.log("clicked")
+    event.preventDefault();
+    axios.get('shippingadr')
+      .then(function(response) {
+        document.querySelector('.profile').innerHTML = response.data;
+        console.log(response.data)
+        if(window.innerWidth<768)
+        {
+            window.scrollBy({
+            top: 300, // Change this value to adjust scrolling distance
+            behavior: 'smooth' // You can change this to 'auto' for instant scrolling
+        });
+        }
+
+      })
+      .catch(function(error) {
+        console.error(error);
+        // Handle error if necessary
+      });
+  });
+
   document.getElementById('wishList').addEventListener('click', function(event) {
     console.log("clicked")
     event.preventDefault();

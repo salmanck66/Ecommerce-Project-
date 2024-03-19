@@ -46,6 +46,7 @@ router.post('/add-to-cart',authMiddleware,userControllers.addtocart)
 router.post('/updateQuantity',authMiddleware,userControllers.updatecart)
 router.post('/removeItem',authMiddleware,userControllers.removeCartItem)
 router.post('/updateprofile',authMiddleware,userControllers.updateprofile)
+router.get('/shippingadr',authMiddleware,userControllers.shippingadr)
 
 router.post('/add-to-wishlist',authMiddleware,userControllers.addtowishlist)
 

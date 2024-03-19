@@ -1,0 +1,17 @@
+
+        <div class="row">
+            {{#each shippingAddress}}
+            <div class="col-6 col-sm-4">
+                <div class="card">
+                    <div class="card-body">
+                        <p><strong>Name:</strong> {{this.shippingAddress.firstName}} {{this.shippingAddress.lastName}}</p>
+                        <p><strong>Phone Number:</strong> {{this.shippingAddress.phonenumber}}</p>
+                        <p><strong>Address:</strong> {{this.shippingAddress.address}}</p>
+                        <p><strong>Address 2:</strong> {{this.shippingAddress.address2}}</p>
+                        <p><strong>State:</strong> {{this.shippingAddress.state}}</p>
+                        <p><strong>Zip:</strong> {{this.shippingAddress.zip}}</p>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+        </div>

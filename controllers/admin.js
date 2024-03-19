@@ -17,21 +17,26 @@ const Userhelpers = require('../helpers/userhelper');
 
 
 
-  let homePage =async (req, res) => {
-    console.log("admin dashbord page");
-    const order = await Order.find().sort({ orderDate: -1 });
-    const result = await Order.aggregate([
-      {
-          $group: {
-              _id: null,
-              totalAmount: { $sum: "$totalAmount" }
+let homePage = async (req, res) => {
+  console.log("admin dashboard page");
+  let result = { totalAmount: 0 }; // Default total amount to 0
+  const order = await Order.find().sort({ orderDate: -1 });
+  
+  if (order.length !== 0) {
+      result = await Order.aggregate([
+          {
+              $group: {
+                  _id: null,
+                  totalAmount: { $sum: "$totalAmount" }
+              }
           }
-      }
-  ]);
-    console.log("admin order management");
-    const visit = await Visit.findOne();
-    res.render('admin/index',{layout:"adminLayout.hbs",order,visit,totalAmount: result[0].totalAmount})
+      ]);
   }
+
+  console.log("admin order management");
+  const visit = await Visit.findOne();
+  res.render('admin/index', { layout: "adminLayout.hbs", order, visit, totalAmount: result[0]?.totalAmount || 0 });
+};
 
 let logIn = (req, res) => {
     console.log("admin login page");
@@ -600,7 +605,7 @@ let addSubcategory = async (req, res) => {
 const addCoupon = async (req, res) => {
   try {
       // Extract data from request body
-      const { couponCode, couponDescription, discountType, discountValue, expiryDate } = req.body;
+      const { couponCode, couponDescription, discountType, discountValue, expiryDate,startingDate } = req.body;
 
       // Create a new coupon instance
       const newCoupon = new Coupon({
@@ -608,7 +613,8 @@ const addCoupon = async (req, res) => {
           couponDescription,
           discountType,
           discountValue,
-          expiryDate
+          expiryDate,
+          startingDate
       });
 
       // Save the new coupon to the database
@@ -652,9 +658,9 @@ let updatebanner = async (req, res) => {
 let editCoupon = async (req,res)=>
 {
   console.log(req.body);
-  const {couponCode,couponDescription,discountType,discountValue,expiryDate,id}= req.body;
+  const {couponCode,couponDescription,discountType,discountValue,expiryDate,id,startingDate}= req.body;
   const updateddata = {
-    couponCode,couponDescription,discountType,discountValue,expiryDate
+    couponCode,couponDescription,discountType,discountValue,expiryDate,startingDate
   }
   const updatedProduct = await Coupon.findByIdAndUpdate(id, updateddata, { new: true });
   if (!updatedProduct) {

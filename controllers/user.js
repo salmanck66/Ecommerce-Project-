@@ -724,6 +724,23 @@ let wishlistprofile = async (req, res) => {
     }
   }
 };
+let shippingadr = async (req, res) => {
+  console.log("reqingg")
+  if (req.cookies.jwt) {
+    try {
+      let tokenExracted = await verifyUser(req.cookies.jwt);
+      let userid = tokenExracted.userId;
+   
+      
+      const shippingAddress= await Order.find({user:userid})
+
+
+      res.render("user/shippingadr", { layout:false,shippingAddress});
+    } catch (error) {
+      res.render("error", { print: error });
+    }
+  }
+};
   
 let userprofile =async (req, res) => {
   if (req.cookies.jwt) {
@@ -731,10 +748,11 @@ let userprofile =async (req, res) => {
     var userId = tokenExracted.userId;
   }
   const user =await User.find({_id:userId})
+  const shippingAddress= await Order.find({user:userId})
   const userName =user.userName
   const category =await Category.find()
   console.log("userprofile");
-  res.render("user/userprofile",{userName,user,category});
+  res.render("user/userprofile",{userName,user,category,shippingAddress});
 };
 let checkout = async(req, res) => {
   console.log("checkout");
@@ -765,7 +783,10 @@ let orderview = async (req, res) => {
       var userName = tokenExracted.userName;
       var userId = tokenExracted.userId;
       console.log(userName);
-      let order = await Order.find({"user":userId}).populate('items.product').exec();
+      let order = await Order.find({"user": userId})
+    .populate('items.product')
+    .sort({ orderDate: -1 }) // Sort in descending order of createdAt
+    .exec();
       console.log(order)
       console.log("ordercomplete");
       res.render("user/orders",{order,layout:false});
@@ -901,7 +922,7 @@ module.exports = {delwish,paymetController,tracking,updateprofile,
   forgetpass,
   invoice,
   signUpPostPage,
-  loginPostPage,
+  loginPostPage,shippingadr,
   loginGetPage,
   logoutPage,verifyotp,
   addtocart,loginotp,
