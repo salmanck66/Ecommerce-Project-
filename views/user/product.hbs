@@ -5,16 +5,16 @@
 		<hr>
 		<div class="container">
 			<div class="flex-w flex-sb-m p-b-52">
-				<div class="flex-w flex-l-m filter-tope-group m-tb-10 border-top-2">
-					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 how-active1" data-filter="*">
-						All Products
-					</button>
-					{{#each category}}
-					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".women">
-						{{this.name}}
-					</button>
-					{{/each}}
-				</div>
+<div class="flex-w flex-l-m filter-tope-group m-tb-10 border-top-2">
+    <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 how-active1 category-button" data-category="all">
+        All Products
+    </button>
+    {{#each category}}
+    <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 category-button" data-category="{{this.name}}">
+        {{this.name}}
+    </button>
+    {{/each}}
+</div>
 				
 			</div>
 
@@ -281,6 +281,38 @@
 <!--===============================================================================================-->
 	<script src="vendor/sweetalert/sweetalert.min.js"></script>
 	<script>
+		document.addEventListener('DOMContentLoaded', function() {
+    // Get all category buttons
+    const categoryButtons = document.querySelectorAll('.category-button');
+
+    // Add click event listener to each category button
+    categoryButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            // Get the selected category
+            const category = this.getAttribute('data-category');
+
+            if (category === 'all') {
+                // Show all products if "All Products" button is clicked
+                const products = document.querySelectorAll('.isotope-item');
+                products.forEach(function(product) {
+                    product.style.display = 'block';
+                });
+            } else {
+                // Hide all products
+                const products = document.querySelectorAll('.isotope-item');
+                products.forEach(function(product) {
+                    product.style.display = 'none';
+                });
+
+                // Show products belonging to the selected category
+                const selectedProducts = document.querySelectorAll('.isotope-item.' + category);
+                selectedProducts.forEach(function(product) {
+                    product.style.display = 'block';
+                });
+            }
+        });
+    });
+});
 		$('.js-addwish-b2, .js-addwish-detail').on('click', function(e){
 			e.preventDefault();
 		});
