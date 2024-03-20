@@ -751,18 +751,47 @@ let shippingadr = async (req, res) => {
     try {
       let tokenExracted = await verifyUser(req.cookies.jwt);
       let userid = tokenExracted.userId;
-   
-      
-      const shippingAddress= await Order.find({user:userid})
-
-
-      res.render("user/shippingadr", { layout:false,shippingAddress});
+      const adress = await User.findOne({_id:userid})
+      res.render("user/shippingadr", { layout:false,adress:adress.addresses});
     } catch (error) {
       res.render("error", { print: error });
     }
   }
 };
-  
+let delAddress =async (req, res) => {
+  try {
+    let tokenExracted = await verifyUser(req.cookies.jwt);
+    let userid = tokenExracted.userId;
+       // Assuming you have a way to identify the user whose address is being deleted
+      const { index } = req.body; // Index of the address to delete
+      
+      // Fetch the user document
+      const user = await User.findById(userid);
+      
+      // Check if the user exists
+      if (!user) {
+          return res.status(404).json({ error: "User not found" });
+      }
+
+      // Check if the index is within bounds of the addresses array
+      if (index < 0 || index >= user.addresses.length) {
+          return res.status(400).json({ error: "Invalid address index" });
+      }
+
+      // Remove the address at the specified index
+      user.addresses.splice(index, 1);
+
+      // Save the updated user document
+      await user.save();
+
+      // Respond with success message
+      res.status(200).json({ message: "Address deleted successfully" });
+  } catch (error) {
+      // Handle any errors
+      console.error("Error deleting address:", error);
+      res.status(500).json({ error: "An error occurred while deleting the address" });
+  }
+}
 let userprofile =async (req, res) => {
   if (req.cookies.jwt) {
     let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
@@ -772,8 +801,10 @@ let userprofile =async (req, res) => {
   const shippingAddress= await Order.find({user:userId})
   const userName =user.userName
   const category =await Category.find()
+  
   console.log("userprofile");
   res.render("user/userprofile",{userName,user,category,shippingAddress});
+
 };
 let checkout = async(req, res) => {
   console.log("checkout");
@@ -879,11 +910,11 @@ let paymetController = async(req,res)=>{
                   res.status(200).send({
                       success:true,
                       msg:'Order Created',
-                      order_id:"123123",
+                      order_id:order.id,
                       amount:amount,
                       key_id:process.env.RZPAY_KEY,
                       product_name:"product",
-                      description:"descriptio",
+                      description:"description",
                       contact:"8567345632",
                       name: "Sandeep Sharma",
                       email: "sandeep@gmail.com"
@@ -955,6 +986,6 @@ module.exports = {delwish,paymetController,tracking,updateprofile,
   loginPostPage,shippingadr,
   loginGetPage,
   logoutPage,verifyotp,
-  addtocart,loginotp,
+  addtocart,loginotp,delAddress,
   viewCart,updatecart,removeCartItem,addtowishlist,discount  ,pcheckout,fcheckout,orderview,ResetPasswordPost,ResetPasswordPostFinal,loginRequestOTP,wishlistprofile
 };

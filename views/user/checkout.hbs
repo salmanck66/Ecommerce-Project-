@@ -113,8 +113,11 @@
         <h5 class="card-title">{{this.firstName}} {{this.lastName}}</h5>
         <p class="card-text">Email: {{this.email}}</p>
         <!-- Include phone number in the card text -->
-        <p class="card-text">Phone Number: {{this.phoneNumber}}</p>
-        <p class="card-text">Address: {{this.address}}, {{this.address2}}, {{this.state}}, {{this.zip}}</p>
+        <p class="card-text">Phone Number: {{this.phonenumber}}</p>
+        <p class="card-text">Address 1: {{this.address}}</p>
+        <p class="card-text">Address 2: {{this.address2}}</p>
+        <p class="card-text">State: {{this.state}}</p>
+        <p class="card-text">Zip: {{this.zip}}</p>
         <a href="#" class="btn btn-primary btn-adress">Use this Address</a>
     </div>
 </div>
@@ -141,27 +144,24 @@
     event.preventDefault();
     
     // Extract address details from the card
-    var firstName = $(this).closest('.card-body').find('.card-title').text().split(' ')[0];
-    var lastName = $(this).closest('.card-body').find('.card-title').text().split(' ')[1];
-    var email = $(this).closest('.card-body').find('.card-text:eq(0)').text().split(': ')[1];
-    var addressDetails = $(this).closest('.card-body').find('.card-text:eq(1)').text().split(': ')[1];
-    var phoneNumber = $(this).closest('.card-body').find('.card-text:eq(2)').text().split(': ')[1];
-    var addressArray = addressDetails.split(', ');
-    var address = addressArray[0];
-    console.log(addressArray[0])
-    var address2 = addressArray[1];
-    var state = addressArray[2];
-    var zip = addressArray[3];
-    
-    // Set values in input fields
-    $('#firstName').val(firstName);
-    $('#lastName').val(lastName);
-    $('#email').val(email);
-    $('#address').val(address);
-    $('#address2').val(address2);
-    $('#number').val(phoneNumber);
-    $('#state').val(state);
-    $('#zip').val(zip);
+    var firstName = $(this).closest('.card').find('.card-title').text().trim().split(' ')[0];
+        var lastName = $(this).closest('.card').find('.card-title').text().trim().split(' ')[1];
+        var email = $(this).closest('.card').find('.card-text:eq(0)').text().trim().split(': ')[1];
+        var phoneNumber = $(this).closest('.card').find('.card-text:eq(1)').text().trim().split(': ')[1];
+        var address = $(this).closest('.card').find('.card-text:eq(2)').text().trim().split(': ')[1];
+        var address2 = $(this).closest('.card').find('.card-text:eq(3)').text().trim().split(': ')[1];
+        var state = $(this).closest('.card').find('.card-text:eq(4)').text().trim().split(': ')[1];
+        var zip = $(this).closest('.card').find('.card-text:eq(5)').text().trim().split(': ')[1];
+
+        // Set values in input fields
+        $('#firstName').val(firstName);
+        $('#lastName').val(lastName);
+        $('#email').val(email);
+        $('#number').val(phoneNumber);
+        $('#address').val(address);
+        $('#address2').val(address2);
+        $('#state').val(state);
+        $('#zip').val(zip);
     
     // Hide the "Save Shipping Address" checkbox
     $(".save").hide();

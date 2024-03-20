@@ -68,10 +68,82 @@
 </div>
 </div>
 </div>
+
+
+<div class="modal fade" id="editAddressModal" tabindex="-1" aria-labelledby="editAddressModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editAddressModalLabel">Edit Address</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Form for editing address fields -->
+        <form id="editAddressForm">
+          <div class="mb-3">
+            <label for="editAddress" class="form-label">Address</label>
+            <input type="text" class="form-control" id="editAddress">
+          </div>
+          <!-- Add other address fields as needed -->
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+  function editAddressWithSweetAlert(index) {
+      const address = user.addresses[index]; // Get the address object from the array
+      swal({
+        text: 'Edit Address:',
+        content: {
+          element: 'input',
+          attributes: {
+            value: address.address,
+            placeholder: 'Enter new address',
+            type: 'text',
+          },
+        },
+        buttons: ['Cancel', 'Save'],
+      }).then((value) => {
+        if (value) {
+          // Perform AJAX request to update the address on the server
+          axios.post('/update-address', { index: index, address: value })
+            .then(response => {
+              // Optionally, handle success response
+              swal('Address updated successfully!', {
+                icon: 'success',
+              });
+            })
+            .catch(error => {
+              console.error('Error updating address:', error);
+              // Optionally, handle error response
+              swal('Error updating address!', {
+                icon: 'error',
+              });
+            });
+        }
+      });
+    }
+
+    // Event listener for clicking the "Edit" button
+    $('.btn-edit-address').click(function(event) {
+      event.preventDefault();
+      const index = $(this).data('index'); // Get the index of the address to be edited from data attribute
+      editAddressWithSweetAlert(index);
+    });
+
+
+
+
+
+
+
     function showToast(message, type) {
             Toastify({
                 text: message,
@@ -201,4 +273,42 @@ document.addEventListener('DOMContentLoaded', function() {
 
 });
 
+function deleteaddr(index) {
+        // Show a SweetAlert confirmation dialog
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this address!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
+                // Send an AJAX request to delete the address
+                $.ajax({
+                    url: "/delete-address",
+                    method: "POST",
+                    data: { index: index },
+                    success: function(response) {
+                        // If deletion is successful, remove the corresponding card from the DOM
+                        $(`.card:eq(${index})`).remove();
+                        // Optionally, you can show a success message or perform other actions
+                        swal("Address deleted successfully!", {
+                            icon: "success",
+                        });
+                    },
+                    error: function(err) {
+                        // Handle errors if deletion fails
+                        console.error("Error deleting address:", err);
+                        // Optionally, you can show an error message or perform other actions
+                        swal("Error deleting address!", {
+                            icon: "error",
+                        });
+                    }
+                });
+            }
+        });
+    }
+
 </script>
+
+
