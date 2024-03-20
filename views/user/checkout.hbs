@@ -78,7 +78,7 @@
                     </div>
                 </div>
                 <hr class="mb-4">
-                <div class="custom-control custom-checkbox">
+                <div class="custom-control custom-checkbox save">
                     <input type="checkbox" class="custom-control-input" name="saveadress" id="same-address">
                     <label class="custom-control-label" for="same-address">Save Shipping Adress</label>
                 </div>
@@ -103,6 +103,25 @@
                 <button class="btn btn-dark btn-lg btnsubmit btn-pay-now  btn-block" onclick="payNow({{cart.carttotal}})" type="button">Pay And Checkout</button>
             </form>
         </div>
+{{#if adress}}
+<div class="col-md-4">
+    <h4 class="mb-3">Saved Addresses</h4>
+    <div id="savedAddressesContainer">
+{{#each adress}}
+<div class="card mb-3">
+    <div class="card-body">
+        <h5 class="card-title">{{this.firstName}} {{this.lastName}}</h5>
+        <p class="card-text">Email: {{this.email}}</p>
+        <!-- Include phone number in the card text -->
+        <p class="card-text">Phone Number: {{this.phoneNumber}}</p>
+        <p class="card-text">Address: {{this.address}}, {{this.address2}}, {{this.state}}, {{this.zip}}</p>
+        <a href="#" class="btn btn-primary btn-adress">Use this Address</a>
+    </div>
+</div>
+{{/each}}
+    </div>
+</div>
+{{/if}}
     </div>
 </div>
 <script src="https://unpkg.com/indian-states-cities@1.0.1/dist/index.min.js"></script>
@@ -111,7 +130,43 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script>
     $(document).ready(function() {
-
+            function disableInputFields() {
+        $('#firstName, #lastName, #email, #address, #address2, #state, #zip, #number').prop('disabled', true);
+        $('input[type="radio"]').prop('disabled', false); // Enable payment method radios
+    }
+        function enableInputFields() {
+        $('#firstName, #lastName, #email, #address, #address2, #state, #zip, #number').prop('disabled', false);
+    }
+     $(document).on('click', '.btn-adress', function(event) {
+    event.preventDefault();
+    
+    // Extract address details from the card
+    var firstName = $(this).closest('.card-body').find('.card-title').text().split(' ')[0];
+    var lastName = $(this).closest('.card-body').find('.card-title').text().split(' ')[1];
+    var email = $(this).closest('.card-body').find('.card-text:eq(0)').text().split(': ')[1];
+    var addressDetails = $(this).closest('.card-body').find('.card-text:eq(1)').text().split(': ')[1];
+    var phoneNumber = $(this).closest('.card-body').find('.card-text:eq(2)').text().split(': ')[1];
+    var addressArray = addressDetails.split(', ');
+    var address = addressArray[0];
+    console.log(addressArray[0])
+    var address2 = addressArray[1];
+    var state = addressArray[2];
+    var zip = addressArray[3];
+    
+    // Set values in input fields
+    $('#firstName').val(firstName);
+    $('#lastName').val(lastName);
+    $('#email').val(email);
+    $('#address').val(address);
+    $('#address2').val(address2);
+    $('#number').val(phoneNumber);
+    $('#state').val(state);
+    $('#zip').val(zip);
+    
+    // Hide the "Save Shipping Address" checkbox
+    $(".save").hide();
+});
+        
         $('.btn-pay-now').hide();
         function togglePayNowButton() {
         if ($('#Online').is(":checked")) {
@@ -246,11 +301,11 @@
 
         // Event listener for form submission
         $('form').on('submit', function(event) {
-            // Prevent form submission if validation fails
-            if (!validateForm()) {
-                event.preventDefault();
-            }
-        });
+    // Prevent form submission if validation fails
+    if (!validateForm() || !$(this).attr('id') === 'payment-form') {
+        event.preventDefault();
+    }
+});
 
             function showToast(message, type) {
             Toastify({

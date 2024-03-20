@@ -7,11 +7,14 @@ const userLoginSchema = new mongoose.Schema({
     phoneNumber: { type: String },
     addresses: [
         {
-            addressLine1: { type: String, required: true },
-            addressLine2: { type: String },
-            city: { type: String, required: true },
+            firstName: { type: String, required: true },
+            lastName: { type: String },
+            email: { type: String, required: true },
+            phonenumber: { type: String, required: true },
+            address: { type: String, required: true }, // Include address field
+            address2: { type: String},
             state: { type: String, required: true },
-            zip: { type: String, required: true }
+            zip: { type: String, required: true },
         }
     ]
 }, { timestamps: true, versionKey: false });

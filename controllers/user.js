@@ -430,9 +430,11 @@ let fcheckout = async (req, res) => {
     let tokenExtracted = await verifyUser(req.cookies.jwt);
     const userId = tokenExtracted.userId;
     const orderNumber = await Userhelpers.getNextOrderNumber();
+    console.log(req.body)
 
     // Get user's cart
     const cart = await Cart.findOne({ user: userId });
+
 
     // Check and reduce stock of products
     for (const item of cart.items) {
@@ -442,7 +444,7 @@ let fcheckout = async (req, res) => {
       }
       const size = item.size;
       if (!product.stock[size] || product.stock[size] < item.quantity) {
-        res.json("Out of Stock");
+        res.status(200).json("Out of Stock");
       }
       // Deduct quantity from stock for the specific size
       product.stock[size] -= item.quantity;
@@ -459,8 +461,8 @@ let fcheckout = async (req, res) => {
         firstName: req.body.fname,
         lastName: req.body.lname,
         email: req.body.email,
+        phonenumber: req.body.number, // Corrected field name here
         address: req.body.adress,
-        phonenumber: req.body.number,
         address2: req.body.adress2,
         state: req.body.state,
         zip: req.body.zip
@@ -468,23 +470,26 @@ let fcheckout = async (req, res) => {
       paymentMethod: req.body.paymentMethod
     });
 
+    // await Cart.findOneAndDelete({ user: userId });
+
     // Save the new order to the database
     const savedOrder = await newOrder.save();
 
-    // Save shipping address to user's profile
-    const user = await User.findById(userId);
-    user.addresses.push({
-      firstName: req.body.fname,
-      lastName: req.body.lname,
-      email: req.body.email,
-      address: req.body.adress,
-      phonenumber: req.body.number,
-      address2: req.body.adress2,
-      state: req.body.state,
-      zip: req.body.zip
-    });
-    await user.save();
-
+    // Save shipping address to user's profile if checkbox is checked
+    if (req.body.saveadress) {
+      const user = await User.findById(userId);
+      user.addresses.push({
+        firstName: req.body.fname,
+        lastName: req.body.lname,
+        email: req.body.email,
+        address: req.body.adress,
+        phonenumber: req.body.number, // Ensure req.body.number is correct
+        address2: req.body.adress2,
+        state: req.body.state,
+        zip: req.body.zip
+      });
+      await user.save();
+    }
     // Clear the cart items or mark them as purchased
     // This step depends on your application's logic
 
@@ -778,10 +783,13 @@ let checkout = async(req, res) => {
     var userId = tokenExracted.userId;
     console.log(userName);
   }
+  console.log(userId);
+  let category = await Category.find()
   const cart = await Cart.findOne({user: userId}).populate('items.product');
+  const adress = await User.findOne({_id:userId})
+  console.log(adress);
 
-  
-  res.render("user/checkout",{userName,cart});
+  res.render("user/checkout",{userName,cart,adress:adress.addresses,category});
 };
 let ordercomplete =async (req, res) => {
   if (req.cookies.jwt) {
@@ -863,24 +871,19 @@ let paymetController = async(req,res)=>{
           receipt: 'razorUser@gmail.com'
       }
       console.log(req.body);
-      let razorpayInstanceHelp =  new razorpay(
-        {
-          key_id :process.env.RZPAY_KEY,
-          key_secret:process.env.RZPAY_KEY_SECRET
-        }
-        )
 
-      razorpayInstanceHelp.orders.create(options, 
+
+     await Userhelpers.razorpayInstanceHelp.orders.create(options, 
           (err, order)=>{
               if(!err){
                   res.status(200).send({
                       success:true,
                       msg:'Order Created',
-                      order_id:order.id,
+                      order_id:"123123",
                       amount:amount,
                       key_id:process.env.RZPAY_KEY,
-                      product_name:req.body.name,
-                      description:req.body.description,
+                      product_name:"product",
+                      description:"descriptio",
                       contact:"8567345632",
                       name: "Sandeep Sharma",
                       email: "sandeep@gmail.com"

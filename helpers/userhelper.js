@@ -12,7 +12,7 @@ const { response } = require('express');
 const Wishlist = require("../models/wishlist")
 const Counter = require("../models/counter")
 const Handlebars = ("handlebars");
-
+const razorpay = require('razorpay');
 const axios = require('axios');
 
 function signupHelper(recievedUserData) {
@@ -41,7 +41,12 @@ function signupHelper(recievedUserData) {
     })
   }
   
-  
+  let razorpayInstanceHelp =  new razorpay(
+    {
+      key_id :process.env.RZPAY_KEY,
+      key_secret:process.env.RZPAY_KEY_SECRET
+    }
+    )
   let loginHelper = async (recievedUserData) => {
     try {
       const { mail, password } = recievedUserData
@@ -170,5 +175,5 @@ function changePasswordHelper(userData) {
       
 
 module.exports = {
-  sendOTP, signupHelper, loginHelper,addToCart,getNextOrderNumber,changePasswordHelper,pushOrder
+  sendOTP, signupHelper, loginHelper,addToCart,getNextOrderNumber,changePasswordHelper,pushOrder,razorpayInstanceHelp
   }
