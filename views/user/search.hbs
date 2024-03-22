@@ -6,7 +6,7 @@
       <button class="btn btn-outline-secondary" type="button" id="searchButton">Search</button>
     </div>
   </div>
-  <div id="productsList" class="row"></div>
+  <div id="productsList" class="col border-success"></div>
 </div>
 
 <!-- Bootstrap JS and jQuery -->
@@ -28,17 +28,27 @@
         // Clear previous search results
         document.getElementById('productsList').innerHTML = '';
         // Display search results
-        response.data.forEach(product => {
-          const productHTML = `
-            <div class="col-md-3">
-              <div class="card">
-                <div class="card-body">
-                  <h5 class="card-title">${product.name}</h5>
-                  <p class="card-text">${product.description}</p>
-                </div>
-              </div>
+response.data.forEach(product => {
+  const productHTML = `
+  <a class="text-decoration-none text-dark" href="productdetail?id=${product._id}">
+    <div class="col-12">
+      <div class="card">
+        <div class="row no-gutters">
+          <div class="col-8">
+            <div class="card-body">
+              <h5 class="card-title">${product.name}</h5>
+              <p class="card-text">Category: ${product.category}</p>
+              <p class="card-text">Edition: ${product.variant}</p>
+              <p class="card-text">${product.description}</p>
             </div>
-          `;
+          </div>
+          <div class="col-4">
+            <img class="card-img" src="${product.image}" alt="Product Image">
+          </div>
+        </div>
+      </div>
+    </div></a>
+  `;
           document.getElementById('productsList').innerHTML += productHTML;
         });
       })
