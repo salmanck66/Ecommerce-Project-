@@ -9,13 +9,11 @@
     <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 how-active1  category-button" data-category="all">
         All Products
     </button>
-    {{#each category}}
-	
-	
-    <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 category-button" >
+{{#each category}}
+    <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 category-button" data-category="{{this.name}}">
         {{this.name}}
     </button>
-    {{/each}}
+{{/each}}
 </div>
 				
 			</div>
@@ -384,6 +382,7 @@
 document.querySelectorAll('.category-button').forEach(button => {
     button.addEventListener('click', async () => {
         const category = button.getAttribute('data-category');
+		console.log(category)
         try {
             const allProducts = document.querySelectorAll('.isotope-item');
             allProducts.forEach(function(product) {
