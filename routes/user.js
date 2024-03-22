@@ -41,6 +41,8 @@ router.get('/forget',userControllers.forgetpass)
 router.get('/signotp',userControllers.loginotp)
 router.get('/trackorder',userControllers.tracking)
 
+router.get('/category/:categoryName' , userControllers.showCategoryProducts )
+
 router.get('/cart',authMiddleware,userControllers.viewCart)
 router.post('/add-to-cart',authMiddleware,userControllers.addtocart)
 router.post('/updateQuantity',authMiddleware,userControllers.updatecart)
