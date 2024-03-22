@@ -987,12 +987,43 @@ let showcatprod =async (req, res) => {
   } catch (error) {
     console.log(error);
   }
+}
+let search =async (req, res) => {
+  try {
+    const category =await Category.find()
+    res.render("user/search",{product,category})
+  } catch (error) {
+    console.log(error);
+  }
+}
+let searchproduct= async (req, res) => {
+  try {
+    const query = req.body.query.toLowerCase().trim();
+    const searchResults = await Product.aggregate([
+      // Match products that match the search query
+      {
+        $match: {
+          $or: [
+            { name: { $regex: query, $options: 'i' } }, // Case-insensitive search by name
+            { description: { $regex: query, $options: 'i' } } // Case-insensitive search by description
+          ]
+        }
+      },
+      {
+        $sort: { name: 1 }
+      }
+    ]);
 
-  
+    // Send the search results as a response
+    res.json(searchResults);
+  } catch (error) {
+    console.error('Error searching for products:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 }
 
 
-module.exports = {delwish,paymetController,tracking,updateprofile,showCategoryProducts,showcatprod,
+module.exports = {searchproduct,delwish,paymetController,tracking,updateprofile,showCategoryProducts,showcatprod,search,
   payment,
   ResetPassword,
   homePage,
