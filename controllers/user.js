@@ -966,27 +966,33 @@ const loginRequestOTP = async (req, res) => {
 let showCategoryProducts =async (req, res) => {
   const categoryName = req.params.categoryName;
   try {
+    if(categoryName === "all")
+    {
+      const product = await Product.find();
+      res.render("user/productbycat", { product,layout:false})
+    }
     const product = await Product.find({ category : categoryName});
     res.render("user/productbycat", { product,layout:false})
     console.log(product);
   } catch (error) {
     console.log(error)
   }
+}
+let showcatprod =async (req, res) => {
+  try {
+    const name = req.query.id
+    const product =await Product.find({category:name})
+    const category =await Category.find()
+    res.render("user/categorywise",{product,category})
+  } catch (error) {
+    console.log(error);
+  }
 
-  // Assuming you have a MongoDB collection named 'products'
-  // Fetch products for the given category from the database
-  // Product.find({ category: categoryName }, (err, products) => {
-  //     if (err) {
-  //         console.error(err);
-  //         res.status(500).send('Internal Server Error');
-  //     } else {
-  //         res.json(products); // Send the products as JSON response
-  //     }
-  // });
+  
 }
 
 
-module.exports = {delwish,paymetController,tracking,updateprofile,showCategoryProducts,
+module.exports = {delwish,paymetController,tracking,updateprofile,showCategoryProducts,showcatprod,
   payment,
   ResetPassword,
   homePage,
