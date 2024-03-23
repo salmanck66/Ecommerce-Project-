@@ -278,7 +278,6 @@ let product =async (req, res) => {
   console.log("product page");
   const category = await Category.find({})
   const product = await Product.find({})
-  console.log(product);
   res.render("user/product",{userName,category,product,userId});
 };
 let productdetail = async (req, res) => {
@@ -973,7 +972,6 @@ let showCategoryProducts =async (req, res) => {
     }
     const product = await Product.find({ category : categoryName});
     res.render("user/productbycat", { product,layout:false})
-    console.log(product);
   } catch (error) {
     console.log(error)
   }
@@ -1022,6 +1020,23 @@ let sort =async (req, res) => {
   res.render("user/categorywise",{product:sortedProducts,category,layout:false})
 }
 
+let teamfilter = async (req, res) => {
+  const clubName = req.params.clubname;
+
+  if (clubName) {
+    console.log(String(clubName).toLowerCase());
+    try {
+      const products = await Product.find({ name: { $regex: String(clubName), $options: 'i' } });
+      res.render("user/productss", { product: products, layout: false });
+    } catch (error) {
+      console.error('Error searching for products:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  } else {
+    res.status(400).json({ error: 'Club name is required' });
+  }
+}
+
 
 
 let searchproduct= async (req, res) => {
@@ -1051,7 +1066,7 @@ let searchproduct= async (req, res) => {
 }
 
 
-module.exports = {searchproduct,delwish,paymetController,tracking,updateprofile,showCategoryProducts,showcatprod,search,
+module.exports = {teamfilter,searchproduct,delwish,paymetController,tracking,updateprofile,showCategoryProducts,showcatprod,search,
   payment,sort,
   ResetPassword,
   homePage,

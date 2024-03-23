@@ -63,12 +63,8 @@ const productSchema = new mongoose.Schema({
   },
   subcategory: {
     type: String
-  },
-  createdDate: {
-    type: Date,
-    default: Date.now
   }
-});
+},{timestamps: true,versionKey:false})
 
 const Product = mongoose.model('Product', productSchema);
 

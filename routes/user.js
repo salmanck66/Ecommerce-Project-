@@ -46,6 +46,7 @@ router.post('/searchproduct',userControllers.searchproduct)
 router.get('/category/:categoryName' , userControllers.showCategoryProducts )
 router.get('/categoryget' , userControllers.showcatprod )
 router.get('/sort/:sortType' , userControllers.sort )
+router.get('/clubs/:clubname' , userControllers.teamfilter )
 
 router.get('/cart',authMiddleware,userControllers.viewCart)
 router.post('/add-to-cart',authMiddleware,userControllers.addtocart)

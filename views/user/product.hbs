@@ -17,7 +17,7 @@
             {{/each}}
         </div>
     </div>
-    <div>
+    <div class="d-flex ">
 <div class="dropdown">
     <button class="btn btn-secondary dropdown-toggle" id="sortDropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sort-up" viewBox="0 0 16 16">
@@ -30,8 +30,50 @@
         <a class="dropdown-item" href="#" id="sortNewness">Latest</a>
     </div>
 </div>
-
+<div class="dropdown ml-1">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="soccerClubsDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Filter Team
+    </button>
+    <div class="dropdown-menu" aria-labelledby="soccerClubsDropdownButton">
+    	<a class="dropdown-item Real" href="#">Real Madrid CF</a>
+        <a class="dropdown-item Barcelona" href="#">FC Barcelona</a>
+        <a class="dropdown-item Atletico" href="#">Athletico Madrid</a>
+        <a class="dropdown-item united" href="#">Manchester United</a>
+        <a class="dropdown-item Arsenal" href="#">Arsenal FC</a>
+        <a class="dropdown-item Tottenham" href="#">Tottenham Hotspur</a>
+        <a class="dropdown-item Newcastle" href="#">Newcastle United FC</a>
+        <a class="dropdown-item Liverpool" href="#">Liverpool FC</a>
+        <a class="dropdown-item AC" href="#">AC Milan FC</a>
+        <a class="dropdown-item Milan" href="#">Inter Milan FC</a>
+        <a class="dropdown-item Miami" href="#">Inter Miami FC</a>
+        <a class="dropdown-item Bayern" href="#">Bayern Munich</a>
+        <a class="dropdown-item Borussia" href="#">Borussia Dortmund</a>
+        <a class="dropdown-item Juventus" href="#">Juventus FC</a>
+        <a class="dropdown-item PSG" href="#">Paris Saint-Germain</a>
+        <a class="dropdown-item Chelsea" href="#">Chelsea FC</a>
+        <a class="dropdown-item City" href="#">Manchester City</a>
+        <a class="dropdown-item Roma" href="#">AS Roma</a>
+        <a class="dropdown-item Sporting" href="#">Sporting CP</a>
+        <a class="dropdown-item Ajax" href="#">Ajax FC</a>
+        <a class="dropdown-item Nassr" href="#">Al-Nassr FC</a>
+        <a class="dropdown-item Ahli" href="#">Al-Ahli FC</a>
+        <a class="dropdown-item Argentina" href="#">Argentina</a>
+        <a class="dropdown-item Brazil" href="#">Brazil</a>
+        <a class="dropdown-item Japan" href="#">Japan</a>
+        <a class="dropdown-item India" href="#">India</a>
+        <a class="dropdown-item Portugal" href="#">Portugal</a>
+        <a class="dropdown-item England" href="#">England</a>
+        <a class="dropdown-item Netherlands" href="#">Netherlands</a>
+        <a class="dropdown-item Italy" href="#">Italy</a>
+        <a class="dropdown-item France" href="#">France</a>
+        <a class="dropdown-item SouthKorea" href="#">South Korea</a>
+        <a class="dropdown-item Spain" href="#">Spain</a>
+        <a class="dropdown-item Germany" href="#">Germany</a>
+        <a class="dropdown-item Croatia" href="#">Croatia</a>
+    </div>
+</div>
     </div>	
+	
 </div>
 
 
@@ -454,7 +496,22 @@ document.querySelectorAll('.category-button').forEach(button => {
         }
     });
 });
+document.querySelectorAll('.dropdown-item').forEach(item => {
+    item.addEventListener('click', async () => {
+        const clubClassName = item.classList[1]; // Extract the second class name which represents the club
+		console.log(clubClassName)
+        try {
+            const response = await axios.get(`/clubs/${clubClassName}`); // Send a GET request to the server
+			document.querySelector('.row.isotope-grid').innerHTML = response.data;
+			const isotopeGrid = document.querySelector('.row.isotope-grid');
+			isotopeGrid.style.height = '';
 
+            // Handle the received data as needed
+        } catch (error) {
+            console.error('Error fetching club data:', error);
+        }
+    });
+});
 </script>
 
 
