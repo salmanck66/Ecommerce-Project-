@@ -988,6 +988,7 @@ let showcatprod =async (req, res) => {
     console.log(error);
   }
 }
+
 let search =async (req, res) => {
   try {
     const category =await Category.find()
@@ -996,6 +997,33 @@ let search =async (req, res) => {
     console.log(error);
   }
 }
+let sort =async (req, res) => {
+  const { sortType } = req.params;
+
+  // Sort products based on sortType
+  let products = await Product.find({})
+  let sortedProducts = ""
+  switch (sortType) {
+      case 'price_asc':
+          sortedProducts = products.slice().sort((a, b) => a.price - b.price);
+          break;
+      case 'price_desc':
+          sortedProducts = products.slice().sort((a, b) => b.price - a.price);
+          break;
+      case 'newness':
+          sortedProducts = products.slice().sort((a, b) => new Date(a.dateAdded) - new Date(b.dateAdded));
+          break;
+      default:
+          sortedProducts = products; // Default to original order if sortType is invalid
+  }
+
+  // Return sorted products as JSON response
+  const category =await Category.find()
+  res.render("user/categorywise",{product:sortedProducts,category,layout:false})
+}
+
+
+
 let searchproduct= async (req, res) => {
   try {
     const query = req.body.query.toLowerCase().trim();
@@ -1024,7 +1052,7 @@ let searchproduct= async (req, res) => {
 
 
 module.exports = {searchproduct,delwish,paymetController,tracking,updateprofile,showCategoryProducts,showcatprod,search,
-  payment,
+  payment,sort,
   ResetPassword,
   homePage,
   contact,

@@ -63,6 +63,10 @@ const productSchema = new mongoose.Schema({
   },
   subcategory: {
     type: String
+  },
+  createdDate: {
+    type: Date,
+    default: Date.now
   }
 });
 

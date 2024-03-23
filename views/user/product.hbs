@@ -19,17 +19,18 @@
     </div>
     <div>
 <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" id="sortDropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sort-up" viewBox="0 0 16 16">
-                        <path d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.5.5 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5M7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1z"/>
-                    </svg>
-                </button>
-                <div class="dropdown-menu" aria-labelledby="sortDropdownMenuButton">
-                    <a class="dropdown-item" href="#" id="sortPrice">Price : Low to High</a>
-                    <a class="dropdown-item" href="#" id="sortPrice">Price : High to Low</a>
-                    <a class="dropdown-item" href="#" id="sortNewness">Latest</a>
-                </div>
-            </div>
+    <button class="btn btn-secondary dropdown-toggle" id="sortDropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sort-up" viewBox="0 0 16 16">
+            <path d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.5.5 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5M7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1z"/>
+        </svg>
+    </button>
+    <div class="dropdown-menu" aria-labelledby="sortDropdownMenuButton">
+        <a class="dropdown-item" href="#" id="sortPriceAsc">Price : Low to High</a>
+        <a class="dropdown-item" href="#" id="sortPriceDesc">Price : High to Low</a>
+        <a class="dropdown-item" href="#" id="sortNewness">Latest</a>
+    </div>
+</div>
+
     </div>	
 </div>
 
@@ -262,6 +263,40 @@
 <!--===============================================================================================-->
 	<script src="vendor/select2/select2.min.js"></script>
 	<script>
+	document.getElementById('sortPriceAsc').addEventListener('click', async () => {
+    await sortProducts('price_asc');
+});
+
+document.getElementById('sortPriceDesc').addEventListener('click', async () => {
+    await sortProducts('price_desc');
+});
+
+document.getElementById('sortNewness').addEventListener('click', async () => {
+    await sortProducts('newness');
+});
+
+async function sortProducts(sortType) {
+    try {
+		 const allProducts = document.querySelectorAll('.isotope-item');
+            allProducts.forEach(function(product) {
+                product.style.display = 'none';
+            });
+        const response = await axios.get(`/sort/${sortType}`); // Adjust the endpoint URL as per your server routes
+         const products = response.data;
+		 console.log(products);
+			document.querySelector('.row.isotope-grid').innerHTML = response.data;
+			const isotopeGrid = document.querySelector('.row.isotope-grid');
+			isotopeGrid.style.height = '';
+
+    } catch (error) {
+        console.error('Error sorting products:', error);
+    }
+}
+
+
+
+
+
 		$(".js-select2").each(function(){
 			$(this).select2({
 				minimumResultsForSearch: 20,
@@ -407,6 +442,7 @@ document.querySelectorAll('.category-button').forEach(button => {
 
             const response = await axios.get(`/category/${category}`);
             const products = response.data;
+			console.log(products);
 			document.querySelector('.row.isotope-grid').innerHTML = response.data;
 			const isotopeGrid = document.querySelector('.row.isotope-grid');
 			isotopeGrid.style.height = '';
