@@ -1,70 +1,88 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Add Product Variants</title>
-</head>
-<body>
-  <section class="container product-adding-page mt-5">
-    <form action="/add-product" method="post" enctype="multipart/form-data">
-      <div class="row">
-        <div class="col-lg-6">
-          <!-- Variants -->
-          <div class="mb-3" id="variants-container">
-            <label for="variants" class="form-label">Variants</label>
-            <div id="variant-inputs">
-              <!-- Variant input fields will be added here dynamically -->
-              <div class="row mb-2">
-                <div class="col-md-6">
-                  <input type="text" class="form-control" name="variants[0][name]" placeholder="Variant Name" value="Home">
-                </div>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" name="variants[0][productLink]" placeholder="Search Product">
-                  <button type="button" class="btn btn-primary" onclick="searchProduct(0)">Search</button>
-                  <div id="search-results-0"></div>
-                </div>
-              </div>
-            </div>
-            <button type="button" class="btn btn-primary" onclick="addVariant()">Add Variant</button>
-          </div>
-        </div>
-      </div>
-      <button type="submit" class="btn btn-primary mx-auto d-block mt-1 mb-3">Add Product</button>
-    </form>
-  </section>
 
-  <script>
-    function addVariant() {
-      const container = document.getElementById('variant-inputs');
-      const index = container.children.length; // Get the current number of variants
+<html>
 
-      const variantInput = `
-        <div class="row mb-2">
-          <div class="col-md-6">
-            <input type="text" class="form-control" name="variants[${index}][name]" placeholder="Variant Name" value="${getVariantName(index)}">
-          </div>
-          <div class="col-md-6">
-            <input type="text" class="form-control" name="variants[${index}][productLink]" placeholder="Search Product">
-            <button type="button" class="btn btn-primary" onclick="searchProduct(${index})">Search</button>
-            <div id="search-results-${index}"></div>
-          </div>
-        </div>
-      `;
-      
-      container.insertAdjacentHTML('beforeend', variantInput);
-    }
+	<head>
 
-    function searchProduct(index) {
-      const inputValue = document.querySelector(`input[name="variants[${index}][productLink]"]`).value;
-      const resultsDiv = document.getElementById(`search-results-${index}`);
-      // Implement AJAX request to search for products and display results here
-    }
+		<title>Convert HTML to Invoice</title>
 
-    function getVariantName(index) {
-      const variantNames = ['Home', 'Away', 'Third', 'Fourth', 'Special Edition', 'Goalkeeper'];
-      return variantNames[index % variantNames.length];
-    }
-  </script>
-</body>
+		<link href="assets/css/style.css" type="text/css" rel="stylesheet" />
+
+	</head>
+
+	<body>
+
+		<div id="invoice">
+
+			<h1>Invoice</h1>
+
+			<p>Order ID: 12345</p>
+
+			<p>Date: 27 May 2021</p>
+
+			<p>Time: 10:30 AM</p>
+
+			<p>Venue: AMC Graduate Center, 25, AMC Street, New York, USA.</p>
+
+			<p>Contact our <a href="#">Organizers' Team</a> if you need any support.</p>
+
+		</div>
+
+
+		<button id="download-btn" class="btn-primary">Download Invoice</button>
+
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.3/jspdf.umd.min.js"></script>
+
+		<script src="assets/js/convert.js"></script>
+
+		<script>
+
+			document.getElementById("download-btn").addEventListener("click", downloadInvoice);
+
+
+			function downloadInvoice() {
+
+				const { jsPDF } = window.jspdf;
+
+
+				var doc = new jsPDF('p', 'pt', 'letter');
+
+
+				var specialElementHandlers = {
+
+					'#editor': function (element, renderer) {
+
+						return true;
+
+					}
+
+				};
+
+
+				doc.fromHTML(
+
+					document.getElementById('invoice'), 
+
+					15, // x-coordinate
+
+					15, // y-coordinate
+
+					{'width': 180,'elementHandlers': specialElementHandlers},
+
+
+					function () {
+
+						doc.save('invoice.pdf');
+
+					}
+
+				);
+
+			}
+
+		</script>
+
+	</body>
+
 </html>

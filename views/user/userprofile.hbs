@@ -18,22 +18,6 @@
                 <span class="font-weight-bold">Hello {{this.userName}}</span>
                 <span class="text-black-50">{{this.mail}}</span><span> </span></div>
                 <div class="row">
-        {{!-- <div class="col">
-            <h2>ACCOUNT SETTINGS</h2>
-            <ul class="list-group">
-                <li class="list-group-item">Profile Information</li>
-                <li class="list-group-item">Manage Addresses</li>
-                <li class="list-group-item">PAN Card Information</li>
-            </ul>
-        </div> --}}
-        {{!-- <div class="col">
-            <h2>PAYMENTS</h2>
-            <ul class="list-group">
-                <li class="list-group-item">Gift Cards ₹0</li>
-                <li class="list-group-item">Saved UPI</li>
-                <li class="list-group-item">Saved Cards</li>
-            </ul>
-        </div> --}}
         <div class="col">
             <h2>Profile</h2>
             <ul class="list-group">
@@ -97,6 +81,22 @@
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+      function handleCancelOrder(event) {
+        event.preventDefault();
+        const orderId = event.target.dataset.productId; // Retrieve order ID from data-product-id attribute
+
+        axios.delete(`/cancel-order/${orderId}`)
+            .then(function(response) {
+                console.log('Order canceled successfully:', response.data);
+                // Remove the order from the DOM
+                event.target.closest('.list-group-item').remove();
+            })
+            .catch(function(error) {
+                console.error('Error canceling order:', error);
+                // Handle error if necessary
+            });
+    }
+
   function editAddressWithSweetAlert(index) {
       const address = user.addresses[index]; // Get the address object from the array
       swal({
@@ -182,7 +182,6 @@ document.addEventListener('DOMContentLoaded', function() {
     axios.get('shippingadr')
       .then(function(response) {
         document.querySelector('.profile').innerHTML = response.data;
-        console.log(response.data)
         if(window.innerWidth<768)
         {
             window.scrollBy({
@@ -204,7 +203,6 @@ document.addEventListener('DOMContentLoaded', function() {
     axios.get('wishlistprofile')
       .then(function(response) {
         document.querySelector('.profile').innerHTML = response.data;
-        console.log(response.data)
         if(window.innerWidth<768)
         {
                 window.scrollBy({
@@ -236,7 +234,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const username = document.getElementById("username").value
         const phonenumber = document.getElementById("phonenumber").value
         const mail = document.getElementById("mail").value
-        console.log(username,phonenumber,mail)
         if (!validateUsername(username)) {
             showToast("Please enter a valid username", "error");
             return;
@@ -308,7 +305,23 @@ function deleteaddr(index) {
             }
         });
     }
+function deleteOrder(orderId) {
+    axios.post(`/update-status`,
+    {
+        orderId: orderId,
+        newStatus: "Cancelled"
+    })
+     .then(response => {
+            console.log('Delivery status updated successfully:', response.data);
+            const statusElement = document.querySelector(`h5[data-id="${orderId}"]`);
+             statusElement.textContent = `Order Status: ${response.data.order.Status}`;
 
+        })
+        .catch(error => {
+            console.error('Error updating delivery status:', error);
+            // Handle error response
+        });
+}
 </script>
 
 

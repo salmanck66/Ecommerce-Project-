@@ -3,13 +3,14 @@
       <ul class="list-group shadow">
         <!-- list group item-->
         {{#each order}}
-        <li class="list-group-item">
+        <li class="list-group-item" data-order-id="{{this.orderId}}">
           <!-- Custom content-->
           <div class="media align-items-lg-center flex-column flex-lg-row p-3">
             <div class="media-body order-2 order-lg-1">
               <div class="card">
                 <div class="card-body">
-                  <h5 class="card-title">Order ID: {{this.orderId}}</h5>
+                  <h5 class="card-title"  id="orderid">Order ID: {{this.orderId}}</h5>
+                  <h5 class="card-title" data-id="{{this.orderId}}">Order Status: {{this.Status}}</h5>
                   <p class="card-text">Payment Method: {{this.paymentMethod}}</p>
                   <p class="card-text">Shipping address: {{this.shippingAddress.address}}</p>
                   <hr>
@@ -33,7 +34,7 @@
                     </div>
                     <div class="mt-2">
                       <a href="productdetail?id={{this._id}}" class="btn flex-c-m  cl2  ">Track Order</a>
-                      <a href="#" class="btn flex-c-m cl2 remove-from-wishlist" data-product-id="{{this._id}}">Cancel Order</a>
+                      <a href="#" class="btn flex-c-m cl2 remove-from-wishlist" onclick="deleteOrder({{this.orderId}})">Cancel Order</a>
                     </div>
                   </div>
                 </div>
@@ -46,18 +47,13 @@
       
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  document.getElementById('myOrdersLink').addEventListener('click', function(event) {
-    event.preventDefault();
-    axios.get('url_to_my_orders_page')
-      .then(function(response) {
-        document.getElementById('myOrdersContainer').innerHTML = response.data;
-      })
-      .catch(function(error) {
-        console.error(error);
-        // Handle error if necessary
-      });
-  });
+    // Function to handle cancel order button click
+
+    // Your other JavaScript code
 });
+
+
 </script>

@@ -1,44 +1,107 @@
+<style>
+    body {
+        background-color: #f8f9fa;
+        font-family: Arial, sans-serif;
+    }
 
-    <style>
-        body {
-            background-color: #f8f9fa;
-            font-family: Arial, sans-serif;
-        }
+    .dsds {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        padding: 40px;
+        margin: 50px;
+        text-align: center;
+    }
 
-        .dsds {
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            padding: 40px;
-            margin: 50px;
-            text-align: center;
+    h1 {
+        color: #343a40;
+        margin-bottom: 30px;
+        margin-top: 10vh;
+    }
 
-        }
+    .btn-primary {
+        background-color: #171718;
+        border: none;
+        border-radius: 20px;
+        margin-top: 10vh;
+        padding: 10px 30px;
+    }
 
-        h1 {
-            color: #343a40;
-            margin-bottom: 30px;
-            margin-top: 10vh;
-        }
+    .btn-primary:hover {
+        background-color: #5c5d5e;
+    }
+</style>
 
-        .btn-primary {
-            background-color: #171718;
-            border: none;
-            border-radius: 20px;
-            margin-top: 10vh;
-            padding: 10px 30px;
-        }
-
-        .btn-primary:hover {
-            background-color: #5c5d5e;
-        }
-    </style>
 <body>
+    <div class="container-fluid dsds" style="margin: 15vh 0 12vh;">
+        <h1>Your Order is Complete!</h1>
+        <p>Thank you for your purchase. Your order has been successfully processed.</p>
+        <p>Your order Id Is {{orderId}} </p>
+        <p>An invoice for your order is available for download.</p>
+        <a class="btn btn-primary" onclick="downloadInvoice()">Download Invoice</a>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.3/jspdf.umd.min.js"></script>
+    <script>
+        function downloadInvoice() {
 
-<div class="container-fluid dsds" style="margin: 15vh 0 12vh;">
-    <h1>Your Order is Complete!</h1>
-    <p>Thank you for your purchase. Your order has been successfully processed.</p>
-    <p>Your order Id Is {{orderId}} </p>
-    <p>An invoice for your order is available for download.</p>
-    <a href="invoice" class="btn btn-primary">Download Invoice</a>
-</div>
+    // Create a new jsPDF instance
+
+    var doc = new jsPDF();
+
+
+    // Add content to the PDF
+
+    doc.text(20, 20, 'Invoice Details');
+
+    doc.text(20, 30, '----------------------');
+
+
+    // Get the HTML content of the invoice card
+
+    var element = document.getElementById('invoice');
+
+    var options = {
+
+        background: 'white',
+
+        scale: 3
+
+    };
+
+
+    // Generate PDF from the HTML content
+
+    return new Promise(function (resolve, reject) {
+
+        doc.html(element, options, function (err) {
+
+            if (err) {
+
+                reject(err);
+
+            } else {
+
+                resolve(doc);
+
+            }
+
+        });
+
+    });
+
+}
+downloadInvoice().then(function (doc) {
+
+    // Save the PDF file
+
+    doc.save('invoice.pdf');
+
+}).catch(function (err) {
+
+    // Handle any errors that occurred during PDF generation
+
+    console.error('Error generating PDF:', err);
+
+});
+    </script>
+</body>

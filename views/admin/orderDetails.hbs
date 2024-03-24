@@ -1,6 +1,22 @@
 <main>
     <div class="container">
         <h1 class="mt-4 mb-3">Order Details</h1>
+        <div>
+                   <div class="text-right mb-3">
+            <select id="status-dropdown" class="form-select">
+                <option value="Packed">Packed</option>
+                <option value="Picked">Picked</option>
+                <option value="In-Transit">In-Transit</option>
+                <option value="Out For Delivery">Out For Delivery</option>
+                <option value="Delivered">Delivered</option>
+            </select>
+           
+            <button id="update-status-button" class="btn btn-primary my-2">Update Delivery Status</button>
+             <h5 id="current-status">Current status : {{ order.Status }}</h5>
+        </div>
+
+        </div>
+
         <div class="row">
             <div class="col-lg-6">
                 <div class="card mb-4">
@@ -48,7 +64,33 @@
         </div>
     </div>
 </main>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
+
+   const updateStatusButton = document.getElementById('update-status-button');
+    const statusDropdown = document.getElementById('status-dropdown');
+    const currentStatusElement = document.getElementById('current-status');
+
+    updateStatusButton.addEventListener('click', () => {
+        const orderId = '{{ order.orderId }}';
+        const newStatus = statusDropdown.value;
+        
+        axios.post('/update-status', {
+            orderId: orderId,
+            newStatus: newStatus
+        })
+        .then(response => {
+            console.log('Delivery status updated successfully:', response.data);
+             currentStatusElement.textContent = `Current status: ${response.data.order.Status}`;
+
+        })
+        .catch(error => {
+            console.error('Error updating delivery status:', error);
+            // Handle error response
+        });
+    });
+
+
   const shipOrderButton = document.getElementById('ship-order-button');
 
   shipOrderButton.addEventListener('click', () => {

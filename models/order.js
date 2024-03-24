@@ -44,6 +44,11 @@ const orderSchema = new mongoose.Schema({
     orderDate: {
         type: Date,
         default: Date.now
+    },
+    Status: {
+        type: String,
+        enum: ['Packed', 'Picked', 'In-Transit', 'Out For Delivery',"Delivered","Cancelled"],
+        default: "Packed"
     }
 });
 

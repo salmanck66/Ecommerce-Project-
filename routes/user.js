@@ -42,6 +42,7 @@ router.get('/signotp',userControllers.loginotp)
 router.get('/trackorder',userControllers.tracking)
 router.get('/search',userControllers.search)
 router.post('/searchproduct',userControllers.searchproduct)
+router.post('/update-status',userControllers.orderstatus)
 
 router.get('/category/:categoryName' , userControllers.showCategoryProducts )
 router.get('/categoryget' , userControllers.showcatprod )
@@ -74,6 +75,7 @@ router.post('/verify-otp-reset-pass',userControllers.verifyotp)
 router.post('/send-otp-phone',userControllers.loginRequestOTP)
 
 router.delete('/wishlist/:productId',authMiddleware,userControllers.delwish)
+router.delete('/cancel-order/:orderId',authMiddleware,userControllers.delorder)
 
 router.post('/payment',userControllers.paymetController)
 

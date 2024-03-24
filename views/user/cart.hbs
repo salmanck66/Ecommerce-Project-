@@ -92,8 +92,11 @@
                             <div id="CouponRemove" style="display: none;" class="ml-2 flex-c-m stext-101 cl2 size-118 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-5" onclick="RemoveCoupon()">
                             Remove Coupon
                             </div>
+                            <div id="viewcoupon" class="ml-2 flex-c-m stext-101 cl2 size-118 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-5" onclick="couponView()">
+                            View Coupon
+                            </div>
                         </div>
-                        <select class="ml-4 form-select" aria-label="Default select example" onchange="codeApply()" id="couponCodeSelect">
+                        <select class="ml-4 form-select" style="display: none;" aria-label="Default select example" onchange="codeApply()" id="couponCodeSelect">
                             {{#each coupon}}
                             <option value="{{this.couponCode}}">{{this.couponCode}}</option>
                             {{/each}}
@@ -144,6 +147,12 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <!-- JavaScript -->
 <script>
+    function couponView()
+    {
+document.getElementById("couponCodeSelect").style.display="block";
+document.getElementById("viewcoupon").style.display="none";
+
+    }
     function codeApply() {
         var select = document.getElementById("couponCodeSelect");
         var input = document.getElementById("tcoupon");

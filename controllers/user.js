@@ -1065,9 +1065,48 @@ let searchproduct= async (req, res) => {
   }
 }
 
+let orderstatus = async (req, res) => {
+  const { orderId, newStatus } = req.body;
+
+  try {
+      const order = await Order.findOneAndUpdate(
+          { orderId: orderId },
+          { $set: { Status: newStatus } },
+          { new: true }
+      );
+      
+      if (order) {
+        res.json({ message: 'Delivery status updated successfully', order: order });
+    } else {
+        res.status(404).json({ error: 'Order not found' });
+    }
+  } catch (error) {
+      console.error('Error updating delivery status:', error);
+      res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+
+let delorder = async (req, res) => {
+  const orderId = req.params.orderId;
+
+  try {
+      // Find the order by ID and remove it from the database
+      const deletedOrder = await Order.findOneAndDelete({ orderId: orderId });
+
+      if (deletedOrder) {
+          res.json({ message: 'Order canceled successfully' });
+      } else {
+          res.status(404).json({ error: 'Order not found' });
+      }
+  } catch (error) {
+      console.error('Error canceling order:', error);
+      res.status(500).json({ error: 'Internal server error' });
+  }
+}
 
 module.exports = {teamfilter,searchproduct,delwish,paymetController,tracking,updateprofile,showCategoryProducts,showcatprod,search,
-  payment,sort,
+  payment,sort,orderstatus,delorder,
   ResetPassword,
   homePage,
   contact,
