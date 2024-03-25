@@ -23,6 +23,9 @@ global.config = config
 function generateOTP() {
   return Math.floor(100000 + Math.random() * 900000);
 }
+
+var otpDB = {};
+
 const loginRequestOTP = async (req, res) => {
   console.log("Requesting OTP");
   const { phone } = req.body;
@@ -37,10 +40,10 @@ const loginRequestOTP = async (req, res) => {
       return res.status(404,{ error: "User not found" })
     }
 
-    var otpserver = generateOTP();
+    otpDB = generateOTP();
 
     // Send OTP asynchronously and wait for completion
-    await Userhelpers.sendOTP(phone, otpserver);
+    await Userhelpers.sendOTP(phone, otpDB);
     console.log("OTP SMS sent");
     
     // Render response after sending OTP
@@ -53,12 +56,14 @@ const loginRequestOTP = async (req, res) => {
 };
 
 const sign = async (req, res) => {
-  const { otp } = req.body;
-  console.log("sign function");
+  const { otp,phone } = req.body;
+  
+  console.log(req.body);
 
   try {
       // Find the user by phone number
-      const user = await User.findOne({ phoneNumber: phone });
+      const user = await User.findOne({ phone: phone });
+      console.log("user found");
 
       if (!user) {
           return res.status(404).json({ error: "User not found" });
@@ -66,7 +71,8 @@ const sign = async (req, res) => {
 
       // Assuming you have fetched the otpserver value from the database
       // Compare the OTP provided by the user with otpserver
-      const isOtpValid = (otpserver === otp);
+      const isOtpValid = (otpDB === otp);
+      console.log(otpDB,otp,isOtpValid);
 
       if (isOtpValid) {
           // If OTP is valid, generate JWT token for authentication

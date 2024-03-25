@@ -40,13 +40,13 @@
                                             <label for="phone" class="form-label">Phone number</label>
                                         </div> 
                                         <div class="form-floating mb-3 otpdiv" style="display: none;">
-                                            <input type="text" class="form-control" name="phone" id="phone" placeholder="Enter your phone number" required>
-                                            <label for="phone" class="form-label">OTP</label>
+                                            <input type="text" class="form-control" name="otp" id="otp" placeholder="Enter  otp " required>
+                                            <label for="otp" class="form-label">OTP</label>
                                         </div> 
                                     </div>
                                     <div class="col-12">
                                         <div class="d-grid">
-                                            <button class="btn bsb-btn-2xl btn-dark otpbtn" type="button" onclick="otp()">Send OTP</button>
+                                            <button class="btn bsb-btn-2xl btn-dark otpbtn" type="button" onclick="otps()">Send OTP</button>
                                             <button class="btn bsb-btn-2xl btn-dark mt-2 loginbtn" style="display: none;" onclick="login()" type="button">Login</button>
                                         </div>
                                     </div>
@@ -77,7 +77,7 @@ function showToast(message, type) {
                 backgroundColor: type === "error" ? "#ff4444" : "#33cc33",
             }).showToast();
         }
-    async function otp(){
+    async function otps(){
         // Extract phone number input value
         const phoneNumber = document.getElementById("phone").value;
         
@@ -100,11 +100,12 @@ function showToast(message, type) {
     async function login() {
     // Extract phone number and OTP input values
     const otp = document.getElementById("otp").value;
+    const phoneNumber = document.getElementById("phone").value;
     console.log(otp)
 
     // Send request to server to verify OTP
     try {
-        const response = await axios.post('/login-with-otp-admin', { otp: otp });
+        const response = await axios.post('/login-with-otp-admin', { otp: otp ,phone:phoneNumber});
         
         // Check if login was successful
         if (response.data.success) {
