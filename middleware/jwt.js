@@ -19,13 +19,14 @@ module.exports = {
           })
       })
   },
-  
+
   signAdmin: (user) => {
       return new Promise((resolve, reject) => {
-          const jwtKey = process.env.JWT_KEY
+          const jwtKey = process.env.JWT_KEY_ADMIN
           const payLoad = {
               userId: user._id,
               userName: user.userName,
+              isAdmin: user.isAdmin,
           }
           jwt.sign(payLoad, jwtKey, { expiresIn: '2h' }, (error, token) => {
               if (error) {
@@ -42,6 +43,22 @@ module.exports = {
   verifyUser: (recievedToken) => {
       return new Promise((resolve, reject) => {
           const jwtKey = process.env.JWT_KEY
+          jwt.verify(recievedToken, jwtKey, (error, decodedToken) => {
+              if (error) {
+                  console.error("some problems occured during jwt verification", error);
+                  reject(error)
+              } else {
+                  // console.log("DECODED TOKEN DETAILS FROM REQUEST " ,decodedToken);
+                  console.log("SUCCESSFULLY DECODED TOKEN DETAILS FROM USER REQUEST  *FROM MIDDLEWARE JWT* ");
+                  resolve(decodedToken)
+              }
+          })
+      })
+  }
+
+  ,verifyAdmin :(recievedToken) => {
+      return new Promise((resolve, reject) => {
+          const jwtKey = process.env.JWT_KEY_ADMIN
           jwt.verify(recievedToken, jwtKey, (error, decodedToken) => {
               if (error) {
                   console.error("some problems occured during jwt verification", error);

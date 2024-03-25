@@ -81,6 +81,7 @@ const sign = async (req, res) => {
       console.log(user._id + ' logged in');
       const token = await signAdmin(user); // Generate token using signAdmin middleware
       console.log(token);
+      res.cookie("admin_jwt", token, { httpOnly: true, maxAge: 86400000 }); // 24 hour expiry
 
       const isAdmin = user.isAdmin || false;
       console.log(isAdmin); // Assuming you have a field named isAdmin in your user schema
@@ -134,7 +135,6 @@ let homePage = async (req, res) => {
           }
       ]);
   }
-
   console.log("admin order management");
   const visit = await Visit.findOne();
   res.render('admin/index', { layout: "adminLayout.hbs", order, visit, totalAmount: result[0]?.totalAmount || 0 });

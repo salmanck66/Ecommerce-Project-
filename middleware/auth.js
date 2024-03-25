@@ -1,4 +1,6 @@
-const { verifyUser } = require('../middleware/jwt');
+const { logIn } = require('../controllers/admin');
+const { verifyUser ,verifyAdmin} = require('../middleware/jwt');
+const User = require('../models/users');
 
 const authMiddleware = async (req, res, next) => {
     try {
@@ -16,6 +18,35 @@ const authMiddleware = async (req, res, next) => {
         res.render('error', { print: error });
     }
 };
+const authMiddlewareAdmin = async (req, res, next) => {
+    try {
+        console.log("calling Middleware");
+
+        if (req.cookies.admin_jwt) {
+            console.log("!")
+            const tokenExracted = await verifyAdmin(req.cookies.admin_jwt);
+            const CheckAdmin = await User.findById(tokenExracted.userId)
+            console.log(CheckAdmin.isAdmin)
+            
+            if (CheckAdmin.isAdmin === true) {
+                
+                return next();
+            }else
+            {
+            console.log("err1")
+            return res.redirect('/admin');
+            
+            }
+        }
+        // If JWT token doesn't exist or user role is not 'user', redirect to login page
+        res.redirect('/admin');
+        
+    } catch (error) {
+        console.error("Error verifying user:", error);
+        res.render('error', { print: error });
+    }
+};
+
 const isAdmin = (req, res, next) => {
     // Check if user is authenticated
     if (req.isAuthenticated()) {
@@ -33,4 +64,4 @@ const isAdmin = (req, res, next) => {
     }
 };
 
-module.exports = { authMiddleware ,isAdmin};
+module.exports = { authMiddlewareAdmin,authMiddleware ,isAdmin};
