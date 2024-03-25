@@ -96,7 +96,7 @@
                             View Coupon
                             </div>
                         </div>
-                        <select class="ml-4 form-select" style="display: none;" aria-label="Default select example" onchange="codeApply()" id="couponCodeSelect">
+                        <select class="ml-4 form-select" style="display: none;" aria-label="Default select example" onclick="codeApply()" id="couponCodeSelect">
                             {{#each coupon}}
                             <option value="{{this.couponCode}}">{{this.couponCode}}</option>
                             {{/each}}
@@ -153,12 +153,13 @@ document.getElementById("couponCodeSelect").style.display="block";
 document.getElementById("viewcoupon").style.display="none";
 
     }
-    function codeApply() {
-        var select = document.getElementById("couponCodeSelect");
-        var input = document.getElementById("tcoupon");
-        var selectedCouponCode = select.value;
-        input.value = selectedCouponCode;
-    }
+function codeApply() {
+    console.log("Calling")
+    var select = document.getElementById("couponCodeSelect");
+    var input = document.getElementById("tcoupon");
+    var selectedCouponCode = select.value;
+    input.value = selectedCouponCode;
+}
     function showToast(message, type) {
             Toastify({
                 text: message,

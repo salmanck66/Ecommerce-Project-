@@ -940,12 +940,11 @@ const loginRequestOTP = async (req, res) => {
   console.log(req.body);
 
   try {
-
     const user = await User.findOne({ phoneNumber: phone });
     console.log("found");
 
     if (!user) {
-      return res.status(404,{ error: "User not found" })
+      return res.status(404).json({ error: "User not found" }); // Correct syntax for sending JSON response
     }
 
     const otp = generateOTP();
@@ -956,7 +955,7 @@ const loginRequestOTP = async (req, res) => {
     console.log("OTP SMS sent");
     
     // Render response after sending OTP
-    res.status(200,{message: "Otp Sent Succesfully"})
+    return res.status(200).json({ message: "Otp Sent Succesfully" }); // Correct syntax for sending JSON response
     
   } catch (error) {
     console.error("Error requesting OTP:", error);

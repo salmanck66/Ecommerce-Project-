@@ -88,7 +88,6 @@ function showToast(message, type) {
     async function otps(){
         // Extract phone number input value
         const phoneNumber = document.getElementById("phone").value;
-        console.log(phoneNumber)
         document.querySelector(".phnodiv").style.display = "none";
         document.querySelector(".otpdiv").style.display = "";
         document.querySelector(".otpbtn").style.display = "none";
@@ -97,11 +96,7 @@ function showToast(message, type) {
         // Send request to server
         try {
             const response = await axios.post('/send-otp-phone', { phone: phoneNumber });
-            // Handle response if needed
-            showToast(response.data.message, "success");
-
-        console.log("Done")
-            
+            showToast(response.data.message, "success");           
         } catch (error) {
             // Handle error
             showToast("Failed to send OTP", "error");

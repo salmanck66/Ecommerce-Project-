@@ -306,21 +306,43 @@ function deleteaddr(index) {
         });
     }
 function deleteOrder(orderId) {
-    axios.post(`/update-status`,
-    {
-        orderId: orderId,
-        newStatus: "Cancelled"
-    })
-     .then(response => {
-            console.log('Delivery status updated successfully:', response.data);
-            const statusElement = document.querySelector(`h5[data-id="${orderId}"]`);
-             statusElement.textContent = `Order Status: ${response.data.order.Status}`;
-
-        })
-        .catch(error => {
-            console.error('Error updating delivery status:', error);
-            // Handle error response
-        });
+    // Display SweetAlert confirmation dialog
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'Do you want to cancel the order?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, cancel it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // If user confirms, proceed with cancelling the order
+            axios.post(`/update-status`, {
+                    orderId: orderId,
+                    newStatus: "Cancelled"
+                })
+                .then(response => {
+                    console.log('Delivery status updated successfully:', response.data);
+                    const statusElement = document.querySelector(`h5[data-id="${orderId}"]`);
+                    statusElement.textContent = `Order Status: ${response.data.order.Status}`;
+                    Swal.fire(
+                        'Cancelled!',
+                        'Your order has been cancelled.',
+                        'success'
+                    );
+                })
+                .catch(error => {
+                    console.error('Error updating delivery status:', error);
+                    // Handle error response
+                    Swal.fire(
+                        'Error!',
+                        'Failed to cancel the order. Please try again later.',
+                        'error'
+                    );
+                });
+        }
+    });
 }
 </script>
 
