@@ -184,9 +184,11 @@ let banner = async(req, res) => {
     console.log(banner);
     res.render('admin/banner',{banner,layout:"adminLayout.hbs"})
   }
-let payments = (req, res) => {
+let payments =async (req, res) => {
+
     console.log("admin banner management");
-    res.render('admin/payments',{layout:"adminLayout.hbs"})
+    const order = await Order.find()
+    res.render('admin/payments',{layout:"adminLayout.hbs",order})
   }
 let settings = (req, res) => {
     console.log("admin banner management");
@@ -806,6 +808,14 @@ let orderview = async (req, res) => {
       res.status(500).json({ success: false, error: 'Failed to push order' });
   }
 }
+ let outadmin = async (req, res) => {
+  if (req.session) {
+    req.session.destroy();
+    console.log("session and cookies are cleared");
+  }
+  res.clearCookie("admin_jwt");
+  res.redirect("/admin");
+}
 
 
-module.exports = {sign,loginRequestOTP,loginotp,orderview,updatebannerpost,updatebanner,deletebanner,addbanner,editCoupon,updatecoupon,deletecoupon,addCoupon,updatesubcategory,subcategoryeditpage,categoryeditpage,editproduct,deleteprod,deletesubcat,updatecategory,producteditpage,updateProduct,addSubcategory,deletecat,postcategory,postaddproduct,homePage,logIn,Forget,order,productm,addproduct,coupon,categories,banner,payments,settings,profile,placeorder}
+module.exports = {outadmin,sign,loginRequestOTP,loginotp,orderview,updatebannerpost,updatebanner,deletebanner,addbanner,editCoupon,updatecoupon,deletecoupon,addCoupon,updatesubcategory,subcategoryeditpage,categoryeditpage,editproduct,deleteprod,deletesubcat,updatecategory,producteditpage,updateProduct,addSubcategory,deletecat,postcategory,postaddproduct,homePage,logIn,Forget,order,productm,addproduct,coupon,categories,banner,payments,settings,profile,placeorder}

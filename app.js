@@ -52,7 +52,8 @@ app.use(cookieParser());
 // app.use(morgan('tiny'))
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json())
-app.use(express.static(path.join(__dirname, 'public')));  
+app.use(express.static(path.join(__dirname, 'public'))); 
+
 
 app.engine('hbs',
   hbs.engine({
@@ -67,6 +68,8 @@ app.engine('hbs',
     // isInWishlist
 }
 }));
+
+// Register the helper function with Handlebars
 
 app.use('/',userRouter)
 app.use('/',adminRouter)
