@@ -24,6 +24,7 @@ function generateOTP() {
   return Math.floor(100000 + Math.random() * 900000);
 }
 var otpDB = {};
+var otpDBPhone = {};
 
 let loginGetPage = async (req, res) => {
   console.log("User login page");
@@ -949,6 +950,7 @@ const loginRequestOTP = async (req, res) => {
 
     const otp = generateOTP();
     console.log(otp);
+    otpDBPhone[phone] = otp;
     // Send OTP asynchronously and wait for completion
     await Userhelpers.sendOTP(phone, otp);
     console.log("OTP SMS sent");
@@ -1119,21 +1121,26 @@ const sign = async (req, res) => {
     }
 
     // Get the OTP associated with the phone number
-    const storedOTP = otpDB[phone];
+    const storedOTP = otpDBPhone[phone];
 
     // Compare the OTP provided by the user with the stored OTP
-    const isOtpValid = (storedOTP === Number(otp));
+    const isOtpValid = storedOTP === Number(otp);
+    console.log(typeof storedOTP,typeof otp);
 
     if (isOtpValid) {
+      console.log("valid otp");
       console.log(user._id + ' logged in');
-      const token = await signUser(user); // Generate token using signAdmin middleware
-      console.log(token);
-      res.cookie("jwt", token, { httpOnly: true, maxAge: 86400000 }); // 24 hour expiry
-      return res.status(200).json({ success: true });
-    }
-    else
-    {
-      return res.status(200).json({ success: true,  error: "Incorrect OTP" });
+      try {
+        const token = await signUser(user); // Generate token using signAdmin middleware
+        console.log(token);
+        res.cookie("jwt", token, { httpOnly: true, maxAge: 7200000 }); //1= COOKIE NAME AND  2 =DATA 3=OPTIONAL
+        return res.status(200).json({ success: true, token }); // Sending the token back as JSON response
+      } catch (error) {
+        console.error("Error generating token:", error);
+        return res.status(500).json({ success: false, error: "Error generating token" });
+      }
+    } else {
+      return res.status(200).json({ success: false, error: "Incorrect OTP" });
     }
   } catch (error) {
     console.error(error);
