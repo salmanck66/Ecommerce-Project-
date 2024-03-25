@@ -5,14 +5,15 @@ const cloudinary = require('../utils/cloudinery')
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/'});
 const axios = require('axios');
+const {isAdmin,authMiddleware} = require('../middleware/auth')
+
 
 
 router.get('/admin',adminControllers.loginotp)
 router.post('/send-otp-phone-admin',adminControllers.loginRequestOTP)
 router.post('/login-with-otp-admin',adminControllers.sign)
 
-router.get('/admin',adminControllers.logIn)
-router.get('/forget',adminControllers.Forget)
+
 router.get('/dashboard',adminControllers.homePage)
 router.get('/orders',adminControllers.order)
 router.get('/productm',adminControllers.productm)

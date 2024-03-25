@@ -32,23 +32,25 @@ const loginRequestOTP = async (req, res) => {
   console.log(req.body);
 
   try {
-
     const user = await User.findOne({ phoneNumber: phone });
     console.log("found");
 
     if (!user) {
-      return res.status(404,{ error: "User not found" })
+      return res.status(404).json({ error: "User not found" });
     }
 
-    otpDB = generateOTP();
+    // Generate OTP
+    const otp = generateOTP();
+
+    // Store OTP associated with the phone number
+    otpDB[phone] = otp;
 
     // Send OTP asynchronously and wait for completion
-    await Userhelpers.sendOTP(phone, otpDB);
+    await Userhelpers.sendOTP(phone, otp);
     console.log("OTP SMS sent");
     
     // Render response after sending OTP
-    res.status(200).json( {message:"Otp Sent" ,phone });
-    
+    res.status(200).json({ message: "Otp Sent", phone });
   } catch (error) {
     console.error("Error requesting OTP:", error);
     res.status(500).json({ message: "Server Error" });
@@ -56,42 +58,58 @@ const loginRequestOTP = async (req, res) => {
 };
 
 const sign = async (req, res) => {
-  const { otp,phone } = req.body;
-  
+  const { otp, phone } = req.body;
   console.log(req.body);
 
   try {
-      // Find the user by phone number
-      const user = await User.findOne({ phone: phone });
-      console.log("user found");
+    // Find the user by phone number
+    const user = await User.findOne({ phoneNumber: phone });
+    console.log(user);
 
-      if (!user) {
-          return res.status(404).json({ error: "User not found" });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Get the OTP associated with the phone number
+    const storedOTP = otpDB[phone];
+
+    // Compare the OTP provided by the user with the stored OTP
+    const isOtpValid = (storedOTP === Number(otp));
+    console.log(storedOTP, otp, isOtpValid);
+
+    if (isOtpValid) {
+      console.log(user._id + ' logged in');
+      const token = await signAdmin(user); // Generate token using signAdmin middleware
+      console.log(token);
+
+      const isAdmin = user.isAdmin || false;
+      console.log(isAdmin); // Assuming you have a field named isAdmin in your user schema
+      let result = { totalAmount: 0 }; // Default total amount to 0
+      const order = await Order.find().sort({ orderDate: -1 });
+      const visit = await Visit.findOne();
+      
+      if (order.length !== 0) {
+          result = await Order.aggregate([
+              {
+                  $group: {
+                      _id: null,
+                      totalAmount: { $sum: "$totalAmount" }
+                  }
+              }
+          ]);
       }
 
-      // Assuming you have fetched the otpserver value from the database
-      // Compare the OTP provided by the user with otpserver
-      const isOtpValid = (otpDB === otp);
-      console.log(otpDB,otp,isOtpValid);
-
-      if (isOtpValid) {
-          // If OTP is valid, generate JWT token for authentication
-          const token = await signAdmin(user); // Generate token using signAdmin middleware
-
-          // Check if the user is an admin
-          const isAdmin = user.isAdmin || false; // Assuming you have a field named isAdmin in your user schema
-
-          if (isAdmin) {
-              return res.status(200).render('admin/index').json({ success: true, isAdmin: true, token });
-          } else {
-              return res.status(200).json({ success: true, isAdmin: false, token });
-          }
+      if (isAdmin === true) {
+      return res.status(200).json({ success: true, isAdmin: true, token });
       } else {
-          return res.status(401).json({ success: false, error: "Incorrect OTP" });
+        return res.status(200).json({ success: true, isAdmin: false, token });
       }
+    } else {
+      return res.status(401).json({ success: false, error: "Incorrect OTP" });
+    }
   } catch (error) {
-      console.error(error);
-      return res.status(500).json({ success: false, error: "Server Error" });
+    console.error(error);
+    return res.status(500).json({ success: false, error: "Server Error" });
   }
 };
 

@@ -1,23 +1,58 @@
 const express = require('express');
-const  Toastify = require('toastify-js')
-const app = express()
-handlebars = require("./helpers/hbs")
-// const morgan = require("morgan") 
-const {parsed:config} = require('dotenv').config()
-global.config = config
+const Toastify = require('toastify-js');
+const app = express();
+const handlebars = require("./helpers/hbs");
+const { parsed: config } = require('dotenv').config();
+global.config = config;
 const path = require('path');
-const session = require('express-session')
-const userRouter=require('./routes/user')
-const adminRouter=require('./routes/admin')
-var hbs =require('express-handlebars')
-var jwt =require('jsonwebtoken')
-const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access')
+const session = require('express-session');
+const userRouter = require('./routes/user');
+const adminRouter = require('./routes/admin');
+const hbs = require('express-handlebars');
+const jwt = require('jsonwebtoken');
+const { allowInsecurePrototypeAccess } = require('@handlebars/allow-prototype-access');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const multer = require('./middleware/multer');
-const {isInWishlist} = require("./helpers/userhelper");
+const { isInWishlist } = require("./helpers/userhelper");
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
 
+// Middleware setup
+app.use(session({   // FOR GOOGLE VERIFICATION
+  secret: 'hihello',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false }
+}));
 
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(new LocalStrategy(
+  (username, password, done) => {
+    User.findOne({ username: username }, (err, user) => {
+      if (err) { return done(err); }
+      if (!user) { return done(null, false); }
+      if (!user.verifyPassword(password)) { return done(null, false); }
+      return done(null, user);
+    });
+  }
+));
+
+passport.serializeUser((user, done) => done(null, user.id));
+passport.deserializeUser((id, done) => {
+  // Lookup user by id in database
+  User.findById(id, (err, user) => done(err, user));
+});
+
+app.set('view engine', 'hbs');
+app.set('views', './views');
+app.use(cookieParser()); 
+// app.use(morgan('tiny'))
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json())
+app.use(express.static(path.join(__dirname, 'public')));  
 
 app.engine('hbs',
   hbs.engine({
@@ -32,22 +67,6 @@ app.engine('hbs',
     // isInWishlist
 }
 }));
-
-app.use(session({   //FOR GOOGLE VERIFICATION
-  secret: 'hihello',
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false }
-}));
-
-app.set('view engine', 'hbs');
-app.set('views', './views');
-app.use(cookieParser()); 
-// app.use(morgan('tiny'))
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json())
-app.use(express.static(path.join(__dirname, 'public')));  
-
 
 app.use('/',userRouter)
 app.use('/',adminRouter)

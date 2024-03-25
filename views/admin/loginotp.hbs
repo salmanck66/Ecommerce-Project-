@@ -22,13 +22,13 @@
     <section class="m-5 pb-md-5 p-xl-5  ">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-12 col-md-9 col-lg-7 col-xl-6 col-xxl-6">
+                <div class="mt-5 col-12 col-md-9 col-lg-7 col-xl-6 col-xxl-6">
                     <div class="card border-0 shadow-lg rounded-4">
                         <div class="card-body p-3 p-md-4 p-xl-5">
                             <div class="row">
                                 <div class="col-12 text-center">
                                     <div class="mb-5">
-                                        <h3>Login with OTP</h3>
+                                        <h3>Admin Login</h3>
                                     </div>
                                 </div>
                             </div>
@@ -111,6 +111,7 @@ function showToast(message, type) {
         if (response.data.success) {
             // If login is successful, redirect to dashboard or perform further actions
             showToast("Login successful. Redirecting...", "success");
+            window.location.href = '/dashboard'
             // Redirect to a dashboard or perform further actions upon successful login
         } else {
             showToast("Incorrect OTP. Please try again.", "error");

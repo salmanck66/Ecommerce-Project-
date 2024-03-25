@@ -19,6 +19,7 @@ module.exports = {
           })
       })
   },
+  
   signAdmin: (user) => {
       return new Promise((resolve, reject) => {
           const jwtKey = process.env.JWT_KEY
