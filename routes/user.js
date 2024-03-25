@@ -73,6 +73,7 @@ router.post('/forgot-password',userControllers.ResetPasswordPost)
 router.post('/verify-otp-reset-pass',userControllers.verifyotp)
 
 router.post('/send-otp-phone',userControllers.loginRequestOTP)
+router.post('/login-with-otp',userControllers.sign)
 
 router.delete('/wishlist/:productId',authMiddleware,userControllers.delwish)
 router.delete('/cancel-order/:orderId',authMiddleware,userControllers.delorder)

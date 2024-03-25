@@ -2,90 +2,84 @@
 <section class="container admin-settings mt-5">
     <h2 class="mb-4">Admin Settings</h2>
 
-    <div class="card mb-3">
-        <div class="card-body">
-            <h5 class="card-title">Delivery</h5>
-            <p class="card-text">Delivery related configurations</p>
-            <!-- Payment settings form -->
-            <form>
-                <div class="mb-3">
-                    <label for="paymentGateway" class="form-label">Delivery Charge</label>
-                    <select class="form-select" id="paymentGateway">
-                        <option value="paypal">Fixed</option>
-                        <option value="stripe">Free</option>
-                    </select>
-                </div> 
-                <label for="siteName" class="form-label">Enter delivery charges</label>
-                <input type="text" class="form-control mb-3" id="siteName" placeholder="Enter delivery charge ">
-                <label for="siteName" class="form-label">Minimum Amount For Delivery</label>
-                <input type="text" class="form-control mb-3" id="siteName" placeholder="Enter amount">
-                <!-- Add more payment settings fields as needed -->
-                <button type="submit" class="btn btn-dark">Save Changes</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- General Settings -->
-    <div class="card mb-3">
-        <div class="card-body">
-            <h5 class="card-title">Change Home Carousel</h5>
-            <p class="card-text">Change Home Carousel and text</p>
-            <!-- General settings form -->
-            <form>
-                <div class="mb-3">
-                    <label for="siteName" class="form-label">Change Coursal Image</label>
-                    <input type="file" class="form-control" id="siteName" placeholder="Enter site name">
-                    <label for="siteName" class="form-label">Coursal Heading</label>
-                    <input type="text" class="form-control" id="siteName" placeholder="Enter site name">
-                    <label for="siteName" class="form-label">Coursal Sub-heading</label>
-                    <input type="text" class="form-control" id="siteName" placeholder="Enter site name">
+        <div class="col-12 col-sm-12 col-md-9 border-right profile">
+            <div class="p-3 ">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="text-right">Profile Settings</h4>
                 </div>
 
-                <!-- Add more general settings fields as needed -->
-                <button type="submit" class="btn btn-dark">Save Changes</button>
-            </form>
-        </div>
-    </div>
-    <div class="card mb-3">
-        <div class="card-body">
-            <h5 class="card-title">About Us </h5>
-            <p class="card-text">Change About Us</p>
-            <!-- General settings form -->
-            <form>
-                <div class="mb-3">
-                    <label for="siteName" class="form-label">About us : our story</label><br>
-                    <textarea name="" id="" cols="100" rows="10"></textarea> <br>
-                    <label for="siteName" class="form-label">About us : our mission</label><br>
-                    <textarea name="" id="" cols="100" rows="10"></textarea> <br>
+                <div class="row mt-2">
+                    <div class="col-12"><label class="labels">User Name</label><input type="text" class="form-control" id="username" placeholder="enter name" value="{{user.userName}}"></div>
                 </div>
-
-                <!-- Add more general settings fields as needed -->
-                <button type="submit" class="btn btn-dark">Save Changes</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Payment Settings -->
-    <div class="card mb-3">
-        <div class="card-body">
-            <h5 class="card-title">Payment Settings</h5>
-            <p class="card-text">Add payment options</p>
-            <!-- Payment settings form -->
-            <form>
-                <div class="mb-3">
-                    <label for="paymentGateway" class="form-label">Payment Gateway</label>
-                    <select class="form-select" id="paymentGateway">
-                        <option value="paypal" disabled>PayPal</option>
-                        <option value="stripe" >Stripe</option>
-                        <!-- Add more payment gateway options as needed -->
-                    </select>
+                <div class="row mt-3">
+                    <div class="col-md-12"><label class="labels">Mobile Number</label><input type="text" class="form-control" id="phonenumber" placeholder="enter phone number" value="{{user.phoneNumber}}"></div>
+                    <div class="col-md-12 mt-3"><label class="labels">Email ID</label><input type="text" class="form-control" id="mail" placeholder="enter email id" value="{{user.mail}}"></div>
                 </div>
-                <!-- Add more payment settings fields as needed -->
-                <button type="submit" class="btn btn-dark">Add</button>
-            </form>
+                <div class="mt-5 text-center"><button class="btn btn-dark profile-button" id="saveProfileButton" type="button">Save Profile</button></div>
+            </div>
         </div>
-    </div>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+function showToast(message, type) {
+            Toastify({
+                text: message,
+                duration: 3000,
+                close: true,
+                gravity: "bottom", // `top` or `bottom`
+                position: "right", // `left`, `center` or `right`
+                backgroundColor: type === "error" ? "#ff0000" : "#008000",
+            }).showToast();
+        }
+      function validateUsername(username) {
+        return /^[a-zA-Z ]+$/.test(username);
+    }
 
+    function validatePhoneNumber(phoneNumber) {
+        return /^\d{10}$/.test(phoneNumber);
+    }
 
-</section>
-<!-- ADMIN SETTINGS SECTION -->
+    function validateEmail(email) {
+        return /\S+@\S+\.\S+/.test(email);
+    }
+
+    document.getElementById('saveProfileButton').addEventListener('click', async () => {
+        console.log("clicked")
+        const username = document.getElementById("username").value
+        const phonenumber = document.getElementById("phonenumber").value
+        const mail = document.getElementById("mail").value
+        if (!validateUsername(username)) {
+            showToast("Please enter a valid username", "error");
+            return;
+        }
+
+        if (!validatePhoneNumber(phonenumber)) {
+            showToast("Please enter a valid phone number (10 digits)", "error");
+            return;
+        }
+
+        if (!validateEmail(mail)) {
+            showToast("Please enter a valid email address", "error");
+            return;
+        }
+        const profileData = {
+        username,
+        phonenumber,
+        mail
+        };
+
+        try {
+          // Send POST request to save profile
+          const response = await axios.post('/updateprofile', profileData);
+          showToast(response.data.message, "success");
+          setTimeout(function(){ location.reload() }, 1000);
+
+          // Optionally, you can show a success message or perform any other action upon successful save
+        } catch (error) {
+          console.error('Error saving profile:', error);
+          // Optionally, you can show an error message or perform any other action upon error
+        }
+      });
+
+</script>

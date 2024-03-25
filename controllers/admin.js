@@ -13,7 +13,7 @@ const Order = require('../models/order');
 const Visit = require('../models/visit');
 const User = require('../models/users');
 const Userhelpers = require('../helpers/userhelper');
-const { signUser, verifyUser } = require("../middleware/jwt");
+const { signUser, verifyUser,verifyAdmin } = require("../middleware/jwt");
 global.config = config
 
 
@@ -103,7 +103,7 @@ const sign = async (req, res) => {
       if (isAdmin === true) {
       return res.status(200).json({ success: true, isAdmin: true, token });
       } else {
-        return res.status(200).json({ success: true, isAdmin: false, token });
+        return res.status(200).json({ success: true, isAdmin: false, token,error: "Incorrect OTP" });
       }
     } else {
       return res.status(401).json({ success: false, error: "Incorrect OTP" });
@@ -190,9 +190,15 @@ let payments =async (req, res) => {
     const order = await Order.find()
     res.render('admin/payments',{layout:"adminLayout.hbs",order})
   }
-let settings = (req, res) => {
+let settings =async (req, res) => {
     console.log("admin banner management");
-    res.render('admin/settings',{layout:"adminLayout.hbs"})
+    let tokenExracted = await verifyAdmin(req.cookies.admin_jwt) //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
+    var userId = tokenExracted.userId;
+    
+    const user = await User.findById(userId)
+
+    
+    res.render('admin/settings',{layout:"adminLayout.hbs",user})
   }
 let profile =  (req, res) => {
     console.log("admin banner management");

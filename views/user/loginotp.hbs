@@ -40,14 +40,14 @@
                                             <label for="phone" class="form-label">Phone number</label>
                                         </div> 
                                         <div class="form-floating mb-3 otpdiv" style="display: none;">
-                                            <input type="text" class="form-control" name="phone" id="phone" placeholder="Enter your phone number" required>
-                                            <label for="phone" class="form-label">OTP</label>
+                                            <input type="text" class="form-control" name="otp" id="otp" placeholder="Enter Otp " required>
+                                            <label for="otp" class="form-label">OTP</label>
                                         </div> 
                                     </div>
                                     <div class="col-12">
                                         <div class="d-grid">
-                                            <button class="btn bsb-btn-2xl btn-dark otpbtn" type="button" onclick="otp()">Send OTP</button>
-                                            <button class="btn bsb-btn-2xl btn-dark mt-2 loginbtn" style="display: none;" type="button">Login</button>
+                                            <button class="btn bsb-btn-2xl btn-dark otpbtn" type="button" onclick="otps()">Send OTP</button>
+                                            <button class="btn bsb-btn-2xl btn-dark mt-2 loginbtn" onclick="login()" style="display: none;" type="button">Login</button>
                                         </div>
                                     </div>
                                 </div>
@@ -85,26 +85,56 @@ function showToast(message, type) {
                 backgroundColor: type === "error" ? "#ff4444" : "#33cc33",
             }).showToast();
         }
-    async function otp(){
+    async function otps(){
         // Extract phone number input value
         const phoneNumber = document.getElementById("phone").value;
+        console.log(phoneNumber)
+        document.querySelector(".phnodiv").style.display = "none";
+        document.querySelector(".otpdiv").style.display = "";
+        document.querySelector(".otpbtn").style.display = "none";
+        document.querySelector(".loginbtn").style.display = "";
         
         // Send request to server
         try {
             const response = await axios.post('/send-otp-phone', { phone: phoneNumber });
             // Handle response if needed
             showToast(response.data.message, "success");
+
+        console.log("Done")
+            
         } catch (error) {
             // Handle error
             showToast("Failed to send OTP", "error");
         }
         
         // Hide phone number input and show OTP input and login button
-        document.querySelector(".phnodiv").style.display = "none";
-        document.querySelector(".otpdiv").style.display = "";
-        document.querySelector(".otpbtn").style.display = "none";
-        document.querySelector(".loginbtn").style.display = "";
+
     }
+
+    async function login() {
+    // Extract phone number and OTP input values
+    const otp = document.getElementById("otp").value;
+    const phoneNumber = document.getElementById("phone").value;
+    console.log(otp)
+
+    // Send request to server to verify OTP
+    try {
+        const response = await axios.post('/login-with-otp', { otp: otp ,phone:phoneNumber});
+        
+        // Check if login was successful
+        if (response.data.success) {
+            // If login is successful, redirect to dashboard or perform further actions
+            showToast("Login successful. Redirecting...", "success");
+            window.location.href = '/dashboard'
+            // Redirect to a dashboard or perform further actions upon successful login
+        } else {
+            showToast("Incorrect OTP. Please try again.", "error");
+        }
+    } catch (error) {
+        // Handle error
+        showToast("Failed to login. Please try again.", "error");
+    }
+}
 </script>
 
 

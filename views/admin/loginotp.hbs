@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jcclub | Login with OTP</title>
+    <title>Admin Login</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <link rel="stylesheet" href="https://unpkg.com/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://unpkg.com/bs-brain@2.0.3/components/logins/login-6/assets/css/login-6.css">
@@ -110,7 +110,7 @@ function showToast(message, type) {
         // Check if login was successful
         if (response.data.success) {
             // If login is successful, redirect to dashboard or perform further actions
-            showToast("Login successful. Redirecting...", "success");
+            showToast("Login successful", "success");
             window.location.href = '/dashboard'
             // Redirect to a dashboard or perform further actions upon successful login
         } else {

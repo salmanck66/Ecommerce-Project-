@@ -42,8 +42,8 @@ const authMiddlewareAdmin = async (req, res, next) => {
         res.redirect('/admin');
         
     } catch (error) {
-        console.error("Error verifying user:", error);
-        res.render('error', { print: error });
+        console.error("Error verifying admin:", error);
+        res.redirect('/admin');
     }
 };
 

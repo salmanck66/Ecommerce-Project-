@@ -948,13 +948,13 @@ const loginRequestOTP = async (req, res) => {
     }
 
     const otp = generateOTP();
-
+    console.log(otp);
     // Send OTP asynchronously and wait for completion
     await Userhelpers.sendOTP(phone, otp);
     console.log("OTP SMS sent");
     
     // Render response after sending OTP
-    res.status(200).render("user/ ", { phone });
+    res.status(200,{message: "Otp Sent Succesfully"})
     
   } catch (error) {
     console.error("Error requesting OTP:", error);
@@ -1105,7 +1105,43 @@ let delorder = async (req, res) => {
   }
 }
 
-module.exports = {teamfilter,searchproduct,delwish,paymetController,tracking,updateprofile,showCategoryProducts,showcatprod,search,
+const sign = async (req, res) => {
+  const { otp, phone } = req.body;
+  console.log(req.body);
+
+  try {
+    // Find the user by phone number
+    const user = await User.findOne({ phoneNumber: phone });
+    console.log(user);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Get the OTP associated with the phone number
+    const storedOTP = otpDB[phone];
+
+    // Compare the OTP provided by the user with the stored OTP
+    const isOtpValid = (storedOTP === Number(otp));
+
+    if (isOtpValid) {
+      console.log(user._id + ' logged in');
+      const token = await signUser(user); // Generate token using signAdmin middleware
+      console.log(token);
+      res.cookie("jwt", token, { httpOnly: true, maxAge: 86400000 }); // 24 hour expiry
+      return res.status(200).json({ success: true });
+    }
+    else
+    {
+      return res.status(200).json({ success: true,  error: "Incorrect OTP" });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ success: false, error: "Server Error" });
+  }
+};
+
+module.exports = {sign,teamfilter,searchproduct,delwish,paymetController,tracking,updateprofile,showCategoryProducts,showcatprod,search,
   payment,sort,orderstatus,delorder,
   ResetPassword,
   homePage,
