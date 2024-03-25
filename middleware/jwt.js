@@ -19,6 +19,22 @@ module.exports = {
           })
       })
   },
+  signAdmin: (user) => {
+      return new Promise((resolve, reject) => {
+          const jwtKey = process.env.JWT_KEY
+          const payLoad = {
+              userId: user._id,
+              userName: user.userName,
+          }
+          jwt.sign(payLoad, jwtKey, { expiresIn: '2h' }, (error, token) => {
+              if (error) {
+                  reject(error)
+              } else {
+                  resolve(token)
+              }
+          })
+      })
+  },
 
 
 

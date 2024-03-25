@@ -1,4 +1,5 @@
 const cloudinary = require('../utils/cloudinery');
+const { signAdmin } = require("../middleware/jwt");
 const Category = require('../models/category')
 const SubCategory = require('../models/subcategory')
 const Product  = require('../models/product')
@@ -10,12 +11,89 @@ const Coupon = require('../models/coupon');
 const Banner = require('../models/banner');
 const Order = require('../models/order');
 const Visit = require('../models/visit');
+const User = require('../models/users');
 const Userhelpers = require('../helpers/userhelper');
+const { signUser, verifyUser } = require("../middleware/jwt");
+global.config = config
 
 
 
 
 
+function generateOTP() {
+  return Math.floor(100000 + Math.random() * 900000);
+}
+const loginRequestOTP = async (req, res) => {
+  console.log("Requesting OTP");
+  const { phone } = req.body;
+  console.log(req.body);
+
+  try {
+
+    const user = await User.findOne({ phoneNumber: phone });
+    console.log("found");
+
+    if (!user) {
+      return res.status(404,{ error: "User not found" })
+    }
+
+    var otpserver = generateOTP();
+
+    // Send OTP asynchronously and wait for completion
+    await Userhelpers.sendOTP(phone, otpserver);
+    console.log("OTP SMS sent");
+    
+    // Render response after sending OTP
+    res.status(200).json( {message:"Otp Sent" ,phone });
+    
+  } catch (error) {
+    console.error("Error requesting OTP:", error);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
+const sign = async (req, res) => {
+  const { otp } = req.body;
+  console.log("sign function");
+
+  try {
+      // Find the user by phone number
+      const user = await User.findOne({ phoneNumber: phone });
+
+      if (!user) {
+          return res.status(404).json({ error: "User not found" });
+      }
+
+      // Assuming you have fetched the otpserver value from the database
+      // Compare the OTP provided by the user with otpserver
+      const isOtpValid = (otpserver === otp);
+
+      if (isOtpValid) {
+          // If OTP is valid, generate JWT token for authentication
+          const token = await signAdmin(user); // Generate token using signAdmin middleware
+
+          // Check if the user is an admin
+          const isAdmin = user.isAdmin || false; // Assuming you have a field named isAdmin in your user schema
+
+          if (isAdmin) {
+              return res.status(200).render('admin/index').json({ success: true, isAdmin: true, token });
+          } else {
+              return res.status(200).json({ success: true, isAdmin: false, token });
+          }
+      } else {
+          return res.status(401).json({ success: false, error: "Incorrect OTP" });
+      }
+  } catch (error) {
+      console.error(error);
+      return res.status(500).json({ success: false, error: "Server Error" });
+  }
+};
+
+
+
+let loginotp = async  (req, res) => {
+  res.render("admin/loginotp",{layout:false})
+}
 
 let homePage = async (req, res) => {
   console.log("admin dashboard page");
@@ -706,4 +784,4 @@ let orderview = async (req, res) => {
 }
 
 
-module.exports = {orderview,updatebannerpost,updatebanner,deletebanner,addbanner,editCoupon,updatecoupon,deletecoupon,addCoupon,updatesubcategory,subcategoryeditpage,categoryeditpage,editproduct,deleteprod,deletesubcat,updatecategory,producteditpage,updateProduct,addSubcategory,deletecat,postcategory,postaddproduct,homePage,logIn,Forget,order,productm,addproduct,coupon,categories,banner,payments,settings,profile,placeorder}
+module.exports = {sign,loginRequestOTP,loginotp,orderview,updatebannerpost,updatebanner,deletebanner,addbanner,editCoupon,updatecoupon,deletecoupon,addCoupon,updatesubcategory,subcategoryeditpage,categoryeditpage,editproduct,deleteprod,deletesubcat,updatecategory,producteditpage,updateProduct,addSubcategory,deletecat,postcategory,postaddproduct,homePage,logIn,Forget,order,productm,addproduct,coupon,categories,banner,payments,settings,profile,placeorder}

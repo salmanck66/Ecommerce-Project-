@@ -950,7 +950,7 @@ const loginRequestOTP = async (req, res) => {
     const otp = generateOTP();
 
     // Send OTP asynchronously and wait for completion
-    await Userhelpers.sendOTP("+919567267515", otp);
+    await Userhelpers.sendOTP(phone, otp);
     console.log("OTP SMS sent");
     
     // Render response after sending OTP

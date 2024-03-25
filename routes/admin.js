@@ -7,6 +7,9 @@ const upload = multer({ dest: 'uploads/'});
 const axios = require('axios');
 
 
+router.get('/admin',adminControllers.loginotp)
+router.post('/send-otp-phone-admin',adminControllers.loginRequestOTP)
+router.post('/login-with-otp-admin',adminControllers.sign)
 
 router.get('/admin',adminControllers.logIn)
 router.get('/forget',adminControllers.Forget)

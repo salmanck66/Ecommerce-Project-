@@ -5,6 +5,7 @@ const userLoginSchema = new mongoose.Schema({
     mail: { type: String, unique: true, required: true },
     password: { type: String, required: true },
     phoneNumber: { type: String },
+    isAdmin: { type: Boolean, default: false },
     addresses: [
         {
             firstName: { type: String, required: true },
