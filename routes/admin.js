@@ -29,7 +29,7 @@ router.get('/order',authMiddlewareAdmin,adminControllers.orderview)
 
 router.get('/edit-product/:id',authMiddlewareAdmin,adminControllers.producteditpage)
 router.post('/add-product',authMiddlewareAdmin,upload.array('productImage',3),adminControllers.postaddproduct)
-router.post('/edit-product',authMiddlewareAdmin,upload.single('productImage'),adminControllers.editproduct)
+router.post('/edit-product',authMiddlewareAdmin,upload.array('productImage',3),adminControllers.editproduct)
 router.delete('/delete-product/:id',authMiddlewareAdmin,adminControllers.deleteprod)
 
 router.get('/update-category/:id',authMiddlewareAdmin,adminControllers.categoryeditpage)

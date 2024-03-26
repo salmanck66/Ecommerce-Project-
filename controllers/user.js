@@ -290,10 +290,10 @@ let productdetail = async (req, res) => {
       var userId = tokenExracted.userId;
       console.log(userName);
     }
-  
-    const productsss = await Product.findById(id); // Adding await here to wait for the query to complete
-    console.log(productsss)
-    res.render("user/product-detail", { layout: "layout.hbs" ,productsss,userName,userId}); // Adding await here as well
+    const productsss = await Product.findById(id);
+    const related = await Product.find({ category: productsss.category, _id: { $ne: id } }); // Excluding the currently viewed product from related
+    console.log(productsss);
+    res.render("user/product-detail", { layout: "layout.hbs", productsss, userName, userId, related });
 
   } catch (error) {
     console.log(error);

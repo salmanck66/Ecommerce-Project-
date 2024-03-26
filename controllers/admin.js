@@ -211,8 +211,9 @@ let profile =  (req, res) => {
     console.log(req.file);
     try {
       // Extract product ID from request parameters
-      
-  
+      const uploadPromises = req.files.map(file => cloudinary.uploader.upload(file.path));
+      const results = await Promise.all(uploadPromises);
+      const imageUrls = results.map(result => result.secure_url);
       // Extract updated product data from request body
       const { name, variant, mrp, price, description, richdescription, category, subcategory, tags,id} = req.body;
       const productId = id;
@@ -226,12 +227,6 @@ let profile =  (req, res) => {
       };
   
       // Check if there's a file uploaded for the image
-      let imageUrl;
-      if (req.file) {
-        // Upload new image to Cloudinary
-        const result = await cloudinary.uploader.upload(req.file.path);
-        imageUrl = result.secure_url;
-      }
   
       // Build updated product object with Cloudinary image URL if available
       const updatedProduct = {
@@ -248,8 +243,8 @@ let profile =  (req, res) => {
       };
   
       // If there's a new image, add it to the updated product object
-      if (imageUrl) {
-        updatedProduct.image = imageUrl;
+      if (imageUrls) {
+        updatedProduct.image = imageUrls;
       }
   
       // Update product in MongoDB
