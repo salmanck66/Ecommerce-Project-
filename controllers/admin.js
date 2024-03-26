@@ -824,8 +824,15 @@ let orderview = async (req, res) => {
 
 const downloadcsv = async (req, res) => {
   try {
-      // Fetch sales data from the database
-      const salesData = await Order.find({}, { orderId: 1, totalAmount: 1, orderDate: 1, paymentMethod: 1 });
+    console.log("reqingg");
+      // Get the start and end dates from the query parameters
+      const startDate = req.query.startDate;
+      const endDate = req.query.endDate;
+
+      // Fetch sales data from the database between the specified dates
+      const salesData = await Order.find({
+          orderDate: { $gte: startDate, $lte: endDate }
+      }, { orderId: 1, totalAmount: 1, orderDate: 1, paymentMethod: 1 });
 
       // Convert the data to CSV format
       const csvWriter = createObjectCsvWriter({

@@ -2,8 +2,17 @@
 <section class="container payment-section mt-5">
     <h2 class="mb-4">Sales Report</h2>
 
-    <!-- Download Button -->
-    <button id="downloadSalesReport" class="btn btn-primary mb-3">Download Sales Report</button>
+   <div class="mb-3">
+            <label for="start-date">Start Date:</label>
+            <input type="date" id="start-date" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="end-date">End Date:</label>
+            <input type="date" id="end-date" class="form-control" required>
+        </div>
+
+        <!-- Buttons for Fetching Sales Report -->
+        <button id="fetch-sales-report" class="btn btn-primary">Fetch Sales Report</button>
 
     <!-- All Payments -->
     <div class="all-payments">
