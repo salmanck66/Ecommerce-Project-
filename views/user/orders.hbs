@@ -9,7 +9,7 @@
             <div class="media-body order-2 order-lg-1">
               <div class="card">
                 <div class="card-body">
-                  <h5 class="card-title"  id="orderid">Order ID: {{this.orderId}}</h5>
+                  <h5 class="card-title statuss"  id="orderid">Order ID: {{this.orderId}}</h5>
                   <h5 class="card-title" data-id="{{this.orderId}}">Order Status: {{this.Status}}</h5>
                   <p class="card-text">Payment Method: {{this.paymentMethod}}</p>
                   <p class="card-text">Shipping address: {{this.shippingAddress.address}}</p>
@@ -19,7 +19,7 @@
                   {{#each this.items}}
                   <div class="row mb-3">
                     <div class="col-md-3">
-                      <img src="{{this.product.image}}" class="img-fluid" alt="Product Image">
+                      <img src="{{this.product.image.[0]}}" class="img-fluid" alt="Product Image">
                     </div>
                     <div class="col-md-9">
                       <h6 class="card-subtitle mb-2 text-muted">{{this.product.name}}</h6>
@@ -34,6 +34,7 @@
                     </div>
                     <div class="mt-2">
                       <a href="productdetail?id={{this._id}}" class="btn flex-c-m  cl2  ">Track Order</a>
+                      <p id="status">{{this.Staus}}</p>
                       <a href="#" class="btn flex-c-m cl2 remove-from-wishlist" onclick="deleteOrder({{this.orderId}})">Cancel Order</a>
                     </div>
                   </div>
@@ -47,13 +48,7 @@
       
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Function to handle cancel order button click
-
-    // Your other JavaScript code
-});
 
 
 </script>

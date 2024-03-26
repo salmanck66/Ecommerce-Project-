@@ -828,12 +828,13 @@ const downloadcsv = async (req, res) => {
       // Get the start and end dates from the query parameters
       const startDate = req.query.startDate;
       const endDate = req.query.endDate;
+      console.log(startDate,endDate)
 
       // Fetch sales data from the database between the specified dates
       const salesData = await Order.find({
           orderDate: { $gte: startDate, $lte: endDate }
       }, { orderId: 1, totalAmount: 1, orderDate: 1, paymentMethod: 1 });
-
+      console.log(salesData);
       // Convert the data to CSV format
       const csvWriter = createObjectCsvWriter({
           path: 'public/salesdata.csv', // Adjusted path
@@ -847,8 +848,8 @@ const downloadcsv = async (req, res) => {
       await csvWriter.writeRecords(salesData);
 
       // Stream the file to the client for download
-      const file = `salesdata.csv`;
-      res.download(file, 'salesdata.csv', (err) => {
+      const file = `public/salesdata.csv`;
+      res.download(file, 'public/salesdata.csv', (err) => {
           if (err) {
               console.error(err);
               res.status(500).send('Internal Server Error');

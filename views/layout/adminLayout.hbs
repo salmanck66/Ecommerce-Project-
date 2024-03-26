@@ -56,8 +56,8 @@
   <script>
 const fetchSalesReport = () => {
     const startDate = document.getElementById('start-date').value;
-    const startDate = document.getElementById('end-date').value;
-    console.log(startDate,startDate)
+    const endDate = document.getElementById('end-date').value;
+    console.log(startDate,endDate)
 
     // Make a request to the backend to download the sales report CSV file between the specified dates
     window.location.href = `/downloadcsv?startDate=${startDate}&endDate=${endDate}`;
@@ -65,9 +65,8 @@ const fetchSalesReport = () => {
 
     // Event listener for the "Fetch Sales Report" button
     document.getElementById('fetch-sales-report').addEventListener('click', fetchSalesReport);
-</script>
-    // Get the current URL path
-    const currentPath = window.location.pathname;
+
+     const currentPath = window.location.pathname;
 
     // Get all sidebar links
     const sidebarLinks = document.querySelectorAll('#sidebar a');
@@ -82,7 +81,9 @@ const fetchSalesReport = () => {
             // If it matches, add the 'active' class to the parent 'li' element
             link.parentNode.classList.add('active');
         }
-    });
+    })
+</script>
+
 </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/ascript.js"></script>

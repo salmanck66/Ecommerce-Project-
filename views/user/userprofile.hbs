@@ -81,8 +81,9 @@
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-      function handleCancelOrder(event) {
+      function handleCancelOrder(event,status) {
         event.preventDefault();
+
         const orderId = event.target.dataset.productId; // Retrieve order ID from data-product-id attribute
 
         axios.delete(`/cancel-order/${orderId}`)
@@ -306,7 +307,10 @@ function deleteaddr(index) {
         });
     }
 function deleteOrder(orderId) {
-    // Display SweetAlert confirmation dialog
+  console.log(orderId);
+
+    
+
     Swal.fire({
         title: 'Are you sure?',
         text: 'Do you want to cancel the order?',
