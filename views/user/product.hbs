@@ -111,7 +111,7 @@
 								<span class="badge rounded-pill badge-danger mt-1 p-2">{{this.tags}}</span>
 							</div>
 						<div class="block2-txt-child2 flex-r p-t-3">
-        			<a  style="cursor: pointer;" class=" dis-block pos-relative " onclick="addToWishlist('{{../userId}}', '{{this._id}}')">
+        			<a  style="cursor: pointer;" class=" dis-block pos-relative " onclick="addToWishlist('{{userId}}', '{{this._id}}')">
                     <img class="icon-heart1 dis-block trans-04" src="images/icons/icon-heart-02.png" alt="ICON">
                     <img class="icon-heart2 dis-block trans-04 ab-t-l" src="images/icons/icon-heart-01.png" alt="ICON">
        				 </a>
@@ -138,7 +138,7 @@
 			<i class="zmdi zmdi-chevron-up"></i>
 		</span>
 	</div>
-
+<p id="userID" hidden>{{userId}}</p>
 
 
 
@@ -254,7 +254,8 @@ async function sortProducts(sortType) {
 			});
 		});
 		function addToWishlist(userId, productId) {
-    console.log("call")
+    userId= document.getElementById("userID").textContent
+	console.log(userId);
     fetch('add-to-wishlist', {
         method: 'POST',
         headers: {
