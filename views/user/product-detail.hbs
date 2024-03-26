@@ -208,6 +208,7 @@
 					{{#each related}}
 					<div class="item-slick2 p-l-15 p-r-15 p-t-15 p-b-15">
 						<!-- Block2 -->
+						<a href="productdetail?id={{this._id}}">
 						<div class="block2">
 							<div class="block2-pic hov-img0">
 								<img src="{{this.image.[0]}}" alt="IMG-PRODUCT">
@@ -215,9 +216,12 @@
 
 							<div class="block2-txt flex-w flex-t p-t-14">
 								<div class="block2-txt-child1 flex-col-l ">
-									<a href="product-detail.html" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+									<a href="productdetail?id={{this._id}}" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
 										{{this.name}}
 									</a>
+									<p  class="stext-100 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+										{{this.variant}}
+									</p>
 <div class="d-flex">
 									<span class="pr-1 stext-105 cl3">
 										₹{{this.price}}
@@ -230,21 +234,21 @@
 								</div>
 
 								<div class="block2-txt-child2 flex-r p-t-3">
-									<a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
-										<button onclick="addToWishlist('{{userId}}', '{{productsss._id}}')" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 js-addwish-detail tooltip100" data-tooltip="Add to Wishlist">
+									<button onclick="addToWishlist('{{userId}}', '{{this._id}}')" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
 									<i class="zmdi zmdi-favorite"></i>
 								</button>
-									</a>
+									</button>
 								</div>
 							</div>
 						</div>
+						</a>
 					</div>
 					{{/each }}
 				</div>
 			</div>
 		</div>
 	</section>
-
+<p id="userID" hidden>{{userId}}</p>
 	<p id="S">{{productsss.stock.S}}</p>
 	<p id="M">{{productsss.stock.M}}</p>
 	<p id="L">{{productsss.stock.L}}</p>
@@ -254,6 +258,7 @@
 <script>
 
 	function addToWishlist(userId, productId) {
+		userId= document.getElementById("userID").textContent
     console.log(userId,productId)
     fetch('add-to-wishlist', {
         method: 'POST',

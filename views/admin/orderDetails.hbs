@@ -44,7 +44,7 @@
                             {{#each order.items}}
                             <div class="col-md-6 mb-3">
                                 <div class="card">
-                                    <img src="{{ this.product.image }}" class="card-img-top" alt="Product Image">
+                                    <img src="{{ this.product.image.[0] }}" class="card-img-top" alt="Product Image">
                                     <div class="card-body">
                                         <h6 class="card-title">Product Name: {{ this.product.name }}</h6>
                                         <p class="card-text">Quantity: {{ this.quantity }}</p>
