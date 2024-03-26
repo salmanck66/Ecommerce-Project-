@@ -27,6 +27,8 @@ router.get('/settings',authMiddlewareAdmin,adminControllers.settings)
 router.get('/profile',authMiddlewareAdmin,adminControllers.profile)
 router.get('/order',authMiddlewareAdmin,adminControllers.orderview)
 
+router.get('/downloadcsv',authMiddlewareAdmin,adminControllers.downloadcsv)
+
 router.get('/edit-product/:id',authMiddlewareAdmin,adminControllers.producteditpage)
 router.post('/add-product',authMiddlewareAdmin,upload.array('productImage',3),adminControllers.postaddproduct)
 router.post('/edit-product',authMiddlewareAdmin,upload.array('productImage',3),adminControllers.editproduct)

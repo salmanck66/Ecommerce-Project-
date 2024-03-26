@@ -54,6 +54,27 @@
 	{{{body}}}
 	{{>admin-sidebar}}
   <script>
+    document.getElementById('downloadSalesReport').addEventListener('click', function() {
+    console.log("calling")
+    // Make Axios request to download the sales report
+    axios.get('/downloadcsv', {
+        responseType: 'blob'
+    })
+    .then(response => {
+        // Create a temporary anchor element to trigger the download
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'sales_report.csv');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        // Handle error appropriately, e.g., display an error message to the user
+    });
+});
     // Get the current URL path
     const currentPath = window.location.pathname;
 

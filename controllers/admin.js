@@ -15,6 +15,8 @@ const User = require('../models/users');
 const Userhelpers = require('../helpers/userhelper');
 const { signUser, verifyUser,verifyAdmin } = require("../middleware/jwt");
 global.config = config
+const { createObjectCsvWriter } = require('csv-writer');
+const fs = require('fs');
 
 
 
@@ -819,4 +821,37 @@ let orderview = async (req, res) => {
 }
 
 
-module.exports = {outadmin,sign,loginRequestOTP,loginotp,orderview,updatebannerpost,updatebanner,deletebanner,addbanner,editCoupon,updatecoupon,deletecoupon,addCoupon,updatesubcategory,subcategoryeditpage,categoryeditpage,editproduct,deleteprod,deletesubcat,updatecategory,producteditpage,updateProduct,addSubcategory,deletecat,postcategory,postaddproduct,homePage,logIn,Forget,order,productm,addproduct,coupon,categories,banner,payments,settings,profile,placeorder}
+
+const downloadcsv = async (req, res) => {
+  try {
+      // Fetch sales data from the database
+      const salesData = await Order.find({}, { orderId: 1, totalAmount: 1, orderDate: 1, paymentMethod: 1 });
+
+      // Convert the data to CSV format
+      const csvWriter = createObjectCsvWriter({
+          path: 'public/salesdata.csv', // Adjusted path
+          header: [
+              { id: 'orderId', title: 'Order ID' },
+              { id: 'totalAmount', title: 'Total Amount' },
+              { id: 'orderDate', title: 'Order Date' },
+              { id: 'paymentMethod', title: 'Payment Method' }
+          ]
+      });
+      await csvWriter.writeRecords(salesData);
+
+      // Stream the file to the client for download
+      const file = `salesdata.csv`;
+      res.download(file, 'salesdata.csv', (err) => {
+          if (err) {
+              console.error(err);
+              res.status(500).send('Internal Server Error');
+          }
+          // No need to unlink the file as it's served statically from the public directory
+      });
+  } catch (err) {
+      console.error(err);
+      res.status(500).send('Internal Server Error');
+  }
+}
+
+module.exports = {downloadcsv,outadmin,sign,loginRequestOTP,loginotp,orderview,updatebannerpost,updatebanner,deletebanner,addbanner,editCoupon,updatecoupon,deletecoupon,addCoupon,updatesubcategory,subcategoryeditpage,categoryeditpage,editproduct,deleteprod,deletesubcat,updatecategory,producteditpage,updateProduct,addSubcategory,deletecat,postcategory,postaddproduct,homePage,logIn,Forget,order,productm,addproduct,coupon,categories,banner,payments,settings,profile,placeorder}

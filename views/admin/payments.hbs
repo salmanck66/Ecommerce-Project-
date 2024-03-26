@@ -2,13 +2,14 @@
 <section class="container payment-section mt-5">
     <h2 class="mb-4">Sales Report</h2>
 
- 
+    <!-- Download Button -->
+    <button id="downloadSalesReport" class="btn btn-primary mb-3">Download Sales Report</button>
+
     <!-- All Payments -->
     <div class="all-payments">
         <h3>Sales</h3>
         <table class="table">
             <thead>
-                
                 <tr>
                     <th scope="col">OrderID</th>
                     <th scope="col">Amount</th>
@@ -16,7 +17,6 @@
                     <th scope="col">Mode</th>
                     <th scope="col">Status</th>
                 </tr>
-                
             </thead>
             <tbody>
                 <!-- Sample payment rows -->
@@ -34,6 +34,8 @@
         </table>
     </div>
 </section>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
 <!-- PAYMENT OPTIONS SECTION -->
 <script>
     allSideMenu.forEach(item=> {
@@ -46,4 +48,7 @@
 		li.classList.add('active');
 	})
 });
+
+// JavaScript for handling download button click
+
 </script>
