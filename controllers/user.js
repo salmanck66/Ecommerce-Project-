@@ -17,6 +17,8 @@ const nodemailer = require('nodemailer');
 const {parsed:config} = require('dotenv').config()
 global.config = config
 const razorpay = require('razorpay');
+const { createObjectCsvWriter } = require('csv-writer');
+const fs = require('fs');
 
 
 
@@ -1147,8 +1149,51 @@ const sign = async (req, res) => {
   }
 };
 
+const downloadcsv = async (req, res) => {
+  try {
+    // Fetch sales data from the database
+    const salesData = await Order.aggregate([
+      {
+        $project: {
+          _id: 0, // Exclude MongoDB _id field
+          orderDate: 1,
+          orderId: 1,
+          totalAmount: 1,
+          paymentMethod: 1
+        }
+      }
+    ]);
+
+    // Convert the data to CSV format
+    const csvWriter = createObjectCsvWriter({
+      path: 'salesdata.csv',
+      header: [
+        { id: 'orderDate', title: 'Order Date' },
+        { id: 'orderId', title: 'Order ID' },
+        { id: 'totalAmount', title: 'Total Amount' },
+        { id: 'paymentMethod', title: 'Payment Method' }
+      ]
+    });
+    await csvWriter.writeRecords(salesData);
+
+    // Stream the file to the client for download
+    const file = `${__dirname}/salesdata.csv`;
+    res.download(file, 'salesdata.csv', (err) => {
+      // Cleanup after download
+      fs.unlink(file, (err) => {
+        if (err) {
+          console.error(err);
+        }
+      });
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
 module.exports = {sign,teamfilter,searchproduct,delwish,paymetController,tracking,updateprofile,showCategoryProducts,showcatprod,search,
-  payment,sort,orderstatus,delorder,
+  payment,sort,orderstatus,delorder,downloadcsv,
   ResetPassword,
   homePage,
   contact,
