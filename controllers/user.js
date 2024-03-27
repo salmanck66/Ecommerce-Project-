@@ -860,11 +860,6 @@ let orderview = async (req, res) => {
  
 };
 
-// let signin = (req, res) => {
-//     console.log("login");
-//     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-//     res.render('user/login',{layout:false})
-//   }
 
 let signup = (req, res) => {
   console.log("signup");
