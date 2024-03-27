@@ -317,8 +317,9 @@ function codeApply() {
     {
         
         const carttotal = getCartTotal()
-        console.log(carttotal)
-        const data ={carttotal}
+        const discount = parseFloat(document.getElementById('coupondiscount').textContent)
+        console.log(carttotal,discount)
+        const data ={carttotal,discount}
          fetch('/proceed-checkout', {
             method: 'POST',
             headers: {

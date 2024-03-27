@@ -413,18 +413,21 @@ let addtowishlist = async (req, res) => {
 
 let pcheckout = async (req, res) => {
   try {
-    let tokenExracted = await verifyUser(req.cookies.jwt)
+    let tokenExracted = await verifyUser(req.cookies.jwt);
     const userId = tokenExracted.userId; // Assuming you have a function to extract the user ID from the JWT token
     console.log("post checkout");
-    const {carttotal} = req.body
-    const cart = await Cart.findOne({user: userId});
-    await Cart.findOneAndUpdate({ "user": userId },  { "carttotal": carttotal } );
-    await cart.save()
-    res.redirect("ordercomplete")
+
+    const { carttotal, discount } = req.body;
+    console.log(carttotal,discount)
+    await Cart.findOneAndUpdate(
+      { user: userId },
+      { carttotal: carttotal, discount: discount }
+    );
+    res.redirect("ordercomplete");
   } catch (error) {
     console.log(error);
   }
-}
+};
 let fcheckout = async (req, res) => {
   try {
     // Verify user and get user ID
