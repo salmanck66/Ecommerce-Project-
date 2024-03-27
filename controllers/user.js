@@ -461,6 +461,7 @@ let fcheckout = async (req, res) => {
       orderId: orderNumber,
       user: userId,
       items: cart.items,
+      Discount:cart.discount,
       totalAmount: cart.carttotal,
       shippingAddress: {
         firstName: req.body.fname,
