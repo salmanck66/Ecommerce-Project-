@@ -22,7 +22,9 @@
                 <div class="card mb-4">
                     <div class="card-body">
                         <h5 class="card-title">Order Information</h5>
+                        <div class="d-flex justify-content-between align-items-center"></div>
                         <p class="card-text">Order ID: {{ order.orderId }}</p>
+                        <span class="badge rounded-pill badge-danger mt-1 p-2">{{this.tags}}</span>
                         <p class="card-text">Customer Name: {{ order.shippingAddress.firstName }} {{ order.shippingAddress.lastName }}</p>
                         <p class="card-text">Email: {{ order.shippingAddress.email}}</p>
                         <p class="card-text">Phone Number: {{ order.shippingAddress.phonenumber}}</p>
