@@ -218,7 +218,7 @@ let homePage = async (req, res) => {
   }
   if (userName) {
     console.log("Having User");
-    const products = await Product.find();
+    const products = await Product.aggregate([{$sort:{salecount:-1}},{ $limit: 20 }])
     const category = await Category.find();
     const banner = await Banner.find();
     const userln = await User.find();
@@ -232,7 +232,7 @@ let homePage = async (req, res) => {
       data: products,
     });
   } else {
-    const products = await Product.find();
+    const products = await Product.aggregate([{$sort:{salecount:-1}},{ $limit: 20 }])
     const category = await Category.find();
     const banner = await Banner.find();
     const users = await User.find();

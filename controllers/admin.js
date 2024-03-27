@@ -153,7 +153,6 @@ let Forget = (req, res) => {
   let order = async (req, res) => {
     try {
         const order = await Order.find().sort({ orderDate: -1 });
-        console.log(order);
         console.log("admin order management");
         res.render('admin/order', { layout: "adminLayout.hbs", order });
     } catch (error) {

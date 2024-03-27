@@ -32,6 +32,7 @@
                         <p class="card-text">Zip: {{ order.shippingAddress.zip }}</p>
                         <p class="card-text">Order Date: {{ order.orderDate }}</p>
                         <p class="card-text">Total Amount: {{ order.totalAmount }}</p>
+                        <p class="card-text">Total discount: {{ order.totalAmount }}</p>
                         <p class="card-text">Payment Method: {{ order.paymentMethod }}</p>
                     </div>
                 </div>
@@ -49,6 +50,7 @@
                                         <h6 class="card-title">Product Name: {{ this.product.name }}</h6>
                                         <p class="card-text">Quantity: {{ this.quantity }}</p>
                                         <p class="card-text">Size: {{ this.size }}</p>
+                                        <p class="card-text">Price: {{ this.product.price }}</p>
                                     </div>
                                 </div>
                             </div>
