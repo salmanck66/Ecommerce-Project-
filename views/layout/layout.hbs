@@ -156,7 +156,7 @@
 			<i class="zmdi zmdi-chevron-up"></i>
 		</span>
 	</div>
-
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
 		$(document).ready(function() {             $('#loginModal').modal('show');
   $(function () {
@@ -265,5 +265,37 @@
 	</script>
 <!--===============================================================================================-->
 	<script src="js/main.js"></script>
+	
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById("subscription-form").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            // Fetch the email input value
+            var emailInput = document.getElementById("email").value;
+
+            // Validate email format
+            if (validateEmail(emailInput)) {
+                // Display SweetAlert message
+                swal("Thank you for subscribing!", "You will receive updates at " + emailInput, "success")
+                .then(function() {
+                    // Clear the input box after the SweetAlert is closed
+                    document.getElementById("email").value = "";
+                });
+            } else {
+                // If email format is not valid, show error message
+                swal("Invalid Email", "Please enter a valid email address.", "error");
+            }
+        });
+    });
+
+    // Function to validate email format
+    function validateEmail(email) {
+        // Regular expression for email validation
+        var re = /\S+@\S+\.\S+/;
+        return re.test(email);
+    }
+</script>
+
 </body>
 </html>
