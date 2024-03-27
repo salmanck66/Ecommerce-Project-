@@ -308,8 +308,21 @@ function deleteaddr(index) {
     }
 function deleteOrder(orderId) {
   console.log(orderId);
+const statusElement = document.querySelector(`h5[data-id="${orderId}"]`);
+    if(statusElement.textContent === `Order Status: Cancelled`)
+    {
+          Swal.fire({
+    text: 'The order has already been cancelled.',
+    icon: 'error',
+    showCancelButton: false,
+    showConfirmButton: false,
+    showCloseButton: true,
+    allowOutsideClick: false,
+    allowEscapeKey: false
+});
+return
+    }
 
-    
 
     Swal.fire({
         title: 'Are you sure?',
