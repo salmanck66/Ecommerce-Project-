@@ -449,6 +449,7 @@ let fcheckout = async (req, res) => {
       }
       // Deduct quantity from stock for the specific size
       product.stock[size] -= item.quantity;
+      product.salecount +=item.quantity
       await product.save();
     }
 
@@ -493,9 +494,10 @@ let fcheckout = async (req, res) => {
     }
     // Clear the cart items or mark them as purchased
     // This step depends on your application's logic
-
+    let tokenExracted = await verifyUser(req.cookies.jwt);
+    
     // Send a success response
-    res.render('user/ordercomplete', { message: 'Order completed successfully.', orderId: savedOrder.orderId });
+    res.render('user/ordercomplete', {userId:tokenExracted.userId, message: 'Order completed successfully.', orderId: savedOrder.orderId });
   } catch (error) {
     console.log(error);
     // Send an error response

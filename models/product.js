@@ -63,8 +63,13 @@ const productSchema = new mongoose.Schema({
   },
   subcategory: {
     type: String
-  }
-},{timestamps: true,versionKey:false})
+  },
+  salecount :{
+    type :Number,
+    default: 0
+}
+}
+,{timestamps: true,versionKey:false})
 
 const Product = mongoose.model('Product', productSchema);
 
