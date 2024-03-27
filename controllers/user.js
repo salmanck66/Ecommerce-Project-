@@ -1071,22 +1071,32 @@ let orderstatus = async (req, res) => {
   const { orderId, newStatus } = req.body;
 
   try {
-      const order = await Order.findOneAndUpdate(
-          { orderId: orderId },
-          { $set: { Status: newStatus } },
-          { new: true }
-      );
-      
-      if (order) {
-        res.json({ message: 'Delivery status updated successfully', order: order });
+    const order = await Order.findOne({ orderId: orderId });
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+
+    if (order.Status !== "Packed") {
+      return res.json({ message: 'Order Cannot Be Cancelled After Its Being Shipped' });
+    }
+
+    const updatedOrder = await Order.findOneAndUpdate(
+      { orderId: orderId },
+      { $set: { Status: newStatus } },
+      { new: true }
+    );
+
+    if (updatedOrder) {
+      return res.json({ message: 'Delivery status updated successfully', order: updatedOrder });
     } else {
-        res.status(404).json({ error: 'Order not found' });
+      return res.status(500).json({ error: 'Failed to update delivery status' });
     }
   } catch (error) {
-      console.error('Error updating delivery status:', error);
-      res.status(500).json({ error: 'Internal server error' });
+    console.error('Error updating delivery status:', error);
+    return res.status(500).json({ error: 'Internal server error' });
   }
 }
+
 
 
 let delorder = async (req, res) => {
