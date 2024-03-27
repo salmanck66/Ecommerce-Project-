@@ -81,6 +81,36 @@
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+   const statusElements = document.querySelectorAll('.statuss');
+    console.log(statusElements); // Check if statusElements is selecting the elements correctly
+    // Loop through each status element
+    statusElements.forEach(function(element) {
+        const status = element.textContent.trim(); // Get the text content of the element
+        console.log(status); // Check if the status is being retrieved correctly
+        
+        // Set class based on status
+        switch (status.toLowerCase()) {
+            case 'packed':
+                element.classList.add('badge-primary'); // Change to element.classList.add()
+                break;
+            case 'picked':
+                element.classList.add('badge-warning'); // Change to element.classList.add()
+                break;
+            case 'in-transit':
+                element.classList.add('badge-info'); // Change to element.classList.add()
+                break;
+            case 'out for delivery':
+                element.classList.add('badge-success'); // Change to element.classList.add()
+                break;
+            case 'delivered':
+                element.classList.add('badge-dark'); // Change to element.classList.add()
+                break;
+            default:
+                element.classList.add('badge-secondary'); // Change to element.classList.add()
+                break;
+        }
+    });
+
       function handleCancelOrder(event,status) {
         event.preventDefault();
 
@@ -156,7 +186,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }).showToast();
         }
   document.getElementById('myOrdersLink').addEventListener('click', function(event) {
-    console.log("clicked")
+
     event.preventDefault();
     axios.get('orderview')
       .then(function(response) {
@@ -307,7 +337,6 @@ function deleteaddr(index) {
         });
     }
 function deleteOrder(orderId) {
-  console.log(orderId);
 const statusElement = document.querySelector(`h5[data-id="${orderId}"]`);
     if(statusElement.textContent === `Order Status: Cancelled`)
     {
