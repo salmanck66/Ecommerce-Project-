@@ -1,12 +1,12 @@
 
-<div style="margin-bottom: 100vh; margin-top: 14vh;" class="container">
+<div style="margin-bottom: 100vh;" class="container searchcopp">
   <div class="input-group mb-3">
     <input type="text" class="form-control" id="searchInput" placeholder="Search products">
     <div class="input-group-append">
       <button class="btn btn-outline-secondary" type="button" id="searchButton">Search</button>
     </div>
   </div>
-  <div id="productsList" class="col border-success"></div>
+  <div id="productsList" class="container"></div>
 </div>
 
 <!-- Bootstrap JS and jQuery -->
@@ -34,7 +34,7 @@ response.data.forEach(product => {
     <div class="col-12">
       <div class="card">
         <div class="row no-gutters">
-          <div class="col-8">
+          <div class="col-10">
             <div class="card-body">
               <h5 class="card-title">${product.name}</h5>
               <p class="card-text">Category: ${product.category}</p>
@@ -42,8 +42,8 @@ response.data.forEach(product => {
               <p class="card-text">${product.description}</p>
             </div>
           </div>
-          <div class="col-4">
-            <img class="card-img" src="${product.image}" alt="Product Image">
+          <div class="col-2">
+            <img class="card-img" src="${product.image[0]}" alt="Product Image">
           </div>
         </div>
       </div>
