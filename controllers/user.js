@@ -300,10 +300,7 @@ let productdetail = async (req, res) => {
     console.log(error);
   }
 };
-let cart = (req, res) => {
-  console.log("cart");
-  res.render("user/cart");
-};
+
 function calculateTotalPrice(cartItems) {
   let totalPrice = 0;
   for (const item of cartItems) {
@@ -496,6 +493,7 @@ let fcheckout = async (req, res) => {
       });
       await user.save();
     }
+    await cart.clearCart();
     // Clear the cart items or mark them as purchased
     // This step depends on your application's logic
     let tokenExracted = await verifyUser(req.cookies.jwt);
@@ -653,6 +651,7 @@ let addtocart = async (req, res) => {
     
 
       await cart.save();
+      
       res.render("user/cart",{ items: cartItems, totalPrice: totalPrice,userName,coupon,category});
 
     } catch (error) {
@@ -963,6 +962,7 @@ const loginRequestOTP = async (req, res) => {
 
 let showCategoryProducts =async (req, res) => {
   const categoryName = req.params.categoryName;
+  console.log(categoryName)
   try {
     if(categoryName === "all")
     {
@@ -970,6 +970,7 @@ let showCategoryProducts =async (req, res) => {
       res.render("user/productbycat", { product,layout:false})
     }
     const product = await Product.find({ category : categoryName});
+    console.log(product)
     res.render("user/productbycat", { product,layout:false})
   } catch (error) {
     console.log(error)
@@ -1164,7 +1165,6 @@ module.exports = {sign,teamfilter,searchproduct,delwish,paymetController,trackin
   about,
   product,
   productdetail,
-  cart,
   help,
   wishlist,
   userprofile,

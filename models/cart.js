@@ -32,4 +32,12 @@ const cartSchema = new Schema({
   }
 });
 
+cartSchema.methods.clearCart = function() {
+  this.items = [];
+  this.carttotal = 0;
+  this.discount = 0;
+  return this.save();
+};
+
+
 module.exports = mongoose.model('Cart', cartSchema);
