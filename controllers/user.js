@@ -698,9 +698,6 @@ let removeCartItem = async (req,res)=>
   {console.log(err)}
 }
 
-
-
-
 let help =async (req, res) => {
   if (req.cookies.jwt) {
     let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
@@ -859,7 +856,6 @@ let orderview = async (req, res) => {
   }
  
 };
-
 
 let signup = (req, res) => {
   console.log("signup");
