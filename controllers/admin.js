@@ -17,7 +17,8 @@ const { signUser, verifyUser,verifyAdmin } = require("../middleware/jwt");
 global.config = config
 const { createObjectCsvWriter } = require('csv-writer');
 const fs = require('fs');
-
+const { log } = require('console');
+const moment = require('moment');
 
 
 
@@ -126,7 +127,7 @@ let homePage = async (req, res) => {
   console.log("admin dashboard page");
   let result = { totalAmount: 0 }; // Default total amount to 0
   const order = await Order.find().sort({ orderDate: -1 });
-  
+
   if (order.length !== 0) {
       result = await Order.aggregate([
           {
@@ -137,11 +138,35 @@ let homePage = async (req, res) => {
           }
       ]);
   }
+
+  const orders = await Order.find().populate('items.product');
+  const salesByCategory = {};
+  // orders.forEach(order => {
+  //   order.items.forEach(item => {
+  //     const category = item.product.category; // Assuming 'category' is a field in your Product model
+  //     const quantity = item.quantity;
+  //     const amount = order.totalAmount;
+
+  //     // If the category doesn't exist in the salesByCategory object, create it
+  //     if (!salesByCategory[category]) {
+  //       salesByCategory[category] = {
+  //         totalSales: 0,
+  //         totalQuantity: 0
+  //       };
+  //     }
+
+  //     // Update the sales data for the category
+  //     salesByCategory[category].totalSales += amount;
+  //     salesByCategory[category].totalQuantity += quantity;
+  //   });
+  // });
+
+  console.log(orders)
+
   console.log("admin order management");
   const visit = await Visit.findOne();
-  res.render('admin/index', { layout: "adminLayout.hbs", order, visit, totalAmount: result[0]?.totalAmount || 0 });
+  res.render('admin/index', { layout: "adminLayout.hbs", order, visit, totalAmount: result[0]?.totalAmount || 0,salesByCategory });
 };
-
 let logIn = (req, res) => {
     console.log("admin login page");
     res.render('admin/login',{layout:false})

@@ -445,7 +445,8 @@ let fcheckout = async (req, res) => {
       }
       const size = item.size;
       if (!product.stock[size] || product.stock[size] < item.quantity) {
-        res.status(200).json("Out of Stock");
+        res.status(200).json("Product Has Gone Out of Stock");
+        return res.redirect('cart')
       }
       // Deduct quantity from stock for the specific size
       product.stock[size] -= item.quantity;
