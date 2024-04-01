@@ -99,6 +99,11 @@
 
 	<script>
 		const categorySalesData = {
+			const salesData = {{ salesByCategory | json }};
+
+        // Extract labels (categories) and data (total sales) from the sales data
+        const labels = Object.keys(salesData);
+        const data = Object.values(salesData).map(category => category.totalSales);
     labels: ['Category 1', 'Category 2', 'Category 3'], // Replace with your category labels
     datasets: [{
         label: 'Category-wise Sales',
