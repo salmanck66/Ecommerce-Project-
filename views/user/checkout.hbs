@@ -1,5 +1,27 @@
-<div class="container mt-5">
+<div class="container bcrumb mb-3">
     <div class="row justify-content-center">
+        {{#if adress}}
+<div class="col-md-4">
+    <h4 class="mb-3">Saved Addresses</h4>
+    <div id="savedAddressesContainer">
+{{#each adress}}
+<div class="card mb-3">
+    <div class="card-body">
+        <h5 class="card-title">{{this.firstName}} {{this.lastName}}</h5>
+        <p class="card-text">Email: {{this.email}}</p>
+        <!-- Include phone number in the card text -->
+        <p class="card-text">Phone Number: {{this.phonenumber}}</p>
+        <p class="card-text">Address 1: {{this.address}}</p>
+        <p class="card-text">Address 2: {{this.address2}}</p>
+        <p class="card-text">State: {{this.state}}</p>
+        <p class="card-text">Zip: {{this.zip}}</p>
+        <a href="#" class="btn btn-primary btn-adress">Use this Address</a>
+    </div>
+</div>
+{{/each}}
+    </div>
+</div>
+{{/if}}
         <div class="col-md-8 order-md-1">
             <h4 class="mb-3">Billing address</h4>
             <form  action="/final-checkout" id="payment-form" method="post">
@@ -103,28 +125,7 @@
                 <button class="btn btn-dark btn-lg btnsubmit btn-pay-now  btn-block" onclick="payNow({{cart.carttotal}})" type="button">Pay And Checkout</button>
             </form>
         </div>
-{{#if adress}}
-<div class="col-md-4">
-    <h4 class="mb-3">Saved Addresses</h4>
-    <div id="savedAddressesContainer">
-{{#each adress}}
-<div class="card mb-3">
-    <div class="card-body">
-        <h5 class="card-title">{{this.firstName}} {{this.lastName}}</h5>
-        <p class="card-text">Email: {{this.email}}</p>
-        <!-- Include phone number in the card text -->
-        <p class="card-text">Phone Number: {{this.phonenumber}}</p>
-        <p class="card-text">Address 1: {{this.address}}</p>
-        <p class="card-text">Address 2: {{this.address2}}</p>
-        <p class="card-text">State: {{this.state}}</p>
-        <p class="card-text">Zip: {{this.zip}}</p>
-        <a href="#" class="btn btn-primary btn-adress">Use this Address</a>
-    </div>
-</div>
-{{/each}}
-    </div>
-</div>
-{{/if}}
+
     </div>
 </div>
 <script src="https://unpkg.com/indian-states-cities@1.0.1/dist/index.min.js"></script>

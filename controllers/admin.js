@@ -139,29 +139,38 @@ let homePage = async (req, res) => {
       ]);
   }
 
-  const orders = await Order.find().populate('items.product');
+  const orders = await Order.find().populate('items.product'); // Fetch orders and populate product details
+
+  // Initialize an object to store sales by category
   const salesByCategory = {};
-  // orders.forEach(order => {
-  //   order.items.forEach(item => {
-  //     const category = item.product.category; // Assuming 'category' is a field in your Product model
-  //     const quantity = item.quantity;
-  //     const amount = order.totalAmount;
 
-  //     // If the category doesn't exist in the salesByCategory object, create it
-  //     if (!salesByCategory[category]) {
-  //       salesByCategory[category] = {
-  //         totalSales: 0,
-  //         totalQuantity: 0
-  //       };
-  //     }
+  // Iterate through each order
+  orders.forEach(order => {
+    order.items.forEach(item => {
+      // Check if item.product is null or undefined
+      if (item.product) {
+        const product = item.product; // Product object
+        const category = product.category; // Assuming 'category' is a field in your Product model
+        const quantity = item.quantity;
+        const amount = order.totalAmount;
 
-  //     // Update the sales data for the category
-  //     salesByCategory[category].totalSales += amount;
-  //     salesByCategory[category].totalQuantity += quantity;
-  //   });
-  // });
+        // If the category doesn't exist in the salesByCategory object, create it
+        if (!salesByCategory[category]) {
+          salesByCategory[category] = {
+            totalSales: 0,
+            totalQuantity: 0
+          };
+        }
 
-  console.log(orders)
+        // Update the sales data for the category
+        salesByCategory[category].totalSales += amount;
+        salesByCategory[category].totalQuantity += quantity;
+      }
+    });
+  });
+
+  log(salesByCategory)
+
 
   console.log("admin order management");
   const visit = await Visit.findOne();
