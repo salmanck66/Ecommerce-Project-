@@ -171,6 +171,12 @@
 
         // Call the function to create the pie chart
         createPieChart();
+        function getMonthName(monthNumber) {
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            return monthNames[monthNumber - 1]; // Adjust month index to match array index
+        }
+
+        // Function to extract data from the table and create the chart
         function createMonthlySalesChartFromTable() {
             const table = document.getElementById('salesTableMonthly');
             const rows = table.querySelectorAll('tr');
@@ -180,7 +186,7 @@
             // Skip the first row (header row)
             for (let i = 1; i < rows.length; i++) {
                 const columns = rows[i].querySelectorAll('td');
-                const month = columns[0].textContent;
+                const month = getMonthName(parseInt(columns[0].textContent));
                 const totalSales = parseInt(columns[1].textContent);
                 labels.push(month);
                 data.push(totalSales);
