@@ -139,42 +139,29 @@ let homePage = async (req, res) => {
       ]);
   }
 
-  const orders = await Order.find().populate('items.product'); // Fetch orders and populate product details
-
-  // Initialize an object to store sales by category
-  const salesByCategory = {};
-
-  // Iterate through each order
-  orders.forEach(order => {
-    order.items.forEach(item => {
-      // Check if item.product is null or undefined
-      if (item.product) {
-        const product = item.product; // Product object
-        const category = product.category; // Assuming 'category' is a field in your Product model
-        const quantity = item.quantity;
-        const amount = order.totalAmount;
-
-        // If the category doesn't exist in the salesByCategory object, create it
-        if (!salesByCategory[category]) {
-          salesByCategory[category] = {
-            totalSales: 0,
-            totalQuantity: 0
-          };
+  const datasles = await Order.aggregate([
+    { $unwind: "$items" }, // Deconstruct the items array
+    {
+        $lookup: { // Join with the Product collection to get the category
+            from: 'products',
+            localField: 'items.product',
+            foreignField: '_id',
+            as: 'product'
         }
-
-        // Update the sales data for the category
-        salesByCategory[category].totalSales += amount;
-        salesByCategory[category].totalQuantity += quantity;
+    },
+    { $unwind: "$product" }, // Deconstruct the product array
+    {
+      $group: {
+          _id: "$product.category", // Group by category
+          totalSales: { $sum: { $multiply: ["$product.price", "$items.quantity"] } } // Calculate total sales for each category by multiplying price with quantity
       }
-    });
-  });
-
-  log(salesByCategory)
+  }
+]);
 
 
   console.log("admin order management");
   const visit = await Visit.findOne();
-  res.render('admin/index', { layout: "adminLayout.hbs", order, visit, totalAmount: result[0]?.totalAmount || 0,salesByCategory });
+  res.render('admin/index', { layout: "adminLayout.hbs", order, visit, totalAmount: result[0]?.totalAmount || 0,datasles});
 };
 let logIn = (req, res) => {
     console.log("admin login page");
@@ -894,5 +881,7 @@ const downloadcsv = async (req, res) => {
       res.status(500).send('Internal Server Error');
   }
 }
+
+
 
 module.exports = {downloadcsv,outadmin,sign,loginRequestOTP,loginotp,orderview,updatebannerpost,updatebanner,deletebanner,addbanner,editCoupon,updatecoupon,deletecoupon,addCoupon,updatesubcategory,subcategoryeditpage,categoryeditpage,editproduct,deleteprod,deletesubcat,updatecategory,producteditpage,updateProduct,addSubcategory,deletecat,postcategory,postaddproduct,homePage,logIn,Forget,order,productm,addproduct,coupon,categories,banner,payments,settings,profile,placeorder}

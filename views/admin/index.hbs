@@ -14,6 +14,18 @@
 					</ul>
 				</div>
 			</div>
+		<table id="salesTable">
+		<tr>
+			<th>Category</th>
+			<th>Total Sales</th>
+		</tr>
+		{{#each datasles}}
+		<tr>
+			<td>{{this._id}}</td>
+			<td>{{this.totalSales}}</td>
+		</tr>
+		{{/each}}
+	</table>
 
 			<ul class="box-info">
 				<li>
@@ -84,43 +96,68 @@
 						<canvas id="monthlySalesChart"></canvas>
 						</li>
 						<li class="card bg-white" sty>
-							<canvas id="categorySalesChart"></canvas>
-							
-
+							<canvas id="pieChart"></canvas>
+						
 						</li>
 
 					</ul>
 				</div>
 			</div>
+			
 		</main>
 		<!-- MAIN -->
 	</section>
 	<!-- CONTENT -->
+	
+
 
 	<script>
-		const categorySalesData = {
-			const salesData = {{ salesByCategory | json }};
+        function createPieChart() {
+            const salesTable = document.getElementById('salesTable');
+            const rows = salesTable.getElementsByTagName('tr');
 
-        // Extract labels (categories) and data (total sales) from the sales data
-        const labels = Object.keys(salesData);
-        const data = Object.values(salesData).map(category => category.totalSales);
-    labels: ['Category 1', 'Category 2', 'Category 3'], // Replace with your category labels
-    datasets: [{
-        label: 'Category-wise Sales',
-        data: [300, 450, 600], // Replace with your sales data for each category
-        backgroundColor: [
-            'rgba(255, 99, 132, 0.5)',
-            'rgba(54, 162, 235, 0.5)',
-            'rgba(255, 206, 86, 0.5)'
-        ],
-        borderColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)'
-        ],
-        borderWidth: 1
-    }]
-};
+            const labels = [];
+            const data = [];
+
+            // Skip the header row
+            for (let i = 1; i < rows.length; i++) {
+                const cells = rows[i].getElementsByTagName('td');
+                if (cells.length >= 2) {
+                    labels.push(cells[0].textContent.trim());
+                    data.push(parseInt(cells[1].textContent.trim()));
+                }
+            }
+
+            // Create pie chart
+            const ctx = document.getElementById('pieChart').getContext('2d');
+            const pieChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Total Sales',
+                        data: data,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.5)',
+                            'rgba(54, 162, 235, 0.5)',
+                            // Add more colors as needed
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            // Add more colors as needed
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    // Add options as needed
+                }
+            });
+        }
+
+        // Call the function to create the pie chart
+        createPieChart();
 
 const monthlySalesData = {
     labels: ['January', 'February', 'March', 'April', 'May', 'June'], // Replace with your month labels
@@ -133,19 +170,6 @@ const monthlySalesData = {
     }]
 };
 
-// Render pie chart
-const categorySalesChart = new Chart(document.getElementById('categorySalesChart'), {
-    type: 'pie',
-    data: categorySalesData,
-    options: {}
-});
-
-// Render bar chart
-const monthlySalesChart = new Chart(document.getElementById('monthlySalesChart'), {
-    type: 'bar', // Change the type to bar
-    data: monthlySalesData,
-    options: {}
-});
 
  document.addEventListener('DOMContentLoaded', function() {
         const viewOrderButtons = document.querySelectorAll('.view-order-btn');
