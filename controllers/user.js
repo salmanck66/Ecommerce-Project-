@@ -800,10 +800,10 @@ let userprofile =async (req, res) => {
   if (req.cookies.jwt) {
     let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
     var userId = tokenExracted.userId;
+    var userName = tokenExracted.userName;
   }
   const user =await User.find({_id:userId})
   const shippingAddress= await Order.find({user:userId})
-  const userName =user.userName
   const category =await Category.find()
   
   console.log("userprofile");

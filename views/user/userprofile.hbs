@@ -1,5 +1,5 @@
 <div class="container" style="margin-top: 2vh;">
-  <div class="bread-crumb flex-w p-l-25 p-r-15 p-t-10 p-lr-0-lg">
+  <div class="bread-crumb bcrumb flex-w p-l-25 p-r-15 p-t-10 p-lr-0-lg">
     <a href="/" class="stext-109 cl8 hov-cl1 trans-04">
       Home
       <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
@@ -81,6 +81,11 @@
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+  const push = document.getElementById("push")
+  if(push)
+  {
+    document.getElementById('pushed').textContent = "Wishlist is empty"
+  }
    const statusElements = document.querySelectorAll('.statuss');
     console.log(statusElements); // Check if statusElements is selecting the elements correctly
     // Loop through each status element
