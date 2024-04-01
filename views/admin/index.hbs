@@ -14,7 +14,7 @@
 					</ul>
 				</div>
 			</div>
-		<table id="salesTable">
+		<table id="salesTable" hidden>
 		<tr>
 			<th>Category</th>
 			<th>Total Sales</th>
@@ -22,6 +22,19 @@
 		{{#each datasles}}
 		<tr>
 			<td>{{this._id}}</td>
+			<td>{{this.totalSales}}</td>
+		</tr>
+		{{/each}}
+	</table>
+
+		<table id="salesTableMonthly">
+		<tr>
+			<th>month</th>
+			<th>Total Sales</th>
+		</tr>
+		{{#each monthlySalesData}}
+		<tr>
+			<td>{{this.month}}</td>
 			<td>{{this.totalSales}}</td>
 		</tr>
 		{{/each}}
@@ -158,17 +171,46 @@
 
         // Call the function to create the pie chart
         createPieChart();
+        function createMonthlySalesChartFromTable() {
+            const table = document.getElementById('salesTableMonthly');
+            const rows = table.querySelectorAll('tr');
+            const labels = [];
+            const data = [];
 
-const monthlySalesData = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June'], // Replace with your month labels
-    datasets: [{
-        label: 'Monthly Sales',
-        data: [1000, 1200, 1500, 1800, 2000, 2200], // Replace with your sales data for each month
-        backgroundColor: 'rgba(255, 159, 64, 0.5)', // Color for bars
-        borderColor: 'rgba(255, 159, 64, 1)',
-        borderWidth: 1
-    }]
-};
+            // Skip the first row (header row)
+            for (let i = 1; i < rows.length; i++) {
+                const columns = rows[i].querySelectorAll('td');
+                const month = columns[0].textContent;
+                const totalSales = parseInt(columns[1].textContent);
+                labels.push(month);
+                data.push(totalSales);
+            }
+
+            const ctx = document.getElementById('monthlySalesChart').getContext('2d');
+            const monthlySalesChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Monthly Sales',
+                        data: data,
+                        backgroundColor: 'rgba(255, 159, 64, 0.5)',
+                        borderColor: 'rgba(255, 159, 64, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // Call the function to extract data from the table and create the chart
+        createMonthlySalesChartFromTable();
 
 
  document.addEventListener('DOMContentLoaded', function() {

@@ -158,10 +158,33 @@ let homePage = async (req, res) => {
   }
 ]);
 
+const monthlySalesData = await Order.aggregate([
+  {
+      $group: {
+          _id: { $month: '$orderDate' }, // Group by month
+          totalSales: { $sum: '$totalAmount' } // Calculate total sales for each month
+      }
+  },
+  {
+      $project: {
+          month: '$_id',
+          totalSales: 1,
+          _id: 0
+      }
+  }
+]);
 
+// Convert month numbers to month names
+const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const monthlySalesChartData = monthlySalesData.map(item => ({
+  month: months[item.month - 1], // Adjust month index to match array index
+  salesAmount: item.totalSales
+}));
+
+console.log(monthlySalesData);
   console.log("admin order management");
   const visit = await Visit.findOne();
-  res.render('admin/index', { layout: "adminLayout.hbs", order, visit, totalAmount: result[0]?.totalAmount || 0,datasles});
+  res.render('admin/index', { layout: "adminLayout.hbs", order, visit, totalAmount: result[0]?.totalAmount || 0,datasles,monthlySalesData});
 };
 let logIn = (req, res) => {
     console.log("admin login page");
