@@ -27,7 +27,7 @@
 		{{/each}}
 	</table>
 
-		<table id="salesTableMonthly">
+		<table id="salesTableMonthly" hidden>
 		<tr>
 			<th>month</th>
 			<th>Total Sales</th>
@@ -104,11 +104,15 @@
 					<div class="head ps-4">
 						<h3>Statitics</h3>
 					</div>
+					
 					<ul class="todo-list bg-white">
 						<li class="card bg-white">
+							<p>Monthly Sales</p>
 						<canvas id="monthlySalesChart"></canvas>
 						</li>
-						<li class="card bg-white" sty>
+						
+						<li class="card bg-white" >
+							<p>Sales By Category</p>
 							<canvas id="pieChart"></canvas>
 						
 						</li>
