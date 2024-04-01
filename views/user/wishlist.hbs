@@ -1,4 +1,4 @@
-<div class="container"  ">
+<div class="container"  >
   <div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
     <a href="/" class="stext-109 cl8 hov-cl1 trans-04">
       Home
@@ -11,10 +11,11 @@
 </div>
 
 <div class="container py-5 mt-0">
-  {{#if wishlists}}
+  {{#if wishlists.[0]}}
     {{#each wishlists}}
       <div class="row ">
         <div class="col-lg-8 col-12 mx-auto">
+          
           <!-- List group-->
           <ul class="list-group shadow">
             <!-- list group item-->
@@ -35,7 +36,7 @@
                         View Product
                       </a>
                       <a href="#" class="btn flex-c-m cl2 remove-from-wishlist" data-product-id="{{this._id}}">
-                        Remove From Wishlist
+                        Remove 
                       </a>
                     </div>
                   </div>
@@ -44,18 +45,20 @@
                 <hr>
               {{/each}}
               <!-- End -->
+              <p id="pushed" class="text-center mt-2"></p>
             </li>
           </ul>
+          
         </div>
       </div>
     {{/each}}
   {{else}}
-    <p>No wishlist found.</p>
+    <p >No wishlist found.</p>
   {{/if}}
   {{#if wishlists}}
     {{#each wishlists}}
       {{#unless products.length}}
-        <p class="text-center" style="margin-top: 20px; z-index: 9999; position: relative;">Wishlist Is Empty.</p>
+        <p class="text-center" style="margin-top: 20px; z-index: 9999; position: relative; " id="push" ></p>
       {{/unless}}
     {{/each}}
   {{/if}}
@@ -63,6 +66,11 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
+    const push = document.getElementById("push")
+  if(push)
+  {
+    document.getElementById('pushed').textContent = "Wishlist is empty"
+  }
     const removeFromWishlistButtons = document.querySelectorAll('.remove-from-wishlist');
     removeFromWishlistButtons.forEach(button => {
       button.addEventListener('click', async (event) => {
@@ -87,4 +95,7 @@
       });
     });
   });
+
+
+
 </script>
