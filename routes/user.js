@@ -79,5 +79,6 @@ router.delete('/wishlist/:productId',authMiddleware,userControllers.delwish)
 router.delete('/cancel-order/:orderId',authMiddleware,userControllers.delorder)
 
 router.post('/payment',userControllers.paymetController)
+router.post('/mailsend',userControllers.sendmail)
 
 module.exports=router;

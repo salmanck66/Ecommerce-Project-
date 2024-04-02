@@ -99,34 +99,69 @@
 	</section>	
 	    <script>
         // Function to handle form submission
-        document.getElementById('contact-form').addEventListener('submit', function (event) {
-            event.preventDefault();
-            // Validate form
-            if (this.checkValidity()) {
-                // Send email
-                sendEmail();
-            } else {
-                // Form is invalid
-                // Show validation error message or use browser's built-in validation messages
-            }
-        });
+        // Function to handle form submission
+document.getElementById('contact-form').addEventListener('submit', function (event) {
+    event.preventDefault();
+    // Validate form
+    if (this.checkValidity()) {
+        // Get form data
+        const formData = new FormData(this);
+        const email = formData.get('email');
+        const msg = formData.get('msg');
+        // Send email
+        sendEmail(email, msg);
+    } else {
+        // Form is invalid
+        // Show validation error message or use browser's built-in validation messages
+    }
+});
 
-        // Function to send email
-        function sendEmail() {
-            // Dummy email sending process
-            // You should replace this with your actual email sending process
-            // Here, I'm using a setTimeout to simulate sending email process
-            setTimeout(function () {
-                // Show SweetAlert notification
+// Function to send email
+function sendEmail(email, msg) {
+    // Create an XMLHttpRequest object
+    const xhr = new XMLHttpRequest();
+
+    // Define POST request parameters
+    xhr.open('POST', '/mailsend', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+
+    // Define callback function when request completes
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            const response = JSON.parse(xhr.responseText);
+            if (response.status === 'success') {
+                // Show success message
                 Swal.fire({
                     title: 'Success!',
-                    text: 'Your message will be replied ASAP.',
+                    text: 'Your message has been sent.',
                     icon: 'success',
                     confirmButtonText: 'OK'
                 });
                 // Reset form after successful submission
                 document.getElementById('contact-form').reset();
-            }, 2000); // 2000 milliseconds = 2 seconds
+            } else {
+                // Show error message
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Failed to send message. Please try again later.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            }
+        } else {
+            // Show error message
+            Swal.fire({
+                title: 'Error!',
+                text: 'An unexpected error occurred. Please try again later.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
         }
+    };
+
+    // Send request with JSON payload
+    xhr.send(JSON.stringify({ email: email, msg: msg }));
+}
+
     </script>
 	    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>

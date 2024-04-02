@@ -1157,8 +1157,40 @@ const sign = async (req, res) => {
   }
 };
 
+let  sendmail = async(req, res) => {
+  const { email, msg } = req.body;
 
-module.exports = {sign,teamfilter,searchproduct,delwish,paymetController,tracking,updateprofile,showCategoryProducts,showcatprod,search,
+  // Create a Nodemailer transporter
+  let transporter = nodemailer.createTransport({
+      service: 'Gmail', // Change this to your email service provider
+      auth: {
+          user: process.env.EMAIL_USER, // Change this to your email address
+          pass: process.env.APP_SPECIFIC_PASSWORD // Change this to your email password
+      }
+  });
+
+  // Setup email data
+  let mailOptions = {
+      from: process.env.EMAIL_USER, // Sender address
+      to: email, // Change this to recipient's email address
+      subject: 'Contact Form Submission',
+      text: `Message:\n${msg}`
+  };
+
+  // Send email
+  transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+          console.log(error);
+          res.json({ status: 'error' });
+      } else {
+          console.log('Email sent: ' + info.response);
+          res.json({ status: 'success' });
+      }
+  });
+}
+
+
+module.exports = {sendmail,sign,teamfilter,searchproduct,delwish,paymetController,tracking,updateprofile,showCategoryProducts,showcatprod,search,
   payment,sort,orderstatus,delorder,
   ResetPassword,
   homePage,
