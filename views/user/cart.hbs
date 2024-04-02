@@ -22,6 +22,21 @@
   border-color: #007bff; /* Add focus border color */
   box-shadow: 0 0 0 0.15rem rgba(0, 123, 255, 0.25); /* Add focus box shadow */
 }
+  .catrr {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 30vh;
+  }
+  .nbv {
+    padding: 10px 20px;
+
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
 </style>
 <!-- Breadcrumb -->
 <div class="container bcrumb">
@@ -38,6 +53,8 @@
 </div>
 
 <!-- Shoping Cart -->
+{{#if items.[0]}}
+
 <div class="container">
     <div class="row">
         <div class=" col-lg-9 col-md-8 col-xl-7 m-lr-auto m-b-50">
@@ -143,6 +160,14 @@
         </div>
     </div>
 </div>
+{{else}}
+<div class="container catrr justify-content-center align-content-center align-items-center">
+  <div>
+    <p>Oops Cart Is Empty !</p>
+  </div>
+  <a href="product" class="btn btn-dark nbv">Go to shop</a>
+</div>
+{{/if}}
 
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <!-- JavaScript -->
