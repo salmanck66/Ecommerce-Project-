@@ -212,6 +212,16 @@ function codeApply() {
 
         // Call the function when the page loads
         checkQuantityMatchStock();
+        $('#tcoupon').on('input', function() {
+    var inputValue = $(this).val();
+    console.log(inputValue)
+    var capitalizedValue = capitalizeFirstLetter(inputValue);
+    $(this).val(capitalizedValue);
+  });
+  
+  function capitalizeFirstLetter(inputString) {
+    return inputString.toUpperCase()
+  }
     });
 
     $('.qtyinput').on('change', function() {
