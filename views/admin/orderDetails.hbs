@@ -26,7 +26,7 @@
                         <p class="card-text">Order ID: {{ order.orderId }}</p>
                         <span class="badge rounded-pill badge-danger mt-1 p-2">{{this.tags}}</span>
                         <p class="card-text">Customer Name: {{ order.shippingAddress.firstName }} {{ order.shippingAddress.lastName }}</p>
-                        <p class="card-text">Email: {{ order.shippingAddress.email}}</p>
+                        <p class="card-text" id="mail">Email: {{ order.shippingAddress.email}}</p>
                         <p class="card-text">Phone Number: {{ order.shippingAddress.phonenumber}}</p>
                         <p class="card-text">Address: {{ order.shippingAddress.address }}</p>
                         <p class="card-text">Address 2: {{ order.shippingAddress.address2 }}</p>
@@ -74,6 +74,7 @@
    const updateStatusButton = document.getElementById('update-status-button');
     const statusDropdown = document.getElementById('status-dropdown');
     const currentStatusElement = document.getElementById('current-status');
+    const mail =document.getElementById('mail').textContent
 
     updateStatusButton.addEventListener('click', () => {
         const orderId = '{{ order.orderId }}';
@@ -81,7 +82,8 @@
         
         axios.post('/update-status', {
             orderId: orderId,
-            newStatus: newStatus
+            newStatus: newStatus,
+            mail: mail
         })
         .then(response => {
             console.log('Delivery status updated successfully:', response.data);

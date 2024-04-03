@@ -64,7 +64,7 @@ const sign = async (req, res) => {
   const { otp, phone } = req.body;
   console.log(req.body);
 
-  try {
+  try { 
     // Find the user by phone number
     const user = await User.findOne({ phoneNumber: phone });
     console.log(user);

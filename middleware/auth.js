@@ -23,7 +23,6 @@ const authMiddlewareAdmin = async (req, res, next) => {
         console.log("calling Middleware");
 
         if (req.cookies.admin_jwt) {
-            console.log("!")
             const tokenExracted = await verifyAdmin(req.cookies.admin_jwt);
             const CheckAdmin = await User.findById(tokenExracted.userId)
             console.log(CheckAdmin.isAdmin)
@@ -35,7 +34,6 @@ const authMiddlewareAdmin = async (req, res, next) => {
             {
             console.log("err1")
             return res.redirect('/admin');
-            
             }
         }
         // If JWT token doesn't exist or user role is not 'user', redirect to login page
