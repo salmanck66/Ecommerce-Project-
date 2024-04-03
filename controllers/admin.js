@@ -10,6 +10,7 @@ const { product } = require('./user');
 const Coupon = require('../models/coupon');
 const Banner = require('../models/banner');
 const Order = require('../models/order');
+const nodemailer = require('nodemailer');
 const Visit = require('../models/visit');
 const User = require('../models/users');
 const Userhelpers = require('../helpers/userhelper');
@@ -842,6 +843,85 @@ let orderview = async (req, res) => {
     res.status(500).send('Error retrieving order details');
 }
 }
+let orderstatus = async (req, res) => {
+  const { orderId, newStatus, mail } = req.body;
+  console.log(orderId, newStatus, mail);
+
+  try {
+      const order = await Order.findOne({ orderId: orderId });
+      if (!order) {
+          return res.status(404).json({ error: 'Order not found' });
+      }
+      console.log(order);
+      const transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+              user: process.env.EMAIL_USER,
+              pass: process.env.APP_SPECIFIC_PASSWORD // Use the generated app-specific password here
+          }
+      });
+
+      let emailText = '';
+      switch (newStatus) {
+          case 'Packed':
+              emailText = 'Your order has been packed and is ready for shipping.';
+              break;
+          case 'Picked':
+              emailText = 'Your order has been picked by courier ';
+              break;
+          case 'In-Transit':
+              emailText = 'Your order has been shipped. It is on its way to you.';
+              break;
+          case 'Delivered':
+              emailText = 'Your order has been delivered. We hope you enjoy your purchase!';
+              break;
+          case 'Out For Delivery':
+              emailText = 'Your order is out for delivery';
+              break;
+          case 'Cancelled':
+              emailText = 'Your order has been cancelled.';
+              break;
+          default:
+              break;
+      }
+      console.log(emailText);
+
+      // if (order.Status !== "Delivered") {
+      //     return res.json({ message: 'Order Cannot Be Cancelled After Its Being Shipped' });
+      // }
+
+      const updatedOrder = await Order.findOneAndUpdate(
+          { orderId: orderId },
+          { $set: { Status: newStatus } },
+          { new: true }
+      );
+      console.log(updatedOrder);
+      if (updatedOrder) {
+          console.log("mail fun");
+          // Send email to customer
+          const mailOptions = {
+              from: process.env.EMAIL_USER,
+              to: mail,
+              subject: 'Order Status Update',
+              text: emailText
+          };
+          await transporter.sendMail(mailOptions);
+
+          return res.json({ message: 'Delivery status updated successfully', order: updatedOrder });
+      } else {
+          return res.status(500).json({ error: 'Failed to update delivery status' });
+      }
+  } catch (error) {
+      console.error('Error updating delivery status:', error);
+      return res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+
+
+
+
+
  let placeorder = async (req, res) => {
   try {
     
@@ -907,4 +987,4 @@ const downloadcsv = async (req, res) => {
 
 
 
-module.exports = {downloadcsv,outadmin,sign,loginRequestOTP,loginotp,orderview,updatebannerpost,updatebanner,deletebanner,addbanner,editCoupon,updatecoupon,deletecoupon,addCoupon,updatesubcategory,subcategoryeditpage,categoryeditpage,editproduct,deleteprod,deletesubcat,updatecategory,producteditpage,updateProduct,addSubcategory,deletecat,postcategory,postaddproduct,homePage,logIn,Forget,order,productm,addproduct,coupon,categories,banner,payments,settings,profile,placeorder}
+module.exports = {orderstatus,downloadcsv,outadmin,sign,loginRequestOTP,loginotp,orderview,updatebannerpost,updatebanner,deletebanner,addbanner,editCoupon,updatecoupon,deletecoupon,addCoupon,updatesubcategory,subcategoryeditpage,categoryeditpage,editproduct,deleteprod,deletesubcat,updatecategory,producteditpage,updateProduct,addSubcategory,deletecat,postcategory,postaddproduct,homePage,logIn,Forget,order,productm,addproduct,coupon,categories,banner,payments,settings,profile,placeorder}

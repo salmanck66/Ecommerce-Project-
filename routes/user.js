@@ -42,7 +42,7 @@ router.get('/signotp',userControllers.loginotp)
 router.get('/trackorder',userControllers.tracking)
 router.get('/search',userControllers.search)
 router.post('/searchproduct',userControllers.searchproduct)
-router.post('/update-status',userControllers.orderstatus)
+
 
 router.get('/category/:categoryName' , userControllers.showCategoryProducts )
 router.get('/categoryget' , userControllers.showcatprod )

@@ -56,7 +56,7 @@ router.delete('/delete-banner/:id',adminControllers.deletebanner)
 router.post('/update-banner', upload.single('bannerimage'), adminControllers.updatebannerpost);
 
 router.post('/place-order',adminControllers.placeorder);
-
+router.post('/update-status',adminControllers.orderstatus)
 
 
 
