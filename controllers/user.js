@@ -290,17 +290,21 @@ let productdetail = async (req, res) => {
       var userName = tokenExracted.userName;
       var userId = tokenExracted.userId;
       console.log(userName);
+
     }
     let cart = await  Cart.findOne({ user:userId });
     const productsss = await Product.findById(id);
-    console.log(cart.items,productsss);
 
-    cart.items.forEach(element => {
-      if(productsss._id.equals(element.product._id))
-      {
-        productsss.stock[element.size] -=element.quantity
-      }
-    })
+    if(userName)
+    {
+      cart.items.forEach(element => {
+        if(productsss._id.equals(element.product._id))
+        {
+          productsss.stock[element.size] -=element.quantity
+        }
+      })
+    }
+
     
 
     const related = await Product.find({ category: productsss.category, _id: { $ne: id } }); // Excluding the currently viewed product from related
