@@ -51,7 +51,7 @@
     </button>
     <div class="dropdown-menu" aria-labelledby="sortDropdownMenuButton">
         <a class="dropdown-item" href="#" id="sortPriceAsc">Price : Low to High</a>
-        <a class="dropdown-item" href="#" id="sortPriceDesc">Price : High to Low</a>
+        <a class="dropdown-item" href="#" id="sortPriceDescs">Price : High to Low</a>
         <a class="dropdown-item" href="#" id="sortNewness">Latest</a>
     </div>
 </div>
@@ -185,7 +185,7 @@
     await sortProducts('price_asc');
 });
 
-document.getElementById('sortPriceDesc').addEventListener('click', async () => {
+document.getElementById('sortPriceDescs').addEventListener('click', async () => {
     await sortProducts('price_desc');
 });
 

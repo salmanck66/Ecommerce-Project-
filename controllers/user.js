@@ -998,6 +998,7 @@ let search =async (req, res) => {
 }
 let sort =async (req, res) => {
   const { sortType } = req.params;
+  console.log(sortType);
 
   // Sort products based on sortType
   let products = await Product.find({})
