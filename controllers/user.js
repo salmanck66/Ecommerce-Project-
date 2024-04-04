@@ -292,15 +292,23 @@ let productdetail = async (req, res) => {
       console.log(userName);
     }
     let cart = await  Cart.findOne({ user:userId });
-
- 
     const productsss = await Product.findById(id);
+    console.log(cart.items,productsss);
+
+    cart.items.forEach(element => {
+      if(productsss._id.equals(element.product._id))
+      {
+        productsss.stock[element.size] -=element.quantity
+      }
+    })
+    
+
     const related = await Product.find({ category: productsss.category, _id: { $ne: id } }); // Excluding the currently viewed product from related
-    console.log(productsss);
+
     res.render("user/product-detail", { layout: "layout.hbs", productsss, userName, userId, related });
 
   } catch (error) {
-    console.log(error);
+    console.log(error); 
   }
 };
 
@@ -655,6 +663,8 @@ let addtocart = async (req, res) => {
     
 
       await cart.save();
+
+
       
       res.render("user/cart",{ items: cartItems, totalPrice: totalPrice,userName,coupon,category});
 

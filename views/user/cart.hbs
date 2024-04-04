@@ -71,15 +71,17 @@
                         {{#each items}}
                         <tr class="table_row">
                             <td class="column-1">
+                                <a href="productdetail?id={{this.productId}}">
                                 <div class="how-itemcart1">
                                     <img src="{{this.productImage.[0]}}" alt="IMG">
-                                </div>
+                                </div></a>
                                 <form action="removeItem" method="post">
                                     <input name="id" value="{{this.productId}}" hidden type="text">
                                     <input name="size" value="{{this.size}}" hidden type="text">
                                     <button class="btn" type="submit">Remove</button>
                                 </form>
                             </td>
+                            
                             <td class="column-2">{{this.productName}} <br>Size : {{this.size}}</td>
                             <td class="column-2 prod" hidden>{{this.productId}}</td>
                             <td class="column-8 size" hidden>{{this.size}}</td>
