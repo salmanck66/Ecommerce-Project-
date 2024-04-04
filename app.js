@@ -73,6 +73,10 @@ app.engine('hbs',
 
 app.use('/',userRouter)
 app.use('/',adminRouter)
+app.use((req,res,next)=>
+{
+  res.status(404).render("error",{message:"Not Found",layout:false});
+})
 
 
 mongoose.connect(config.CONNECTION_STRING,{
