@@ -9,6 +9,7 @@ const Coupon = require("../models/coupon");
 const User = require("../models/users");
 const Order = require("../models/order");
 const Wishlist = require("../models/wishlist");
+const Subscription = require("../models/subscription");
 const { session } = require("passport");
 const url = require('url');
 const uuid = require('uuid');
@@ -72,6 +73,23 @@ let ResetPasswordPostFinal = async(req,res)=>{
     res.render("error", { print: error });
   }
 };
+let subscribe = async (req,res)=>
+{
+  const { email } = req.body;
+  console.log(email);
+
+  try {
+    // Save the email to MongoDB
+    const subscription = new Subscription({ email });
+    await subscription.save();
+
+    console.log('Email saved:', email);
+    res.status(200).json({ message: 'Subscription successful' });
+  } catch (err) {
+    console.error('Error saving email:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
 
 let verifyotp =async(req,res,email)=>{
 
@@ -1228,6 +1246,6 @@ module.exports = {sendmail,sign,teamfilter,searchproduct,delwish,paymetControlle
   loginPostPage,shippingadr,
   loginGetPage,
   logoutPage,verifyotp,
-  addtocart,loginotp,delAddress,
+  addtocart,loginotp,delAddress,subscribe,
   viewCart,updatecart,removeCartItem,addtowishlist,discount  ,pcheckout,fcheckout,orderview,ResetPasswordPost,ResetPasswordPostFinal,loginRequestOTP,wishlistprofile
 };

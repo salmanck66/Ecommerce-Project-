@@ -71,6 +71,7 @@ router.get('/resetpass',userControllers.ResetPassword)
 router.post('/resetpassload',userControllers.ResetPasswordPostFinal)
 router.post('/forgot-password',userControllers.ResetPasswordPost)
 router.post('/verify-otp-reset-pass',userControllers.verifyotp)
+router.post('/subscribe',userControllers.subscribe)
 
 router.post('/send-otp-phone',userControllers.loginRequestOTP)
 router.post('/login-with-otp',userControllers.sign)
