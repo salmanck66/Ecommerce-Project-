@@ -60,7 +60,7 @@
 <div class="form-floating mb-3">
     <input type="text" class="form-control" name="otp" id="otp" placeholder="OTP" disabled>
     <label for="otp" class="form-label">OTP</label>
-    <p class="ereoorr" hidden>Invalid OTP</p>
+
     <button id="generateBtn" class="btn btn-sm btn-dark mt-3" onclick="generateOTP()" type="button" disabled>Generate OTP</button>
     <button id="VerifyBtn" class="btn btn-sm btn-dark mt-3" onclick="verifyOTP()" type="button" hidden>Verify OTP</button>
   
@@ -86,7 +86,7 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-function showToasts(message, type) {
+function showToast(message, type) {
             Toastify({
                 text: message,
                 duration: 3000,
@@ -111,7 +111,7 @@ function verifyOTP() {
             document.getElementById('resetPasswordBtn').removeAttribute("disabled","disabled") // Display success message
         } else {
             console.error('Error verifying OTP:', xhr.responseText);
-            showToasts("Invalid OTP","error")
+            showToast("Invalid OTP","error")
         }
     };
     xhr.onerror = function () {
