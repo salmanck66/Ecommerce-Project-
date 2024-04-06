@@ -18,7 +18,7 @@
 		</div>
 	</div>
 		
-
+<p id="username" hidden>{{userName}}</p>
 	<!-- Product Detail -->
 	<section class="sec-product-detail bg0 p-t-65 p-b-60">
 		<div class="container">
@@ -489,6 +489,12 @@ const stock = parseInt(document.getElementById('stockDisplay').textContent);
 
     addToCartForm.addEventListener('submit', async (event) => {
       event.preventDefault();
+    const username = document.getElementById("username").textContent
+    console.log(username)
+    if(username.length < 1 )
+    {
+        window.location.href = '/login'
+    }
 
     const stock = parseInt(document.getElementById('stockDisplay').textContent);
     const size = addToCartForm.querySelector('select[name="size"]').value;
