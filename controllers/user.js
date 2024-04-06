@@ -32,7 +32,7 @@ let loginGetPage = async (req, res) => {
   try {
     if (req.cookies.jwt) {
       let tokenExracted = await verifyUser(req.cookies.jwt);
-      if (tokenExracted.role === "user") {
+      if (tokenExracted) {
         return res.redirect("/");
       }
     }
@@ -90,6 +90,12 @@ let verifyotp =async(req,res,email)=>{
   }
 }
 let loginotp = async  (req, res) => {
+  if (req.cookies.jwt) {
+    let tokenExracted = await verifyUser(req.cookies.jwt);
+    if (tokenExracted) {
+      return res.redirect("/");
+    }
+  }
   res.render("user/loginotp",{layout:false})
 }
 
@@ -874,15 +880,35 @@ let orderview = async (req, res) => {
  
 };
 
-let signup = (req, res) => {
+let signup =async (req, res) => {
+  if (req.cookies.jwt) {
+    let tokenExracted = await verifyUser(req.cookies.jwt);
+    if (tokenExracted) {
+      return res.redirect("/");
+    }
+  }
+  
   console.log("signup");
   res.render("user/signup", { layout: false });
 };
-let tracking = (req, res) => {
+let tracking = async(req, res) => {
+  if (req.cookies.jwt) {
+    let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
+    var userName = tokenExracted.userName;
+    console.log(userName);
+  }
+  const category = await Category.find({})
+
   console.log("tracking");
-  res.render("user/tracking", {});
+  res.render("user/tracking", {userName,});
 };
-let forgetpass = (req, res) => {
+let forgetpass = async(req, res) => {
+  if (req.cookies.jwt) {
+    let tokenExracted = await verifyUser(req.cookies.jwt);
+    if (tokenExracted) {
+      return res.redirect("/");
+    }
+  }
   console.log("forgetpass");
   res.render("user/forget", { layout: false });
 };
