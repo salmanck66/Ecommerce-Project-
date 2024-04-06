@@ -246,9 +246,18 @@ let homePage = async (req, res) => {
     console.log("Having User");
     const products = await Product.aggregate([{$sort:{salecount:-1}},{ $limit: 20 }])
     const category = await Category.find();
+
+    const cart= await Cart.find({user:userId})
+    const wishlist= await Wishlist.find({user:userId})
+    const itemsLength = cart[0].items.length;
+    const WishitemsLength = wishlist[0].products.length;
+
+ 
+
     const banner = await Banner.find();
     const userln = await User.find();
     return res.render("user/index", {
+      cartln:itemsLength,wishln:WishitemsLength,
       userId,userln,
       userName,
       category,
@@ -262,7 +271,7 @@ let homePage = async (req, res) => {
     const category = await Category.find();
     const banner = await Banner.find();
     const users = await User.find();
-    res.render("user/index", { data: products, category, banner,userId });
+    res.render("user/index", { data: products, category, banner,userId,cartln:0,wishln:0 });
   }
 };
 
