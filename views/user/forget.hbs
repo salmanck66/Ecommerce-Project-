@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jcclub Admin| Forget Password</title>
+    <title>Jcclub| Forget Password</title>
     <link rel="stylesheet" href="https://unpkg.com/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://unpkg.com/bs-brain@2.0.3/components/logins/login-6/assets/css/login-6.css">
     <style>
@@ -58,8 +58,9 @@
                                     </div>
                                     <div class="col-12">
 <div class="form-floating mb-3">
-    <input type="text" class="form-control" name="otp" id="otp" placeholder="OTP">
+    <input type="text" class="form-control" name="otp" id="otp" placeholder="OTP" disabled>
     <label for="otp" class="form-label">OTP</label>
+    <p class="ereoorr" hidden>Invalid OTP</p>
     <button id="generateBtn" class="btn btn-sm btn-dark mt-3" onclick="generateOTP()" type="button" disabled>Generate OTP</button>
     <button id="VerifyBtn" class="btn btn-sm btn-dark mt-3" onclick="verifyOTP()" type="button" hidden>Verify OTP</button>
   
@@ -85,6 +86,16 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+function showToasts(message, type) {
+            Toastify({
+                text: message,
+                duration: 3000,
+                close: false,
+                gravity: "bottom", // `top` or `bottom`
+                position: "right", // `left`, `center` or `right`
+                backgroundColor: type === "error" ? "#ff4444" : "#33cc33",
+            }).showToast();
+        }
 function verifyOTP() {
     var otp = document.getElementById('otp').value;
     var xhr = new XMLHttpRequest();
@@ -100,6 +111,7 @@ function verifyOTP() {
             document.getElementById('resetPasswordBtn').removeAttribute("disabled","disabled") // Display success message
         } else {
             console.error('Error verifying OTP:', xhr.responseText);
+            showToasts("Invalid OTP","error")
         }
     };
     xhr.onerror = function () {
@@ -151,12 +163,12 @@ function verifyOTP() {
             var password = document.getElementById('password').value;
             var confirmPassword = document.getElementById('confirmPassword').value;
             var generateBtn = document.getElementById('generateBtn');
-
-            if (email !== "" && password !== "" && confirmPassword !== "" && password === confirmPassword) {
-                generateBtn.removeAttribute('disabled');
-            } else {
-                generateBtn.setAttribute('disabled', 'disabled');
-            }
+            const emailRegex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
+if (email !== "" && password !== "" && confirmPassword !== "" && password === confirmPassword && emailRegex.test(email)) {
+    generateBtn.removeAttribute('disabled');
+} else {
+    generateBtn.setAttribute('disabled', 'disabled');
+}
         }
         function sendEmailForOTP() {
         var email = document.getElementById('email').value;
@@ -181,7 +193,7 @@ function verifyOTP() {
     // Hide the generate button
     var generateBtn = document.getElementById('generateBtn');
     generateBtn.style.display = 'none';
-
+    document.getElementById('otp').removeAttribute("disabled");
     // Show the timer
     var timer = document.getElementById('timer');
     timer.style.display = 'block';
@@ -211,23 +223,7 @@ function verifyOTP() {
         document.getElementById('password').addEventListener('input', enableGenerateButton);
         document.getElementById('confirmPassword').addEventListener('input', enableGenerateButton);
 
-        function toast()
-        {
-            Toastify({
-  text: "This is a toast",
-  duration: 3000,
-  destination: "https://github.com/apvarun/toastify-js",
-  newWindow: true,
-  close: true,
-  gravity: "top", // `top` or `bottom`
-  position: "left", // `left`, `center` or `right`
-  stopOnFocus: true, // Prevents dismissing of toast on hover
-  style: {
-    background: "linear-gradient(to right, #00b09b, #96c93d)",
-  },
-  onClick: function(){} // Callback after click
-}).showToast();
-        }
+
     </script>
 </body>
 </html>
