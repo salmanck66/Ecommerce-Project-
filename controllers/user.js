@@ -176,7 +176,7 @@ let loginPostPage = async (req, res) => {
     let resolved = await Userhelpers.loginHelper(req.body);
     if (resolved.invalidUsername) {
       console.log("invalid user name");
-      return res.render("user/login", {
+      return res.render("user/loginotp", {
         layout: false,
         mailError: "Mail id not registered",
         mail: req.body.mail,
@@ -184,14 +184,14 @@ let loginPostPage = async (req, res) => {
       });
     } else if (resolved.passwordMismatch) {
       console.log("password not match");
-      return res.render("user/login", {
+      return res.render("user/loginotp", {
         layout: false,
         passwordError: "Wrong Password",
         password: req.body.password,
         mail: req.body.mail,
       });
     } else if (resolved.blockedUser) {
-      return res.render("user/login", {
+      return res.render("user/loginotp", {
         layout: false,
         mailError: "This user has been temporarily BLOCKED",
         password: req.body.password,

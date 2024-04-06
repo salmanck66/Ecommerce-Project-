@@ -86,7 +86,7 @@
                 close: true,
                 gravity: "bottom", // `top` or `bottom`
                 position: "right", // `left`, `center` or `right`
-                backgroundColor: type === "error" ? "##FF0000" : "#33cc33",
+                backgroundColor: type === "error" ? "#AA0000" : "#33cc33",
             }).showToast();
         }
 
@@ -95,7 +95,7 @@
         var passwordError = $("#passwordError").text();
         if (mailError) {
             showToast(mailError, "error");
-        }
+        }or
         if (passwordError) {
             showToast(passwordError, "error");
         }
