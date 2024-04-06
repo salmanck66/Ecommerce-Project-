@@ -164,7 +164,7 @@ function verifyOTP() {
             var confirmPassword = document.getElementById('confirmPassword').value;
             var generateBtn = document.getElementById('generateBtn');
             const emailRegex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
-if (email !== "" && password !== "" && confirmPassword !== "" && password === confirmPassword && emailRegex.test(email)) {
+if (email !== "" && password !== "" && confirmPassword !== "" && password === confirmPassword && emailRegex.test(email) &&password.length >5) {
     generateBtn.removeAttribute('disabled');
 } else {
     generateBtn.setAttribute('disabled', 'disabled');
