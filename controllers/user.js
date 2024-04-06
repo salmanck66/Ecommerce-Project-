@@ -36,6 +36,7 @@ let loginGetPage = async (req, res) => {
         return res.redirect("/");
       }
     }
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
     res.render("user/login", { layout: false }); // Assuming layout is set to false for login page
   } catch (error) {
     console.error("Error retrieving user from JWT:", error);
@@ -96,6 +97,7 @@ let loginotp = async  (req, res) => {
       return res.redirect("/");
     }
   }
+  res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
   res.render("user/loginotp",{layout:false})
 }
 
