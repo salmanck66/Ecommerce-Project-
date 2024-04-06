@@ -247,10 +247,10 @@ let homePage = async (req, res) => {
     const products = await Product.aggregate([{$sort:{salecount:-1}},{ $limit: 20 }])
     const category = await Category.find();
 
-    const cart= await Cart.find({user:userId})
-    const wishlist= await Wishlist.find({user:userId})
-    const itemsLength = cart[0].items.length;
-    const WishitemsLength = wishlist[0].products.length;
+    const cartd= await Cart.find({user:userId})
+    const wishlistd= await Wishlist.find({user:userId})
+    const itemsLength = cartd[0].items.length;
+    const WishitemsLength = wishlistd[0].products.length;
 
  
 
@@ -289,33 +289,48 @@ let contact = async (req, res) => {
   if (req.cookies.jwt) {
     let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
     var userName = tokenExracted.userName;
-    console.log(userName);
+    var userId = tokenExracted.userId;
+    const cartd= await Cart.find({user:userId})
+    const wishlistd= await Wishlist.find({user:userId})
+    var itemsLength = cartd[0].items.length;
+    var WishitemsLength = wishlistd[0].products.length;
   }
+
   const category = await Category.find({})
   console.log("contact");
-  res.render("user/contact", { userName,layout: "layout" ,category});
+  res.render("user/contact", { userName,layout: "layout" ,category,cartln:itemsLength || 0,wishln:WishitemsLength || 0});
 };
 let about =async (req, res) => {
   if (req.cookies.jwt) {
     let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
     var userName = tokenExracted.userName;
     console.log(userName);
+    var userId = tokenExracted.userId;
+const cartd= await Cart.find({user:userId})
+const wishlistd= await Wishlist.find({user:userId})
+var itemsLength = cartd[0].items.length;
+var WishitemsLength = wishlistd[0].products.length;
   }
   console.log("about");
   const category = await Category.find({})
-  res.render("user/about",{userName,category});
+  res.render("user/about",{userName,category,cartln:itemsLength || 0,wishln:WishitemsLength || 0});
 };
 let product =async (req, res) => {
   if (req.cookies.jwt) {
     let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
     var userName = tokenExracted.userName;
-    var userId = tokenExracted.userId
+    var userId = tokenExracted.userId;
+const cartd= await Cart.find({user:userId})
+const wishlistd= await Wishlist.find({user:userId})
+var itemsLength = cartd[0].items.length;
+var WishitemsLength = wishlistd[0].products.length;
     console.log(userId);
   }
   console.log("product page");
   const category = await Category.find({})
   const product = await Product.find({})
-  res.render("user/product",{userName,category,product,userId});
+  res.render("user/product",{userName,category,product,userId,cartln:itemsLength || 0,wishln:WishitemsLength || 0
+  });
 };
 let productdetail = async (req, res) => {
   try {
@@ -324,6 +339,10 @@ let productdetail = async (req, res) => {
       let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
       var userName = tokenExracted.userName;
       var userId = tokenExracted.userId;
+const cartd= await Cart.find({user:userId})
+const wishlistd= await Wishlist.find({user:userId})
+var itemsLength = cartd[0].items.length;
+var WishitemsLength = wishlistd[0].products.length;
       console.log(userName);
 
     }
@@ -344,7 +363,7 @@ let productdetail = async (req, res) => {
 
     const related = await Product.find({ category: productsss.category, _id: { $ne: id } }); // Excluding the currently viewed product from related
 
-    res.render("user/product-detail", {category, layout: "layout.hbs", productsss, userName, userId, related });
+    res.render("user/product-detail", {category, layout: "layout.hbs", productsss, userName, userId, related,cartln:itemsLength || 0,wishln:WishitemsLength || 0 });
 
   } catch (error) {
     console.log(error); 

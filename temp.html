@@ -192,3 +192,11 @@ app.listen(config.PORT,()=>
 {
     console.log("Sever is listening");
 })
+
+,cartln:itemsLength || 0,wishln:WishitemsLength || 0
+
+var userId = tokenExracted.userId;
+const cartd= await Cart.find({user:userId})
+const wishlistd= await Wishlist.find({user:userId})
+var itemsLength = cartd[0].items.length;
+var WishitemsLength = wishlistd[0].products.length;
