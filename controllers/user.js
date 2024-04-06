@@ -305,11 +305,11 @@ let productdetail = async (req, res) => {
       })
     }
 
-    
+    let category = await Category.find({})
 
     const related = await Product.find({ category: productsss.category, _id: { $ne: id } }); // Excluding the currently viewed product from related
 
-    res.render("user/product-detail", { layout: "layout.hbs", productsss, userName, userId, related });
+    res.render("user/product-detail", {category, layout: "layout.hbs", productsss, userName, userId, related });
 
   } catch (error) {
     console.log(error); 
