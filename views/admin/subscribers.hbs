@@ -1,0 +1,74 @@
+    <div class="container mt-5">
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#promoModal">
+    Send Promotion Mail
+</button>
+        <h2>Subscriber List</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Subscription Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each subscribe}}
+                <tr>
+                    <td>{{this.email}}</td>
+                    <td>{{this.createdAt}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="modal fade" id="promoModal" tabindex="-1" aria-labelledby="promoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="promoModalLabel">Send Promotion Mail</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="promoForm">
+                    <div class="mb-3">
+                        <label for="subject" class="form-label">Subject</label>
+                        <input type="text" class="form-control" id="subject" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="htmlContent" class="form-label">HTML Content</label>
+                        <textarea class="form-control" id="htmlContent" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    // Handle form submission
+document.getElementById('promoForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    // Get subject and HTML content from the form
+    const subject = document.getElementById('subject').value;
+    const htmlContent = document.getElementById('htmlContent').value;
+
+    // Send subject and HTML content to the server
+    axios.post('/send-promotion-mail', { subject, htmlContent })
+        .then(response => {
+            console.log(response.data);
+            // Display success message or handle response as needed
+            // For example, close the modal or show a notification
+            $('#promoModal').modal('hide');
+        })
+        .catch(error => {
+            console.error('Error sending promotion mail:', error);
+            // Display error message or handle error as needed
+            // For example, show an alert
+            alert('Error sending promotion mail. Please try again later.');
+        });
+});
+
+</script>

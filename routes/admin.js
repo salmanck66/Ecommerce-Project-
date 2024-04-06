@@ -13,7 +13,7 @@ router.get('/admin',adminControllers.loginotp)
 router.post('/send-otp-phone-admin',adminControllers.loginRequestOTP)
 router.post('/login-with-otp-admin',adminControllers.sign)
 router.get('/adminlogout',adminControllers.outadmin)
-
+router.post('/send-promotion-mail',authMiddlewareAdmin,adminControllers.promomail)
 
 router.get('/dashboard',authMiddlewareAdmin,adminControllers.homePage)
 router.get('/orders',authMiddlewareAdmin,adminControllers.order)
@@ -26,6 +26,7 @@ router.get('/payments',authMiddlewareAdmin,adminControllers.payments)
 router.get('/settings',authMiddlewareAdmin,adminControllers.settings)
 router.get('/profile',authMiddlewareAdmin,adminControllers.profile)
 router.get('/order',authMiddlewareAdmin,adminControllers.orderview)
+router.get('/subscribers',authMiddlewareAdmin,adminControllers.subscribers)
 
 router.get('/downloadcsv',authMiddlewareAdmin,adminControllers.downloadcsv)
 

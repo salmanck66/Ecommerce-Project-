@@ -13,6 +13,7 @@ const Order = require('../models/order');
 const nodemailer = require('nodemailer');
 const Visit = require('../models/visit');
 const User = require('../models/users');
+const Subsribers = require('../models/subscription');
 const Userhelpers = require('../helpers/userhelper');
 const { signUser, verifyUser,verifyAdmin } = require("../middleware/jwt");
 global.config = config
@@ -22,7 +23,68 @@ const { log } = require('console');
 const moment = require('moment');
 
 
+const promomail = async  (req , res) =>{
+  try {
+    const { subject, htmlContent } = req.body;
+    console.log(subject,htmlContent);
+    // Fetch all subscriber email IDs from the database
+    const subscribers = await Subsribers.find({}, 'email');
 
+    // Set up nodemailer transporter
+    const transporter = nodemailer.createTransport({
+        // Your email service configuration
+        // For example, Gmail SMTP settings
+        service: 'gmail',
+        auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.APP_SPECIFIC_PASSWORD
+        }
+    });
+
+    // Define email options
+    const mailOptions = {
+        from: process.env.EMAIL_USER,
+        subject: subject,
+        // Your email content here
+        html: htmlContent 
+    };
+
+    // Send emails to each subscriber
+    subscribers.forEach(subscriber => {
+        mailOptions.to = subscriber.email;
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error('Error sending email:', error);
+            } else {
+                console.log('Email sent:', info.response);
+            }
+        });
+    });
+
+    // Respond with success message
+    res.status(200).send('Promotion emails sent successfully to all subscribers.');
+} catch (error) {
+    console.error('Error sending promotion emails:', error);
+    res.status(500).send('Internal Server Error');
+}
+}
+
+const subscribers = async (req, res) => {
+  try {
+    // Find subscribers and sort by createdAt field in descending order
+    const subscribe = await Subsribers.find({}).sort({ createdAt: -1 });
+
+    // Format the createdAt date field
+    subscribe.forEach(subscriber => {
+      subscriber.createdAt = subscriber.createdAt.toLocaleString(); // Example format: "4/6/2024, 2:00:00 PM"
+    });
+
+    res.status(200).render('admin/subscribers', { layout: "adminLayout.hbs", subscribe });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Internal Server Error");
+  }
+}
 
 function generateOTP() {
   return Math.floor(100000 + Math.random() * 900000);
@@ -987,4 +1049,4 @@ const downloadcsv = async (req, res) => {
 
 
 
-module.exports = {orderstatus,downloadcsv,outadmin,sign,loginRequestOTP,loginotp,orderview,updatebannerpost,updatebanner,deletebanner,addbanner,editCoupon,updatecoupon,deletecoupon,addCoupon,updatesubcategory,subcategoryeditpage,categoryeditpage,editproduct,deleteprod,deletesubcat,updatecategory,producteditpage,updateProduct,addSubcategory,deletecat,postcategory,postaddproduct,homePage,logIn,Forget,order,productm,addproduct,coupon,categories,banner,payments,settings,profile,placeorder}
+module.exports = {promomail,subscribers,orderstatus,downloadcsv,outadmin,sign,loginRequestOTP,loginotp,orderview,updatebannerpost,updatebanner,deletebanner,addbanner,editCoupon,updatecoupon,deletecoupon,addCoupon,updatesubcategory,subcategoryeditpage,categoryeditpage,editproduct,deleteprod,deletesubcat,updatecategory,producteditpage,updateProduct,addSubcategory,deletecat,postcategory,postaddproduct,homePage,logIn,Forget,order,productm,addproduct,coupon,categories,banner,payments,settings,profile,placeorder}
