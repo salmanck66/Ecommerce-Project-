@@ -1344,11 +1344,10 @@ let checkout = async (req, res) => {
     console.log(userId);
     const category = await Category.find();
     const cart = await Cart.findOne({ user: userId }).populate('items.product');
-    const address = await User.findOne({ _id: userId });
+    const adress = await User.findOne({ _id: userId });
 
-    console.log(address);
 
-    res.render("user/checkout", { userName, cart, address: address.addresses, category, cartln: itemsLength || 0, wishln: WishitemsLength || 0 });
+    res.render("user/checkout", { userName, cart, adress:adress.addresses, category, cartln: itemsLength || 0, wishln: WishitemsLength || 0 });
   } catch (error) {
     console.error('Error rendering checkout page:', error);
     res.render("error", { print: error });
