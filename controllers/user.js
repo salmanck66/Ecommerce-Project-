@@ -1152,23 +1152,62 @@ let showCategoryProducts =async (req, res) => {
     console.log(error)
   }
 }
-let showcatprod =async (req, res) => {
+// let showcatprod =async (req, res) => {
+//   try {
+//     const name = req.query.id
+//     const product =await Product.find({category:name})
+//     const category =await Category.find()
+//     let tokenExracted = await verifyUser(req.cookies.jwt);
+//     var userId = tokenExracted.userId;
+// const cartd= await Cart.find({user:userId})
+// const wishlistd= await Wishlist.find({user:userId})
+// var itemsLength = cartd[0].items.length;
+// var WishitemsLength = wishlistd[0].products.length;
+//     res.render("user/categorywise",{product,category,cartln:itemsLength || 0,wishln:WishitemsLength || 0
+//     })
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }
+
+let showcatprod = async (req, res) => {
   try {
-    const name = req.query.id
-    const product =await Product.find({category:name})
-    const category =await Category.find()
+    const name = req.query.id;
+    const product = await Product.find({ category: name });
+    const category = await Category.find();
     let tokenExracted = await verifyUser(req.cookies.jwt);
     var userId = tokenExracted.userId;
-const cartd= await Cart.find({user:userId})
-const wishlistd= await Wishlist.find({user:userId})
-var itemsLength = cartd[0].items.length;
-var WishitemsLength = wishlistd[0].products.length;
-    res.render("user/categorywise",{product,category,cartln:itemsLength || 0,wishln:WishitemsLength || 0
-    })
+    
+    // Fetch user's cart and wishlist
+    const cartd = await Cart.findOne({ user: userId });
+    const wishlistd = await Wishlist.findOne({ user: userId });
+    
+    // Initialize itemsLength and WishitemsLength to 0
+    let itemsLength = 0;
+    let WishitemsLength = 0;
+
+    // If cartd and wishlistd exist, update itemsLength and WishitemsLength
+    if (cartd) {
+      itemsLength = cartd.items.length;
+    }
+
+    if (wishlistd) {
+      WishitemsLength = wishlistd.products.length;
+    }
+
+    res.render("user/categorywise", {
+      product,
+      category,
+      cartln: itemsLength,
+      wishln: WishitemsLength
+    });
   } catch (error) {
     console.log(error);
+    // Handle errors gracefully
+    res.status(500).send("Internal Server Error");
   }
-}
+};
+
 
 let search =async (req, res) => {
   try {
