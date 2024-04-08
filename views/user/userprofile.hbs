@@ -16,7 +16,7 @@
         <div class="col-md-3 col-12 border-right">
             <div class="d-flex flex-column align-items-center text-center p-3 py-0">
                 <span class="font-weight-bold">Hello {{this.userName}}</span>
-                <span class="text-black-50">{{this.mail}}</span><span> </span></div>
+                <span class="text-black-50 " id="mailid">{{this.mail}}</span><span> </span></div>
                 <div class="row">
         <div class="col">
             <h2>Profile</h2>
@@ -343,6 +343,8 @@ function deleteaddr(index) {
     }
 function deleteOrder(orderId) {
 const statusElement = document.querySelector(`h5[data-id="${orderId}"]`);
+const mail = document.getElementById('mailid').textContent
+console.log(mail)
     if(statusElement.textContent === `Order Status: Cancelled`)
     {
           Swal.fire({
@@ -371,6 +373,7 @@ return
             // If user confirms, proceed with cancelling the order
             axios.post(`/update-status`, {
                     orderId: orderId,
+                    mail:mail,
                     newStatus: "Cancelled"
                 })
                 .then(response => {

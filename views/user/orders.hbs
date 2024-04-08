@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Your existing code...
     
     // Check if order status is "Cancelled" and hide cancel buttons
-    const orderStatus = "{{this.order.Status}}"; // Assuming you have access to order status
+    const orderStatus = {{this.order.Status}}; // Assuming you have access to order status
     if (orderStatus === "Cancelled") {
         const cancelButtons = document.querySelectorAll('.cancelorder');
         cancelButtons.forEach(button => {
