@@ -332,53 +332,158 @@ let payment =async (req, res) => {
   res.render("user/payments",{userName});
 };
 
-let contact = async (req, res) => {
-  if (req.cookies.jwt) {
-    let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
-    var userName = tokenExracted.userName;
-    var userId = tokenExracted.userId;
-    const cartd= await Cart.find({user:userId})
-    const wishlistd= await Wishlist.find({user:userId})
-    var itemsLength = cartd[0].items.length;
-    var WishitemsLength = wishlistd[0].products.length;
-  }
+// let contact = async (req, res) => {
+//   if (req.cookies.jwt) {
+//     let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
+//     var userName = tokenExracted.userName;
+//     var userId = tokenExracted.userId;
+//     const cartd= await Cart.find({user:userId})
+//     const wishlistd= await Wishlist.find({user:userId})
+//     var itemsLength = cartd[0].items.length;
+//     var WishitemsLength = wishlistd[0].products.length;
+//   }
 
-  const category = await Category.find({})
-  console.log("contact");
-  res.render("user/contact", { userName,layout: "layout" ,category,cartln:itemsLength || 0,wishln:WishitemsLength || 0});
-};
-let about =async (req, res) => {
-  if (req.cookies.jwt) {
-    let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
-    var userName = tokenExracted.userName;
-    console.log(userName);
-    var userId = tokenExracted.userId;
-const cartd= await Cart.find({user:userId})
-const wishlistd= await Wishlist.find({user:userId})
-var itemsLength = cartd[0].items.length;
-var WishitemsLength = wishlistd[0].products.length;
+//   const category = await Category.find({})
+//   console.log("contact");
+//   res.render("user/contact", { userName,layout: "layout" ,category,cartln:itemsLength || 0,wishln:WishitemsLength || 0});
+// };
+let contact = async (req, res) => {
+  try {
+    let userName;
+    let userId;
+    let itemsLength = 0;
+    let WishitemsLength = 0;
+
+    if (req.cookies.jwt) {
+      let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
+      userName = tokenExracted.userName;
+      userId = tokenExracted.userId;
+
+      const cartd = await Cart.findOne({ user: userId });
+      const wishlistd = await Wishlist.findOne({ user: userId });
+
+      if (cartd) {
+        itemsLength = cartd.items.length;
+      }
+      if (wishlistd) {
+        WishitemsLength = wishlistd.products.length;
+      }
+    }
+
+    const category = await Category.find({});
+    console.log("contact");
+    res.render("user/contact", { userName, layout: "layout", category, cartln: itemsLength || 0, wishln: WishitemsLength || 0 });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Internal Server Error");
   }
-  console.log("about");
-  const category = await Category.find({})
-  res.render("user/about",{userName,category,cartln:itemsLength || 0,wishln:WishitemsLength || 0});
 };
-let product =async (req, res) => {
-  if (req.cookies.jwt) {
-    let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
-    var userName = tokenExracted.userName;
-    var userId = tokenExracted.userId;
-const cartd= await Cart.find({user:userId})
-const wishlistd= await Wishlist.find({user:userId})
-var itemsLength = cartd[0].items.length;
-var WishitemsLength = wishlistd[0].products.length;
-    console.log(userId);
+
+// let about =async (req, res) => {
+//   if (req.cookies.jwt) {
+//     let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
+//     var userName = tokenExracted.userName;
+//     console.log(userName);
+//     var userId = tokenExracted.userId;
+// const cartd= await Cart.find({user:userId})
+// const wishlistd= await Wishlist.find({user:userId})
+// var itemsLength = cartd[0].items.length;
+// var WishitemsLength = wishlistd[0].products.length;
+//   }
+//   console.log("about");
+//   const category = await Category.find({})
+//   res.render("user/about",{userName,category,cartln:itemsLength || 0,wishln:WishitemsLength || 0});
+// };
+
+let about = async (req, res) => {
+  try {
+    let userName;
+    let userId;
+    let itemsLength = 0;
+    let WishitemsLength = 0;
+
+    if (req.cookies.jwt) {
+      let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
+      userName = tokenExracted.userName;
+      userId = tokenExracted.userId;
+
+      const cartd = await Cart.findOne({ user: userId });
+      const wishlistd = await Wishlist.findOne({ user: userId });
+
+      if (cartd) {
+        itemsLength = cartd.items.length;
+      }
+      if (wishlistd) {
+        WishitemsLength = wishlistd.products.length;
+      }
+    }
+
+    console.log("about");
+    const category = await Category.find({});
+    res.render("user/about", { userName, category, cartln: itemsLength || 0, wishln: WishitemsLength || 0 });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Internal Server Error");
   }
-  console.log("product page");
-  const category = await Category.find({})
-  const product = await Product.find({})
-  res.render("user/product",{userName,category,product,userId,cartln:itemsLength || 0,wishln:WishitemsLength || 0
-  });
 };
+
+
+
+// let product =async (req, res) => {
+//   if (req.cookies.jwt) {
+//     let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
+//     var userName = tokenExracted.userName;
+//     var userId = tokenExracted.userId;
+// const cartd= await Cart.find({user:userId})
+// const wishlistd= await Wishlist.find({user:userId})
+// var itemsLength = cartd[0].items.length;
+// var WishitemsLength = wishlistd[0].products.length;
+//     console.log(userId);
+//   }
+//   console.log("product page");
+//   const category = await Category.find({})
+//   const product = await Product.find({})
+//   res.render("user/product",{userName,category,product,userId,cartln:itemsLength || 0,wishln:WishitemsLength || 0
+//   });
+// };
+
+let product = async (req, res) => {
+  try {
+    let userName;
+    let userId;
+    let itemsLength = 0;
+    let WishitemsLength = 0;
+
+    if (req.cookies.jwt) {
+      let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
+      userName = tokenExracted.userName;
+      userId = tokenExracted.userId;
+      userName = tokenExracted.userName;
+
+      const cartd = await Cart.findOne({ user: userId });
+      const wishlistd = await Wishlist.findOne({ user: userId });
+
+      if (cartd) {
+        itemsLength = cartd.items.length;
+      }
+      if (wishlistd) {
+        WishitemsLength = wishlistd.products.length;
+      }
+    }
+
+    console.log("product page");
+    const category = await Category.find({});
+    const product = await Product.find({});
+
+    res.render("user/product", { userName, category, product, userId, cartln: itemsLength || 0, wishln: WishitemsLength || 0 });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+
+
 // let productdetail = async (req, res) => {
 //   try {
 //     const id = req.query.id
@@ -606,7 +711,12 @@ let fcheckout = async (req, res) => {
 
     // Get user's cart
     const cart = await Cart.findOne({ user: userId });
-
+    console.log(cart.items.length);
+    if(cart.items.length === 0){
+        return res.redirect('/cart')
+    }
+    
+    
 
     // Check and reduce stock of products
     for (const item of cart.items) {
@@ -669,9 +779,12 @@ let fcheckout = async (req, res) => {
     // Clear the cart items or mark them as purchased
     // This step depends on your application's logic
     let tokenExracted = await verifyUser(req.cookies.jwt);
+    const category = await Category.find()
+
+    const wishlistd = await Wishlist.findOne({ user: userId });
     
     // Send a success response
-    res.render('user/ordercomplete', {userId:tokenExracted.userId, message: 'Order completed successfully.', orderId: savedOrder.orderId });
+    res.render('user/ordercomplete', {wishln:wishlistd.products.length  ,cartln:0,category,userId:tokenExracted.userId, message: 'Order completed successfully.', orderId: savedOrder.orderId });
   } catch (error) {
     console.log(error);
     // Send an error response
@@ -777,66 +890,127 @@ let addtocart = async (req, res) => {
   }
 }
 
-  let viewCart = async (req, res) => {
-    try {
-      let tokenExracted = await verifyUser(req.cookies.jwt);
-      console.log(tokenExracted.userId);
-        var userName = tokenExracted.userName;
-        console.log(userName);
-        const category = await Category.find()
-      // Check if user is authenticated
-      if (!tokenExracted.userId) {
-        return res.status(401).redirect("/login", { error: 'User not authenticated' });
-      }
+//   let viewCart = async (req, res) => {
+//     try {
+//       let tokenExracted = await verifyUser(req.cookies.jwt);
+//       console.log(tokenExracted.userId);
+//         var userName = tokenExracted.userName;
+//         console.log(userName);
+//         const category = await Category.find()
+//       // Check if user is authenticated
+//       if (!tokenExracted.userId) {
+//         return res.status(401).redirect("/login", { error: 'User not authenticated' });
+//       }
       
-      var userId = tokenExracted.userId;
-const cartd= await Cart.find({user:userId})
-const wishlistd= await Wishlist.find({user:userId})
-var itemsLength = cartd[0].items.length;
-var WishitemsLength = wishlistd[0].products.length;
-      // Find the user's cart
-      const cart = await Cart.findOne({ user: userId }).populate('items.product');
-      const coupon = await Coupon.find()
-      console.log(cart)
+//       var userId = tokenExracted.userId;
+// const cartd= await Cart.find({user:userId})
+// const wishlistd= await Wishlist.find({user:userId})
+// var itemsLength = cartd[0].items.length;
+// var WishitemsLength = wishlistd[0].products.length;
+//       // Find the user's cart
+//       const cart = await Cart.findOne({ user: userId }).populate('items.product');
+//       const coupon = await Coupon.find()
+//       console.log(cart)
 
-      // Prepare the response data
-      const cartItems = cart.items.map(item => {
-        return {
-          productId: item.product._id,
-          productName: item.product.name,
-          productImage: item.product.image,
-          productstock: item.product.stock,
-          size: item.size,
-          price: item.product.price,
-          quantity: item.quantity,
-          totalPrice: item.quantity * item.product.price // Assuming each product has a 'price' field
-        };
-      });
+//       // Prepare the response data
+//       const cartItems = cart.items.map(item => {
+//         return {
+//           productId: item.product._id,
+//           productName: item.product.name,
+//           productImage: item.product.image,
+//           productstock: item.product.stock,
+//           size: item.size,
+//           price: item.product.price,
+//           quantity: item.quantity,
+//           totalPrice: item.quantity * item.product.price // Assuming each product has a 'price' field
+//         };
+//       });
   
 
-      const totalPrice = cartItems.reduce((total, item) => total + item.totalPrice, 0);
+//       const totalPrice = cartItems.reduce((total, item) => total + item.totalPrice, 0);
 
-      cart.items.forEach(item => {
-        if (item.product.stock[item.size] < item.quantity) {
+//       cart.items.forEach(item => {
+//         if (item.product.stock[item.size] < item.quantity) {
 
-            item.quantity = item.product.stock[item.size];
-            // Add a message property to inform the user
-            item.message = `Quantity reduced to match available stock (${item.quantity} available)`;
-        }
-    });
+//             item.quantity = item.product.stock[item.size];
+//             // Add a message property to inform the user
+//             item.message = `Quantity reduced to match available stock (${item.quantity} available)`;
+//         }
+//     });
     
 
-      await cart.save();
+//       await cart.save();
 
 
       
-      res.render("user/cart",{ items: cartItems, totalPrice: totalPrice,userName,coupon,category,cartln:itemsLength || 0,wishln:WishitemsLength || 0});
+//       res.render("user/cart",{ items: cartItems, totalPrice: totalPrice,userName,coupon,category,cartln:itemsLength || 0,wishln:WishitemsLength || 0});
 
-    } catch (error) {
-      console.error('Error viewing cart:', error);
-      res.render("user/cart");
+//     } catch (error) {
+//       console.error('Error viewing cart:', error);
+//       res.render("user/cart");
+//     }
+//   }
+
+let viewCart = async (req, res) => {
+  try {
+    let tokenExracted = await verifyUser(req.cookies.jwt);
+    console.log(tokenExracted.userId);
+    var userName = tokenExracted.userName;
+    console.log(userName);
+    const category = await Category.find();
+
+    // Check if user is authenticated
+    if (!tokenExracted.userId) {
+      return res.status(401).redirect("/login", { error: 'User not authenticated' });
     }
+
+    var userId = tokenExracted.userId;
+    const cartd = await Cart.find({ user: userId });
+    const wishlistd = await Wishlist.find({ user: userId });
+
+    var itemsLength = cartd.length > 0 ? cartd[0].items.length : 0;
+    var WishitemsLength = wishlistd.length > 0 ? wishlistd[0].products.length : 0;
+
+    // Find the user's cart
+    const cart = await Cart.findOne({ user: userId }).populate('items.product');
+    const coupon = await Coupon.find();
+    console.log(cart);
+
+    // Prepare the response data
+    const cartItems = cart.items.map(item => {
+      return {
+        productId: item.product._id,
+        productName: item.product.name,
+        productImage: item.product.image,
+        productstock: item.product.stock,
+        size: item.size,
+        price: item.product.price,
+        quantity: item.quantity,
+        totalPrice: item.quantity * item.product.price // Assuming each product has a 'price' field
+      };
+    });
+
+    const totalPrice = cartItems.reduce((total, item) => total + item.totalPrice, 0);
+
+    cart.items.forEach(item => {
+      if (item.product.stock[item.size] < item.quantity) {
+        item.quantity = item.product.stock[item.size];
+        // Add a message property to inform the user
+        item.message = `Quantity reduced to match available stock (${item.quantity} available)`;
+      }
+    });
+
+    await cart.save();
+
+    res.render("user/cart", { items: cartItems, totalPrice: totalPrice, userName, coupon, category, cartln: itemsLength || 0, wishln: WishitemsLength || 0 });
+
+  } catch (error) {
+    console.error('Error viewing cart:', error);
+    res.render("user/cart");
   }
+};
+
+
 let updateprofile = async(req,res)=>
 {
   try {
@@ -875,47 +1049,122 @@ let removeCartItem = async (req,res)=>
   {console.log(err)}
 }
 
-let help =async (req, res) => {
-  if (req.cookies.jwt) {
-    let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
-    var userName = tokenExracted.userName;
-    console.log(userName);
-    var userId = tokenExracted.userId;
-const cartd= await Cart.find({user:userId})
-const wishlistd= await Wishlist.find({user:userId})
-var itemsLength = cartd[0].items.length;
-var WishitemsLength = wishlistd[0].products.length;
+// let help =async (req, res) => {
+//   if (req.cookies.jwt) {
+//     let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
+//     var userName = tokenExracted.userName;
+//     console.log(userName);
+//     var userId = tokenExracted.userId;
+// const cartd= await Cart.find({user:userId})
+// const wishlistd= await Wishlist.find({user:userId})
+// var itemsLength = cartd[0].items.length;
+// var WishitemsLength = wishlistd[0].products.length;
+//   }
+//   const category = await Category.find({})
+//   console.log("help");
+//   res.render("user/help",{userName,category,cartln:itemsLength || 0,wishln:WishitemsLength || 0
+//   });
+// };
+
+let help = async (req, res) => {
+  try {
+    let userName;
+    let userId;
+    let itemsLength = 0;
+    let WishitemsLength = 0;
+
+    if (req.cookies.jwt) {
+      let tokenExracted = await verifyUser(req.cookies.jwt); // NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
+      userName = tokenExracted.userName;
+      console.log(userName);
+      userId = tokenExracted.userId;
+
+      const cartd = await Cart.find({ user: userId });
+      const wishlistd = await Wishlist.find({ user: userId });
+
+      if (cartd.length > 0) {
+        itemsLength = cartd[0].items.length;
+      }
+      if (wishlistd.length > 0) {
+        WishitemsLength = wishlistd[0].products.length;
+      }
+    }
+
+    const category = await Category.find({});
+    console.log("help");
+    res.render("user/help", { userName, category, cartln: itemsLength || 0, wishln: WishitemsLength || 0 });
+  } catch (error) {
+    console.error('Error rendering help page:', error);
+    res.status(500).send("Internal Server Error");
   }
-  const category = await Category.find({})
-  console.log("help");
-  res.render("user/help",{userName,category,cartln:itemsLength || 0,wishln:WishitemsLength || 0
-  });
 };
+
+
+
+// let wishlist = async (req, res) => {
+//   if (req.cookies.jwt) {
+//     try {
+//       let tokenExracted = await verifyUser(req.cookies.jwt);
+//       let userName = tokenExracted.userName;
+//       var userId = tokenExracted.userId;
+// const cartd= await Cart.find({user:userId})
+// const wishlistd= await Wishlist.find({user:userId})
+// var itemsLength = cartd[0].items.length;
+// var WishitemsLength = wishlistd[0].products.length;
+//       console.log("wishid", userId);
+      
+//       const wishlists = await Wishlist.find({ user: userId }).populate('products');
+//       // Use populate to retrieve the product details associated with each wishlist item
+//       const category = await Category.find()
+
+//       console.log(wishlists);
+
+//       res.render("user/wishlist", { wishlists, userName ,category,cartln:itemsLength || 0,wishln:WishitemsLength || 0
+//       });
+//     } catch (error) {
+//       res.render("error", { print: error });
+//     }
+//   }
+// };
+
 let wishlist = async (req, res) => {
-  if (req.cookies.jwt) {
-    try {
+  try {
+    if (req.cookies.jwt) {
       let tokenExracted = await verifyUser(req.cookies.jwt);
       let userName = tokenExracted.userName;
-      var userId = tokenExracted.userId;
-const cartd= await Cart.find({user:userId})
-const wishlistd= await Wishlist.find({user:userId})
-var itemsLength = cartd[0].items.length;
-var WishitemsLength = wishlistd[0].products.length;
+      let userId = tokenExracted.userId;
+
+      const cartd = await Cart.find({ user: userId });
+      const wishlistd = await Wishlist.find({ user: userId });
+
+      let itemsLength = 0;
+      let WishitemsLength = 0;
+
+      if (cartd.length > 0) {
+        itemsLength = cartd[0].items.length;
+      }
+      if (wishlistd.length > 0) {
+        WishitemsLength = wishlistd[0].products.length;
+      }
+
       console.log("wishid", userId);
-      
+
       const wishlists = await Wishlist.find({ user: userId }).populate('products');
       // Use populate to retrieve the product details associated with each wishlist item
-      const category = await Category.find()
+      const category = await Category.find();
 
       console.log(wishlists);
 
-      res.render("user/wishlist", { wishlists, userName ,category,cartln:itemsLength || 0,wishln:WishitemsLength || 0
-      });
-    } catch (error) {
-      res.render("error", { print: error });
+      res.render("user/wishlist", { wishlists, userName, category, cartln: itemsLength || 0, wishln: WishitemsLength || 0 });
+    } else {
+      res.redirect("/login");
     }
+  } catch (error) {
+    console.error('Error rendering wishlist:', error);
+    res.render("error", { print: error });
   }
 };
+
 
 let wishlistprofile = async (req, res) => {
   if (req.cookies.jwt) {
@@ -984,61 +1233,177 @@ let delAddress =async (req, res) => {
       res.status(500).json({ error: "An error occurred while deleting the address" });
   }
 }
-let userprofile =async (req, res) => {
-  if (req.cookies.jwt) {
-    let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
-    var userId = tokenExracted.userId;
-const cartd= await Cart.find({user:userId})
-const wishlistd= await Wishlist.find({user:userId})
-var itemsLength = cartd[0].items.length;
-var WishitemsLength = wishlistd[0].products.length;
-    var userName = tokenExracted.userName;
-  }
-  const user =await User.find({_id:userId})
-  const shippingAddress= await Order.find({user:userId})
-  const category =await Category.find()
+// let userprofile =async (req, res) => {
+//   if (req.cookies.jwt) {
+//     let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
+//     var userId = tokenExracted.userId;
+// const cartd= await Cart.find({user:userId})
+// const wishlistd= await Wishlist.find({user:userId})
+// var itemsLength = cartd[0].items.length;
+// var WishitemsLength = wishlistd[0].products.length;
+//     var userName = tokenExracted.userName;
+//   }
+//   const user =await User.find({_id:userId})
+//   const shippingAddress= await Order.find({user:userId})
+//   const category =await Category.find()
   
-  console.log("userprofile");
-  res.render("user/userprofile",{userName,user,category,shippingAddress,cartln:itemsLength || 0,wishln:WishitemsLength || 0
-  });
+//   console.log("userprofile");
+//   res.render("user/userprofile",{userName,user,category,shippingAddress,cartln:itemsLength || 0,wishln:WishitemsLength || 0
+//   });
 
-};
-let checkout = async(req, res) => {
-  console.log("checkout");
-  if (req.cookies.jwt) {
-    let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
-    var userName = tokenExracted.userName;
-    var userId = tokenExracted.userId;
-    const cartd= await Cart.find({user:userId})
-    const wishlistd= await Wishlist.find({user:userId})
-    var itemsLength = cartd[0].items.length;
-    var WishitemsLength = wishlistd[0].products.length;
-    console.log(userName);
-  }
-  console.log(userId);
-  let category = await Category.find()
-  const cart = await Cart.findOne({user: userId}).populate('items.product');
-  const adress = await User.findOne({_id:userId})
-  console.log(adress);
+// };
+let userprofile = async (req, res) => {
+  try {
+    let userName;
+    let userId;
+    let itemsLength = 0;
+    let WishitemsLength = 0;
 
-  res.render("user/checkout",{userName,cart,adress:adress.addresses,category,cartln:itemsLength || 0,wishln:WishitemsLength || 0
-  });
-};
-let ordercomplete =async (req, res) => {
-  if (req.cookies.jwt) {
-    let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
-    var userName = tokenExracted.userName;
-    var userId = tokenExracted.userId;
-const cartd= await Cart.find({user:userId})
-const wishlistd= await Wishlist.find({user:userId})
-var itemsLength = cartd[0].items.length;
-var WishitemsLength = wishlistd[0].products.length;
-    console.log(userName);
+    if (req.cookies.jwt) {
+      let tokenExracted = await verifyUser(req.cookies.jwt);
+      userId = tokenExracted.userId;
+      const cartd = await Cart.find({ user: userId });
+      const wishlistd = await Wishlist.find({ user: userId });
+
+      if (cartd.length > 0) {
+        itemsLength = cartd[0].items.length;
+      }
+      if (wishlistd.length > 0) {
+        WishitemsLength = wishlistd[0].products.length;
+      }
+      userName = tokenExracted.userName;
+    }
+
+    const user = await User.find({ _id: userId });
+    const shippingAddress = await Order.find({ user: userId });
+    const category = await Category.find();
+
+    console.log("userprofile");
+    res.render("user/userprofile", {
+      userName,
+      user,
+      category,
+      shippingAddress,
+      cartln: itemsLength || 0,
+      wishln: WishitemsLength || 0
+    });
+  } catch (error) {
+    console.error('Error rendering user profile:', error);
+    res.render("error", { print: error });
   }
-  console.log("ordercomplete");
-  res.render("user/ordercomplete",{userName,cartln:itemsLength || 0,wishln:WishitemsLength || 0
-  });
 };
+
+
+// let checkout = async(req, res) => {
+//   console.log("checkout");
+//   if (req.cookies.jwt) {
+//     let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
+//     var userName = tokenExracted.userName;
+//     var userId = tokenExracted.userId;
+//     const cartd= await Cart.find({user:userId})
+//     const wishlistd= await Wishlist.find({user:userId})
+//     var itemsLength = cartd[0].items.length;
+//     var WishitemsLength = wishlistd[0].products.length;
+//     console.log(userName);
+//   }
+//   console.log(userId);
+//   let category = await Category.find()
+//   const cart = await Cart.findOne({user: userId}).populate('items.product');
+//   const adress = await User.findOne({_id:userId})
+//   console.log(adress);
+
+//   res.render("user/checkout",{userName,cart,adress:adress.addresses,category,cartln:itemsLength || 0,wishln:WishitemsLength || 0
+//   });
+// };
+let checkout = async (req, res) => {
+  try {
+    console.log("checkout");
+    let userName;
+    let userId;
+    let itemsLength = 0;
+    let WishitemsLength = 0;
+
+    if (req.cookies.jwt) {
+      let tokenExracted = await verifyUser(req.cookies.jwt);
+      userName = tokenExracted.userName;
+      userId = tokenExracted.userId;
+      
+      const cartd = await Cart.find({ user: userId });
+      const wishlistd = await Wishlist.find({ user: userId });
+
+      if (cartd.length > 0) {
+        itemsLength = cartd[0].items.length;
+      }
+      if (wishlistd.length > 0) {
+        WishitemsLength = wishlistd[0].products.length;
+      }
+
+      console.log(userName);
+    }
+
+    console.log(userId);
+    const category = await Category.find();
+    const cart = await Cart.findOne({ user: userId }).populate('items.product');
+    const address = await User.findOne({ _id: userId });
+
+    console.log(address);
+
+    res.render("user/checkout", { userName, cart, address: address.addresses, category, cartln: itemsLength || 0, wishln: WishitemsLength || 0 });
+  } catch (error) {
+    console.error('Error rendering checkout page:', error);
+    res.render("error", { print: error });
+  }
+};
+
+// let ordercomplete =async (req, res) => {
+//   if (req.cookies.jwt) {
+//     let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
+//     var userName = tokenExracted.userName;
+//     var userId = tokenExracted.userId;
+// const cartd= await Cart.find({user:userId})
+// const wishlistd= await Wishlist.find({user:userId})
+// var itemsLength = cartd[0].items.length;
+// var WishitemsLength = wishlistd[0].products.length;
+//     console.log(userName);
+//   }
+//   console.log("ordercomplete");
+//   res.render("user/ordercomplete",{userName,cartln:itemsLength || 0,wishln:WishitemsLength || 0
+//   });
+// };
+let ordercomplete = async (req, res) => {
+  try {
+    const category = await Category.find({})
+    let userName;
+    let userId;
+    let itemsLength = 0;
+    let WishitemsLength = 0;
+    
+    if (req.cookies.jwt) {
+      let tokenExracted = await verifyUser(req.cookies.jwt);
+      userName = tokenExracted.userName;
+      userId = tokenExracted.userId;
+      
+      const cartd = await Cart.find({ user: userId });
+      const wishlistd = await Wishlist.find({ user: userId });
+
+      if (cartd.length > 0) {
+        itemsLength = cartd[0].items.length;
+      }
+      if (wishlistd.length > 0) {
+        WishitemsLength = wishlistd[0].products.length;
+      }
+
+      console.log(userName);
+    }
+
+    console.log("ordercomplete");
+    res.render("user/ordercomplete", {category, userName, cartln: itemsLength || 0, wishln: WishitemsLength || 0 });
+  } catch (error) {
+    console.error('Error rendering order complete page:', error);
+    res.render("error", { print: error });
+  }
+};
+
 let orderview = async (req, res) => {
   try {
     if (req.cookies.jwt) {
@@ -1072,23 +1437,59 @@ let signup =async (req, res) => {
   console.log("signup");
   res.render("user/signup", { layout: false });
 };
-let tracking = async(req, res) => {
-  if (req.cookies.jwt) {
-    let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
-    var userName = tokenExracted.userName;
-    console.log(userName);
-    var userId = tokenExracted.userId;
-const cartd= await Cart.find({user:userId})
-const wishlistd= await Wishlist.find({user:userId})
-var itemsLength = cartd[0].items.length;
-var WishitemsLength = wishlistd[0].products.length;
-  }
-  const category = await Category.find({})
+// let tracking = async(req, res) => {
+//   if (req.cookies.jwt) {
+//     let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
+//     var userName = tokenExracted.userName;
+//     console.log(userName);
+//     var userId = tokenExracted.userId;
+// const cartd= await Cart.find({user:userId})
+// const wishlistd= await Wishlist.find({user:userId})
+// var itemsLength = cartd[0].items.length;
+// var WishitemsLength = wishlistd[0].products.length;
+//   }
+//   const category = await Category.find({})
 
-  console.log("tracking");
-  res.render("user/tracking", {category,userName,cartln:itemsLength || 0,wishln:WishitemsLength || 0
-  });
+//   console.log("tracking");
+//   res.render("user/tracking", {category,userName,cartln:itemsLength || 0,wishln:WishitemsLength || 0
+//   });
+// };
+let tracking = async (req, res) => {
+  try {
+    let userName;
+    let userId;
+    let itemsLength = 0;
+    let WishitemsLength = 0;
+
+    if (req.cookies.jwt) {
+      let tokenExracted = await verifyUser(req.cookies.jwt);
+      userName = tokenExracted.userName;
+      userId = tokenExracted.userId;
+      
+      const cartd = await Cart.find({ user: userId });
+      const wishlistd = await Wishlist.find({ user: userId });
+
+      if (cartd.length > 0) {
+        itemsLength = cartd[0].items.length;
+      }
+      if (wishlistd.length > 0) {
+        WishitemsLength = wishlistd[0].products.length;
+      }
+
+      console.log(userName);
+    }
+
+    const category = await Category.find({});
+
+    console.log("tracking");
+    res.render("user/tracking", { category, userName, cartln: itemsLength || 0, wishln: WishitemsLength || 0 });
+  } catch (error) {
+    console.error('Error rendering tracking page:', error);
+    res.render("error", { print: error });
+  }
 };
+
+
 let forgetpass = async(req, res) => {
   if (req.cookies.jwt) {
     let tokenExracted = await verifyUser(req.cookies.jwt);
@@ -1207,6 +1608,7 @@ let showCategoryProducts =async (req, res) => {
     console.log(error)
   }
 }
+
 // let showcatprod =async (req, res) => {
 //   try {
 //     const name = req.query.id
@@ -1214,47 +1616,51 @@ let showCategoryProducts =async (req, res) => {
 //     const category =await Category.find()
 //     let tokenExracted = await verifyUser(req.cookies.jwt);
 //     var userId = tokenExracted.userId;
+//     var userName = tokenExracted.userName;
 // const cartd= await Cart.find({user:userId})
 // const wishlistd= await Wishlist.find({user:userId})
 // var itemsLength = cartd[0].items.length;
 // var WishitemsLength = wishlistd[0].products.length;
 //     res.render("user/categorywise",{product,category,cartln:itemsLength || 0,wishln:WishitemsLength || 0
-//     })
+//     ,userName})
 //   } catch (error) {
 //     console.log(error);
 //   }
 // }
-
 let showcatprod = async (req, res) => {
   try {
     const name = req.query.id;
     const product = await Product.find({ category: name });
     const category = await Category.find();
-    let tokenExracted = await verifyUser(req.cookies.jwt);
-    var userId = tokenExracted.userId;
     
-    // Fetch user's cart and wishlist
-    const cartd = await Cart.findOne({ user: userId });
-    const wishlistd = await Wishlist.findOne({ user: userId });
-    
-    // Initialize itemsLength and WishitemsLength to 0
+    // Extract user information if user is signed in
+    let userId, userName;
     let itemsLength = 0;
     let WishitemsLength = 0;
+    if (req.cookies.jwt) {
+      let tokenExracted = await verifyUser(req.cookies.jwt);
+      userId = tokenExracted.userId;
+      userName = tokenExracted.userName;
+      
+      // Fetch user's cart and wishlist if user is signed in
+      const cartd = await Cart.find({ user: userId });
+      const wishlistd = await Wishlist.find({ user: userId });
 
-    // If cartd and wishlistd exist, update itemsLength and WishitemsLength
-    if (cartd) {
-      itemsLength = cartd.items.length;
-    }
-
-    if (wishlistd) {
-      WishitemsLength = wishlistd.products.length;
+      // Calculate cart and wishlist lengths
+      if (cartd[0]) {
+        itemsLength = cartd[0].items.length;
+      }
+      if (wishlistd[0]) {
+        WishitemsLength = wishlistd[0].products.length;
+      }
     }
 
     res.render("user/categorywise", {
       product,
       category,
-      cartln: itemsLength,
-      wishln: WishitemsLength
+      cartln: itemsLength || 0,
+      wishln: WishitemsLength || 0,
+      userName
     });
   } catch (error) {
     console.log(error);
@@ -1264,22 +1670,156 @@ let showcatprod = async (req, res) => {
 };
 
 
-let search =async (req, res) => {
+// let showcatprod = async (req, res) => {
+//   try {
+//     const name = req.query.id;
+//     const product = await Product.find({ category: name });
+//     const category = await Category.find();
+//     let tokenExracted = await verifyUser(req.cookies.jwt);
+//     var userId = tokenExracted.userId;
+    
+//     // Fetch user's cart and wishlist
+//     const cartd = await Cart.findOne({ user: userId });
+//     const wishlistd = await Wishlist.findOne({ user: userId });
+    
+//     // Initialize itemsLength and WishitemsLength to 0
+//     let itemsLength = 0;
+//     let WishitemsLength = 0;
+
+//     // If cartd and wishlistd exist, update itemsLength and WishitemsLength
+//     if (cartd) {
+//       itemsLength = cartd.items.length;
+//     }
+
+//     if (wishlistd) {
+//       WishitemsLength = wishlistd.products.length;
+//     }
+
+//     res.render("user/categorywise", {
+//       product,
+//       category,
+//       cartln: itemsLength,
+//       wishln: WishitemsLength
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     // Handle errors gracefully
+//     res.status(500).send("Internal Server Error");
+//   }
+// };
+// let showcatprod = async (req, res) => {
+//   try {
+//     const name = req.query.id;
+    
+//     // Find products based on category
+//     const product = await Product.find({ category: name });
+    
+//     // Fetch all categories
+//     const category = await Category.find();
+    
+//     // Extract user ID from JWT token
+//     let tokenExracted = await verifyUser(req.cookies.jwt);
+//     var userId = tokenExracted.userId;
+    
+//     // Fetch user's cart and wishlist
+//     const cartd = await Cart.findOne({ user: userId });
+//     const wishlistd = await Wishlist.findOne({ user: userId });
+    
+//     // Initialize itemsLength and WishitemsLength to 0
+//     let itemsLength = 0;
+//     let WishitemsLength = 0;
+
+//     // If cartd and wishlistd exist, update itemsLength and WishitemsLength
+//     if (cartd) {
+//       itemsLength = cartd.items.length;
+//     }
+
+//     if (wishlistd) {
+//       WishitemsLength = wishlistd.products.length;
+//     }
+
+//     // Render the category-wise product page with necessary data
+//     res.render("user/categorywise", {
+//       product,
+//       category,
+//       cartln: itemsLength,
+//       wishln: WishitemsLength
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     // Handle errors gracefully
+//     res.status(500).send("Internal Server Error");
+//   }
+// };
+
+
+
+// let search =async (req, res) => {
+//   try {
+//     let tokenExracted = await verifyUser(req.cookies.jwt)
+//     const category =await Category.find()
+//     var userId = tokenExracted.userId;
+//     var userName = tokenExracted.userName;
+// const cartd= await Cart.find({user:userId})
+// const wishlistd= await Wishlist.find({user:userId})
+// var itemsLength = cartd[0].items.length;
+// var WishitemsLength = wishlistd[0].products.length;
+//     res.render("user/search",{product,category,userName,cartln:itemsLength || 0,wishln:WishitemsLength || 0
+//     })
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }
+let search = async (req, res) => {
   try {
-    let tokenExracted = await verifyUser(req.cookies.jwt)
-    const category =await Category.find()
-    var userId = tokenExracted.userId;
-    var userName = tokenExracted.userName;
-const cartd= await Cart.find({user:userId})
-const wishlistd= await Wishlist.find({user:userId})
-var itemsLength = cartd[0].items.length;
-var WishitemsLength = wishlistd[0].products.length;
-    res.render("user/search",{product,category,userName,cartln:itemsLength || 0,wishln:WishitemsLength || 0
-    })
+    // Fetch all categories for navigation
+    const categories = await Category.find();
+
+    // Initialize variables for user information and item counts
+    let userId, userName;
+    let cartItemCount = 0;
+    let wishlistItemCount = 0;
+
+    // Check if JWT token is present in the request cookies
+    if (req.cookies.jwt) {
+      // Extract user information from the JWT token
+      let tokenExracted = await verifyUser(req.cookies.jwt);
+      userId = tokenExracted.userId;
+      userName = tokenExracted.userName;
+
+      // Fetch user's cart and wishlist information
+      const cart = await Cart.findOne({ user: userId });
+      const wishlist = await Wishlist.findOne({ user: userId });
+
+      // Calculate the number of items in the cart and wishlist
+      cartItemCount = cart ? cart.items.length : 0;
+      wishlistItemCount = wishlist ? wishlist.products.length : 0;
+    }
+
+    // Check if a search query is provided in the request
+    const searchQuery = req.query.q;
+    let searchResults = [];
+
+    if (searchQuery) {
+      // Perform the search based on the search query
+      searchResults = await Product.find({ $text: { $search: searchQuery } });
+    }
+
+    // Render the search page with search results and other necessary data
+    res.render("user/search", {
+      searchResults,
+      categories,
+      userName,
+      cartln: cartItemCount,
+      wishln: wishlistItemCount
+    });
   } catch (error) {
     console.log(error);
+    res.status(500).send("Internal Server Error");
   }
-}
+};
+
+
 let sort =async (req, res) => {
   const { sortType } = req.params;
   console.log(sortType);
