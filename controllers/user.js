@@ -379,43 +379,98 @@ var WishitemsLength = wishlistd[0].products.length;
   res.render("user/product",{userName,category,product,userId,cartln:itemsLength || 0,wishln:WishitemsLength || 0
   });
 };
+// let productdetail = async (req, res) => {
+//   try {
+//     const id = req.query.id
+//     if (req.cookies.jwt) {
+//       let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
+//       var userName = tokenExracted.userName;
+//       var userId = tokenExracted.userId;
+// const cartd= await Cart.find({user:userId})
+// const wishlistd= await Wishlist.find({user:userId})
+// var itemsLength = cartd[0].items.length;
+// var WishitemsLength = wishlistd[0].products.length;
+//       console.log(userName);
+
+//     }
+//     let cart = await  Cart.findOne({ user:userId });
+//     const productsss = await Product.findById(id);
+
+//     if(userName)
+//     {
+//       cart.items.forEach(element => {
+//         if(productsss._id.equals(element.product._id))
+//         {
+//           productsss.stock[element.size] -=element.quantity
+//         }
+//       })
+//     }
+
+//     let category = await Category.find({})
+
+//     const related = await Product.find({ category: productsss.category, _id: { $ne: id } }); // Excluding the currently viewed product from related
+
+//     res.render("user/product-detail", {category, layout: "layout.hbs", productsss, userName, userId, related,cartln:itemsLength || 0,wishln:WishitemsLength || 0 });
+
+//   } catch (error) {
+//     console.log(error); 
+//   }
+// };
 let productdetail = async (req, res) => {
   try {
-    const id = req.query.id
+    const id = req.query.id;
+    let userName;
+    let userId;
+    let itemsLength = 0;
+    let WishitemsLength = 0;
+
     if (req.cookies.jwt) {
       let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
-      var userName = tokenExracted.userName;
-      var userId = tokenExracted.userId;
-const cartd= await Cart.find({user:userId})
-const wishlistd= await Wishlist.find({user:userId})
-var itemsLength = cartd[0].items.length;
-var WishitemsLength = wishlistd[0].products.length;
+      userName = tokenExracted.userName;
+      userId = tokenExracted.userId;
       console.log(userName);
 
-    }
-    let cart = await  Cart.findOne({ user:userId });
-    const productsss = await Product.findById(id);
+      const cartd = await Cart.findOne({ user: userId });
+      const wishlistd = await Wishlist.findOne({ user: userId });
 
-    if(userName)
-    {
-      cart.items.forEach(element => {
-        if(productsss._id.equals(element.product._id))
-        {
-          productsss.stock[element.size] -=element.quantity
-        }
-      })
+      if (cartd) {
+        itemsLength = cartd.items.length;
+      }
+      if (wishlistd) {
+        WishitemsLength = wishlistd.products.length;
+      }
     }
 
-    let category = await Category.find({})
+    let cart;
+    if (userId) {
+      cart = await Cart.findOne({ user: userId });
+      const productsss = await Product.findById(id);
 
-    const related = await Product.find({ category: productsss.category, _id: { $ne: id } }); // Excluding the currently viewed product from related
+      if (cart && userName) {
+        cart.items.forEach(element => {
+          if (productsss._id.equals(element.product._id)) {
+            productsss.stock[element.size] -= element.quantity;
+          }
+        });
+      }
 
-    res.render("user/product-detail", {category, layout: "layout.hbs", productsss, userName, userId, related,cartln:itemsLength || 0,wishln:WishitemsLength || 0 });
+      const category = await Category.find({});
+      const related = await Product.find({ category: productsss.category, _id: { $ne: id } }); // Excluding the currently viewed product from related
 
+      res.render("user/product-detail", { category, layout: "layout.hbs", productsss, userName, userId, related, cartln: itemsLength, wishln: WishitemsLength });
+    } else {
+      const category = await Category.find({});
+      const productsss = await Product.findById(id);
+      const related = await Product.find({ category: productsss.category, _id: { $ne: id } }); // Excluding the currently viewed product from related
+
+      res.render("user/product-detail", { category, layout: "layout.hbs", productsss, userName, userId, related, cartln: itemsLength, wishln: WishitemsLength });
+    }
   } catch (error) {
-    console.log(error); 
+    console.log(error);
+    res.status(500).send("Internal Server Error");
   }
 };
+
 
 function calculateTotalPrice(cartItems) {
   let totalPrice = 0;
