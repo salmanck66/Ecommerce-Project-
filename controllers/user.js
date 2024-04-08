@@ -232,6 +232,45 @@ let loginPostPage = async (req, res) => {
 };
 
 
+// let homePage = async (req, res) => {
+//   console.log("Home page");
+//   await Visit.findOneAndUpdate({}, { $inc: { count: 1 } }, { upsert: true });
+//   if (req.cookies.jwt) {
+//     let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
+//     var userName = tokenExracted.userName;
+//     var userId = tokenExracted.userId;
+//     console.log("uid",userId);
+//     console.log(userName);
+//   }
+//   if (userName) {
+//     console.log("Having User");
+//     const products = await Product.aggregate([{$sort:{salecount:-1}},{ $limit: 20 }])
+//     const category = await Category.find();
+
+//     const cartd= await Cart.find({user:userId})
+//     const wishlistd= await Wishlist.find({user:userId})
+//     const itemsLength = cartd[0].items.length;
+//     const WishitemsLength = wishlistd[0].products.length;
+//     const banner = await Banner.find();
+//     const userln = await User.find();
+//     return res.render("user/index", {
+//       cartln:itemsLength,wishln:WishitemsLength,
+//       userId,userln,
+//       userName,
+//       category,
+//       banner,
+//       user: true,
+//       home: true,
+//       data: products,
+//     });
+//   } else {
+//     const products = await Product.aggregate([{$sort:{salecount:-1}},{ $limit: 20 }])
+//     const category = await Category.find();
+//     const banner = await Banner.find();
+//     const users = await User.find();
+//     res.render("user/index", { data: products, category, banner,userId,cartln:0,wishln:0 });
+//   }
+// };
 let homePage = async (req, res) => {
   console.log("Home page");
   await Visit.findOneAndUpdate({}, { $inc: { count: 1 } }, { upsert: true });
@@ -239,26 +278,33 @@ let homePage = async (req, res) => {
     let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
     var userName = tokenExracted.userName;
     var userId = tokenExracted.userId;
-    console.log("uid",userId);
+    console.log("uid", userId);
     console.log(userName);
   }
   if (userName) {
     console.log("Having User");
-    const products = await Product.aggregate([{$sort:{salecount:-1}},{ $limit: 20 }])
+    const products = await Product.aggregate([{ $sort: { salecount: -1 } }, { $limit: 20 }])
     const category = await Category.find();
 
-    const cartd= await Cart.find({user:userId})
-    const wishlistd= await Wishlist.find({user:userId})
-    const itemsLength = cartd[0].items.length;
-    const WishitemsLength = wishlistd[0].products.length;
+    let itemsLength = 0;
+    let WishitemsLength = 0;
 
- 
+    const cartd = await Cart.findOne({ user: userId });
+    const wishlistd = await Wishlist.findOne({ user: userId });
+
+    if (cartd && cartd.items) {
+      itemsLength = cartd.items.length;
+    }
+
+    if (wishlistd && wishlistd.products) {
+      WishitemsLength = wishlistd.products.length;
+    }
 
     const banner = await Banner.find();
     const userln = await User.find();
     return res.render("user/index", {
-      cartln:itemsLength,wishln:WishitemsLength,
-      userId,userln,
+      cartln: itemsLength, wishln: WishitemsLength,
+      userId, userln,
       userName,
       category,
       banner,
@@ -267,13 +313,14 @@ let homePage = async (req, res) => {
       data: products,
     });
   } else {
-    const products = await Product.aggregate([{$sort:{salecount:-1}},{ $limit: 20 }])
+    const products = await Product.aggregate([{ $sort: { salecount: -1 } }, { $limit: 20 }])
     const category = await Category.find();
     const banner = await Banner.find();
     const users = await User.find();
-    res.render("user/index", { data: products, category, banner,userId,cartln:0,wishln:0 });
+    res.render("user/index", { data: products, category, banner, userId, cartln: 0, wishln: 0 });
   }
 };
+
 
 let payment =async (req, res) => {
   if (req.cookies.jwt) {
