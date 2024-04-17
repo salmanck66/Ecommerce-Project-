@@ -340,6 +340,11 @@ let payments =async (req, res) => {
     console.log("admin banner management");
     const order = await Order.aggregate([
       {
+        $match: {
+          Status: "Delivered"
+        }
+      },
+      {
         $sort: { orderDate: -1 }
       },
       {
