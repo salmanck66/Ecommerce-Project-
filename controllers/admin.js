@@ -282,7 +282,27 @@ let Forget = (req, res) => {
   }
   let order = async (req, res) => {
     try {
-        const order = await Order.find().sort({ orderDate: -1 });
+      const order = await Order.aggregate([
+        {
+          $sort: { orderDate: -1 }
+        },
+        {
+          $addFields: {
+            formattedOrderDate: {
+              $dateToString: {
+                format: "%d-%m-%Y",
+                date: "$orderDate"
+              }
+            }
+          }
+        }
+      ]);
+      
+      // Update the order array with formatted dates
+      order.forEach(o => {
+        o.orderDate = o.formattedOrderDate;
+        delete o.formattedOrderDate;
+      });
         console.log("admin order management");
         res.render('admin/order', { layout: "adminLayout.hbs", order });
     } catch (error) {
