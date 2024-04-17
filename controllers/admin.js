@@ -9,6 +9,7 @@ const mongoose = require('mongoose');
 const { product } = require('./user');
 const Coupon = require('../models/coupon');
 const Banner = require('../models/banner');
+const Subscription = require('../models/subscription');
 const Order = require('../models/order');
 const nodemailer = require('nodemailer');
 const Visit = require('../models/visit');
@@ -72,12 +73,29 @@ const promomail = async  (req , res) =>{
 const subscribers = async (req, res) => {
   try {
     // Find subscribers and sort by createdAt field in descending order
-    const subscribe = await Subsribers.find({}).sort({ createdAt: -1 });
+    const subscribe = await Subscription.aggregate([
+      {
+        $sort: { createdAt: -1 }
+      },
+      {
+        $addFields: {
+          formattedCreatedAt: {
+            $dateToString: {
+              format: "%d-%m-%Y",
+              date: "$createdAt"
+            }
+          }
+        }
+      }
+    ]);
+
+    // Iterate through each subscription to update createdAt and remove formattedCreatedAt
+    subscribe.forEach(sub => {
+      sub.createdAt = sub.formattedCreatedAt;
+      delete sub.formattedCreatedAt;
+    });
 
     // Format the createdAt date field
-    subscribe.forEach(subscriber => {
-      subscriber.createdAt = subscriber.createdAt.toLocaleString(); // Example format: "4/6/2024, 2:00:00 PM"
-    });
 
     res.status(200).render('admin/subscribers', { layout: "adminLayout.hbs", subscribe });
   } catch (error) {
@@ -85,6 +103,7 @@ const subscribers = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 }
+
 
 function generateOTP() {
   return Math.floor(100000 + Math.random() * 900000);
