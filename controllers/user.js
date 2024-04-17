@@ -701,6 +701,8 @@ let pcheckout = async (req, res) => {
     console.log(error);
   }
 };
+
+
 let fcheckout = async (req, res) => {
   try {
     // Verify user and get user ID
@@ -709,12 +711,40 @@ let fcheckout = async (req, res) => {
     const orderNumber = await Userhelpers.getNextOrderNumber();
     console.log(req.body)
 
+
     // Get user's cart
     const cart = await Cart.findOne({ user: userId });
     console.log(cart.items.length);
     if(cart.items.length === 0){
         return res.redirect('/cart')
     }
+      const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.APP_SPECIFIC_PASSWORD // Use the generated app-specific password here
+      }
+  });
+
+
+    const mailOptions = {
+      from: process.env.EMAIL_USER, // Sender email address
+      to: req.body.email, // Receiver email address (customer's email)
+      subject: 'Order Confirmation', // Email subject
+      text: `Your order has been successfully placed, Your Order ID Is ${orderNumber}. Thank you for shopping with us !` // Email body
+    };
+
+    transporter.sendMail(mailOptions); // Send the email
+
+    // Send email to jcclubotp@gmail.com
+    const adminMailOptions = {
+      from: process.env.EMAIL_USER, // Sender email address
+      to: 'jcclubotp@gmail.com', // Receiver email address (your email)
+      subject: 'New Order Notification', // Email subject
+      text: `A new order has been placed. ${orderNumber}` // Email body
+    };
+
+    transporter.sendMail(adminMailOptions); // Send the email to admin
     
     
 
@@ -782,7 +812,8 @@ let fcheckout = async (req, res) => {
     const category = await Category.find()
 
     const wishlistd = await Wishlist.findOne({ user: userId });
-    
+
+
     // Send a success response
     res.render('user/ordercomplete', {wishln:wishlistd.products.length  ,cartln:0,category,userId:tokenExracted.userId, message: 'Order completed successfully.', orderId: savedOrder.orderId });
   } catch (error) {
