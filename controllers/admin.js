@@ -189,7 +189,28 @@ let loginotp = async  (req, res) => {
 let homePage = async (req, res) => {
   console.log("admin dashboard page");
   let result = { totalAmount: 0 }; // Default total amount to 0
-  const order = await Order.find().sort({ orderDate: -1 });
+  const order = await Order.aggregate([
+    {
+      $sort: { orderDate: -1 }
+    },
+    {
+      $addFields: {
+        formattedOrderDate: {
+          $dateToString: {
+            format: "%d-%m-%Y",
+            date: "$orderDate"
+          }
+        }
+      }
+    }
+  ]);
+  
+  // Update the order array with formatted dates
+  order.forEach(o => {
+    o.orderDate = o.formattedOrderDate;
+    delete o.formattedOrderDate;
+  });
+
 
   if (order.length !== 0) {
       result = await Order.aggregate([
@@ -249,6 +270,8 @@ console.log(monthlySalesData);
   const visit = await Visit.findOne();
   res.render('admin/index', { layout: "adminLayout.hbs", order, visit, totalAmount: result[0]?.totalAmount || 0,datasles,monthlySalesData});
 };
+
+
 let logIn = (req, res) => {
     console.log("admin login page");
     res.render('admin/login',{layout:false})
