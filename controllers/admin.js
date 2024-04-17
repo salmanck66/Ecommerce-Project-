@@ -338,7 +338,27 @@ let banner = async(req, res) => {
 let payments =async (req, res) => {
 
     console.log("admin banner management");
-    const order = await Order.find()
+    const order = await Order.aggregate([
+      {
+        $sort: { orderDate: -1 }
+      },
+      {
+        $addFields: {
+          formattedOrderDate: {
+            $dateToString: {
+              format: "%d-%m-%Y",
+              date: "$orderDate"
+            }
+          }
+        }
+      }
+    ]);
+    
+    // Update the order array with formatted dates
+    order.forEach(o => {
+      o.orderDate = o.formattedOrderDate;
+      delete o.formattedOrderDate;
+    });
     res.render('admin/payments',{layout:"adminLayout.hbs",order})
   }
 let settings =async (req, res) => {
