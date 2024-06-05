@@ -5,6 +5,15 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 	<!-- Boxicons -->
+   <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Cropper.js CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+  <link rel="stylesheet" href="/js/cropperjs/cropper.css">
+  <script src="/js/cropperjs/cropper.js"></script>
 	<link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
 	    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 	    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
@@ -17,6 +26,25 @@
 
 	<!-- My CSS -->
 	<style>
+    {{!-- .cropper-drag-box, cropper-move, cropper-modal
+    {
+            width: 1000px;
+            height: 1000px;
+    } --}}
+        .cropper-view-box,
+    .cropper-face {
+      border-radius: 50%; /* Example: making the crop box round */
+    }
+    /* Optional: Additional custom styles for the cropper */
+    .cropper-bg {
+      background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    }
+    .cropper-modal {
+      background-color: rgba(0, 0, 0, 0.7); /* Darker background */
+    }
+    .cropper-drag-box {
+      background-color: transparent;
+    }
 		/* Notification Balloon Styles */
 .notification-balloon {
   position: absolute;

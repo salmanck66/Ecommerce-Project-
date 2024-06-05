@@ -232,7 +232,7 @@ let loginPostPage = async (req, res) => {
 };
 
 
-// let homePage = async (req, res) => {
+// let homePage = async (req, res) =>
 //   console.log("Home page");
 //   await Visit.findOneAndUpdate({}, { $inc: { count: 1 } }, { upsert: true });
 //   if (req.cookies.jwt) {
@@ -271,6 +271,7 @@ let loginPostPage = async (req, res) => {
 //     res.render("user/index", { data: products, category, banner,userId,cartln:0,wishln:0 });
 //   }
 // };
+
 let homePage = async (req, res) => {
   console.log("Home page");
   await Visit.findOneAndUpdate({}, { $inc: { count: 1 } }, { upsert: true });

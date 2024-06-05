@@ -98,13 +98,11 @@
 		<div class="container">
 			<div class="p-b-10 mt-md-5 ">
 				<h3 class="ltext-103 cl5 mt-md-5">
-					Product Overview
+					Trending Products
 				</h3>
 			</div>
 
 			<div class="row isotope-grid ">
-				
-
 				{{#each data}}
 				<a href="productdetail?id={{this._id}}" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 " style="text-decoration: none;">
 				<div class="col-sm-6 col-md-4 col-lg-3 col-6 p-b-35 isotope-item {{this.category}}">
@@ -112,6 +110,7 @@
 					<div class="block2">
 						<div class="block2-pic hov-img0">
 							<img class="img-fluid imgprodt"    src={{this.image.[0]}}  alt="IMG-PRODUCT">
+				
 						</div>
 
 						<div class="block2-txt d-flex flex-t p-t-14">
@@ -143,8 +142,10 @@
 
 					<div class="block2-txt-child2 flex-l p-t-3">
         			<a  style="cursor: pointer;" class=" dis-block pos-relative " onclick="addToWishlist('{{../userId}}', '{{this._id}}')">
+
                     <img class="icon-heart1 dis-block trans-04" src="images/icons/icon-heart-02.png" alt="ICON">
                     <img class="icon-heart2 dis-block trans-04 ab-t-l" src="images/icons/icon-heart-01.png" alt="ICON">
+
        				 </a>
     				</div>
 
