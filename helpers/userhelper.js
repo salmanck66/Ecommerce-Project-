@@ -19,7 +19,12 @@ function signupHelper(recievedUserData) {
     const { firstName, lastName, mail, phoneNumber, password } = recievedUserData
     return new Promise(async (resolve, reject) => {
       try {
-        const existingUser = await User.findOne({ mail: mail })
+        const existingUser = await User.findOne({
+          $or: [
+            { mail: mail },
+            { phoneNumber: phoneNumber }
+          ]
+        });
         if (!existingUser) {
           const hashedPassword = await bcrypt.hash(password, 10)
           const user = new User({

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jcclub | Login with OTP</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <link rel="stylesheet" href="https://unpkg.com/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://unpkg.com/bs-brain@2.0.3/components/logins/login-6/assets/css/login-6.css">
@@ -641,7 +642,23 @@
             $("#passwordError").text("");
         });
     });
-
+document.addEventListener('DOMContentLoaded', function() {
+    // Check if the signupSuccess flag is set
+    if (localStorage.getItem('signupSuccess') === 'true') {
+        // Show a notification
+        Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Please login with your credentials.',
+            timer: 3000,
+            timerProgressBar: true,
+            willClose: () => {
+                // Remove the flag after showing the message
+                localStorage.removeItem('signupSuccess');
+            }
+        });
+    }
+});
 
 </script>
 

@@ -5,23 +5,6 @@ const {userLogined} = require('../middleware/jwt')
 const {authMiddleware} = require('../middleware/auth')
 const { isInWishlist } = require('../helpers/userhelper');
 
-
-const passport = require('passport');
-require("../passport")
-router.use(passport.initialize())
-router.use(passport.session())
-
-router.get('/auth/google' , passport.authenticate('google', { scope: 
-	[ 'email', 'profile' ] 
-})); 
-
-// Auth Callback 
-router.get( '/auth/google/callback', 
-	passport.authenticate( 'google', { 
-		successRedirect: '/', 
-		failureRedirect: '/login'
-}));
-
 router.get('/',userControllers.homePage)
 
 router.get('/contact',userControllers.contact)

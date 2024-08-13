@@ -167,7 +167,7 @@ let signUpPostPage = async (req, res) => {
         .status(200)
         .render("user/signup", {
           layout: false,
-          mailError: "Email Already Exists",
+          mailError: "Email or phone number already exists",
           firstName: req.body.firstName,
           lastName: req.body.lastName,
           mail: req.body.mail,
@@ -275,21 +275,23 @@ let loginPostPage = async (req, res) => {
 let homePage = async (req, res) => {
   console.log("Home page");
   await Visit.findOneAndUpdate({}, { $inc: { count: 1 } }, { upsert: true });
+
+  let userName, userId;
   if (req.cookies.jwt) {
-    let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
-    var userName = tokenExracted.userName;
-    var userId = tokenExracted.userId;
-    console.log("uid", userId);
-    console.log(userName);
+    let tokenExtracted = await verifyUser(req.cookies.jwt);
+    userName = tokenExtracted.userName;
+    userId = tokenExtracted.userId;
   }
-  if (userName) {
-    console.log("Having User");
-    const products = await Product.aggregate([{ $sort: { salecount: -1 } }, { $limit: 20 }])
-    const category = await Category.find();
 
-    let itemsLength = 0;
-    let WishitemsLength = 0;
+  const products = await Product.aggregate([{ $sort: { salecount: -1 } }, { $limit: 20 }]);
+  const category = await Category.find();
+  const banner = await Banner.find();
+  
+  let itemsLength = 0;
+  let wishItemsLength = 0;
+  let wishlistedProductIds = [];
 
+  if (userId) {
     const cartd = await Cart.findOne({ user: userId });
     const wishlistd = await Wishlist.findOne({ user: userId });
 
@@ -298,29 +300,29 @@ let homePage = async (req, res) => {
     }
 
     if (wishlistd && wishlistd.products) {
-      WishitemsLength = wishlistd.products.length;
+      wishItemsLength = wishlistd.products.length;
+      wishlistedProductIds = wishlistd.products.map(p => p.toString()); // Convert ObjectId to string
     }
-
-    const banner = await Banner.find();
-    const userln = await User.find();
-    return res.render("user/index", {
-      cartln: itemsLength, wishln: WishitemsLength,
-      userId, userln,
-      userName,
-      category,
-      banner,
-      user: true,
-      home: true,
-      data: products,
-    });
-  } else {
-    const products = await Product.aggregate([{ $sort: { salecount: -1 } }, { $limit: 20 }])
-    const category = await Category.find();
-    const banner = await Banner.find();
-    const users = await User.find();
-    res.render("user/index", { data: products, category, banner, userId, cartln: 0, wishln: 0 });
   }
+
+  // Add `isWishlisted` flag to each product
+  products.forEach(product => {
+    product.isWishlisted = wishlistedProductIds.includes(product._id.toString());
+  });
+
+  res.render("user/index", {
+    cartln: itemsLength,
+    wishln: wishItemsLength,
+    userId,
+    userName,
+    category,
+    banner,
+    user: !!userName,
+    home: true,
+    data: products,
+  });
 };
+
 
 
 let payment =async (req, res) => {
@@ -634,20 +636,8 @@ let updatecart = async (req, res) => {
 let addtowishlist = async (req, res) => {
   try {
     const { userId, productId } = req.body;
-    console.log("userid:", userId, "pid:", productId);
 
-    // Check if user and product exist
-    const user = await User.findById(userId);
-    const product = await Product.findById(productId);
-
-    if (!user) {
-      return res.status(401).json({ error: 'User not authenticated' });
-  }
-
-    if (!product) {
-      return res.status(404).json({ error: 'Product not found' });
-    }
-
+    // Validate input
     if (!userId || !productId) {
       return res.status(400).json({ error: 'User ID or Product ID is missing in the request body' });
     }
@@ -656,25 +646,36 @@ let addtowishlist = async (req, res) => {
       return res.status(400).json({ error: 'Invalid user ID' });
     }
 
+    // Check if user and product exist
+    const user = await User.findById(userId);
+    const product = await Product.findById(productId);
+
+    if (!user) {
+      return res.status(401).json({ error: 'User not authenticated' });
+    }
+
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
     // Check if user's wishlist exists
     let wishlist = await Wishlist.findOne({ user: userId });
 
     if (!wishlist) {
-      // If user's wishlist doesn't exist, create a new wishlist
-      const newWishlist = new Wishlist({ user: userId, products: [productId] });
-      await newWishlist.save();
-      res.status(200).json({ message: 'Product added to wishlist successfully', icon: 'success' });
+      // Create a new wishlist if none exists
+      wishlist = new Wishlist({ user: userId, products: [] });
     }
 
     // Check if the product is already in the wishlist
-    const pindex = wishlist.products.indexOf(productId);
-    if (pindex !== -1) {
-      // If product exists, remove it from the wishlist
-      wishlist.products.splice(pindex, 1);
+    const isProductInWishlist = wishlist.products.includes(productId);
+
+    if (isProductInWishlist) {
+      // Remove product from wishlist
+      wishlist.products = wishlist.products.filter(p => p.toString() !== productId);
       await wishlist.save();
       res.status(200).json({ message: 'Product removed from wishlist successfully', icon: 'error' });
     } else {
-      // If product doesn't exist, add it to the wishlist
+      // Add product to wishlist
       wishlist.products.push(productId);
       await wishlist.save();
       res.status(200).json({ message: 'Product added to wishlist successfully', icon: 'success' });
@@ -684,6 +685,7 @@ let addtowishlist = async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 }
+
 
 let pcheckout = async (req, res) => {
   try {
