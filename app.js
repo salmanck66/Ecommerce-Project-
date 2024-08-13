@@ -90,6 +90,7 @@ mongoose.connect(config.CONNECTION_STRING,{
   console.log(err);
 })
 
+console.log('Connection String:', config.CONNECTION_STRING);
 
 
 app.listen(config.PORT,()=>
