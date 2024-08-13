@@ -611,6 +611,7 @@
     <script>
 
     $(document).ready(function() {
+
         
         // Function to show toast notifications
         function showToast(message, type) {
@@ -642,23 +643,6 @@
             $("#passwordError").text("");
         });
     });
-document.addEventListener('DOMContentLoaded', function() {
-    // Check if the signupSuccess flag is set
-    if (localStorage.getItem('signupSuccess') === 'true') {
-        // Show a notification
-        Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            text: 'Please login with your credentials.',
-            timer: 3000,
-            timerProgressBar: true,
-            willClose: () => {
-                // Remove the flag after showing the message
-                localStorage.removeItem('signupSuccess');
-            }
-        });
-    }
-});
 
 </script>
 

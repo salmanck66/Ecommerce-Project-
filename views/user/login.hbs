@@ -662,6 +662,12 @@
 
 <script>
     $(document).ready(function() {
+        const currentUrl = window.location.href;
+    if(currentUrl.toString().includes('true'))
+    {
+ 
+        showToast("Sigup complete ,please login","success")
+    }
         $("#login").on('click', function(){
            const phoneNumber = $("#phone").val();
            console.log(phoneNumber)

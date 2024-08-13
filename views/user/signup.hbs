@@ -635,6 +635,7 @@
         $(document).ready(function() {
             $('#firstName, #lastName, #mail, #phoneNumber, #password').on('input', function() {
                 validateInputs();
+                localStorage.setItem('signupSuccess', 'true');
             });
 
             function validateInputs() {
