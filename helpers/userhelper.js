@@ -56,6 +56,10 @@ function signupHelper(recievedUserData) {
     try {
       const { mail, password } = recievedUserData
       let existingUser = await User.findOne({ mail: mail })
+      if(existingUser.isAdmin == true)
+      {
+        return {admin:true}
+      }
       if (existingUser) {
         const passwordMatch = await bcrypt.compare(password, existingUser.password)
         if (!passwordMatch) {

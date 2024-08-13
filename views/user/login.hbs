@@ -729,6 +729,8 @@
         } catch (error) {
             // Handle error
             showToast("Failed to send OTP", "error");
+            setTimeout(()=>window.location.href = '/login',1000)
+
         }
         
         // Hide phone number input and show OTP input and login button

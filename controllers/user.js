@@ -215,7 +215,15 @@ let loginPostPage = async (req, res) => {
         password: req.body.password,
         mail: req.body.mail,
       });
-    } else {
+    } else if(resolved.admin){
+      return res.render("user/loginotp", {
+        layout: false,
+        mailError: "Restricted entry",
+        password: req.body.password,
+        mail: req.body.mail,
+      });
+    }
+    else {
       if (resolved.verified) {
         console.log("user verified and login success");
         const token = await signUser(resolved.existingUser);
@@ -231,46 +239,6 @@ let loginPostPage = async (req, res) => {
   }
 };
 
-
-// let homePage = async (req, res) =>
-//   console.log("Home page");
-//   await Visit.findOneAndUpdate({}, { $inc: { count: 1 } }, { upsert: true });
-//   if (req.cookies.jwt) {
-//     let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
-//     var userName = tokenExracted.userName;
-//     var userId = tokenExracted.userId;
-//     console.log("uid",userId);
-//     console.log(userName);
-//   }
-//   if (userName) {
-//     console.log("Having User");
-//     const products = await Product.aggregate([{$sort:{salecount:-1}},{ $limit: 20 }])
-//     const category = await Category.find();
-
-//     const cartd= await Cart.find({user:userId})
-//     const wishlistd= await Wishlist.find({user:userId})
-//     const itemsLength = cartd[0].items.length;
-//     const WishitemsLength = wishlistd[0].products.length;
-//     const banner = await Banner.find();
-//     const userln = await User.find();
-//     return res.render("user/index", {
-//       cartln:itemsLength,wishln:WishitemsLength,
-//       userId,userln,
-//       userName,
-//       category,
-//       banner,
-//       user: true,
-//       home: true,
-//       data: products,
-//     });
-//   } else {
-//     const products = await Product.aggregate([{$sort:{salecount:-1}},{ $limit: 20 }])
-//     const category = await Category.find();
-//     const banner = await Banner.find();
-//     const users = await User.find();
-//     res.render("user/index", { data: products, category, banner,userId,cartln:0,wishln:0 });
-//   }
-// };
 
 let homePage = async (req, res) => {
   console.log("Home page");
@@ -1604,6 +1572,10 @@ const loginRequestOTP = async (req, res) => {
   try {
     const user = await User.findOne({ phoneNumber: phone });
     console.log("found");
+ 
+    if (user.isAdmin) {
+      return res.status(404).json({ error: "User not found" });
+  }
 
     if (!user) {
       return res.status(404).json({ error: "User not found" }); // Correct syntax for sending JSON response
