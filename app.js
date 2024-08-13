@@ -2,8 +2,7 @@ const express = require('express');
 const Toastify = require('toastify-js');
 const app = express();
 const handlebars = require("./helpers/hbs");
-const { parsed: config } = require('dotenv').config();
-global.config = config;
+const dotenv = require('dotenv')
 const path = require('path');
 const session = require('express-session');
 const userRouter = require('./routes/user');
@@ -79,7 +78,7 @@ app.use((req,res,next)=>
 })
 
 
-mongoose.connect(config.CONNECTION_STRING,{
+mongoose.connect(process.env.CONNECTION_STRING,{
   dbName:'eshop'
 })
 .then((data)=>
@@ -90,10 +89,10 @@ mongoose.connect(config.CONNECTION_STRING,{
   console.log(err);
 })
 
-console.log('Connection String:', config.CONNECTION_STRING);
+console.log('Connection String:', process.env.CONNECTION_STRING);
 
 
-app.listen(config.PORT,()=>
+app.listen(process.env.PORT,()=>
 {
     console.log("Sever is listening");
 })
