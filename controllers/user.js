@@ -439,6 +439,7 @@ const product = async (req, res) => {
     let userId = '';
     let itemsLength = 0;
     let wishItemsLength = 0;
+    let wishlistedProductIds = [];
 
     if (req.cookies.jwt) {
       const tokenExtracted = await verifyUser(req.cookies.jwt); // Verifying the JWT token to extract user details
@@ -451,22 +452,26 @@ const product = async (req, res) => {
       if (cartData) {
         itemsLength = cartData.items.length;
       }
-      if (wishlistData) {
+      if (wishlistData && wishlistData.products) {
         wishItemsLength = wishlistData.products.length;
+        wishlistedProductIds = wishlistData.products.map(p => p.toString()); // Convert ObjectId to string
       }
     }
 
     console.log("Rendering product page");
     const categories = await Category.find({});
     const products = await Product.find({});
+    products.forEach(product => {
+      product.isWishlisted = wishlistedProductIds.includes(product._id.toString());
+    });
 
     res.render("user/product", {
       userName,
       userId,
       category:categories,
       products,
-      cartLength: itemsLength,
-      wishLength: wishItemsLength,
+      cartln: itemsLength,
+      wishln: wishItemsLength,
     });
   } catch (error) {
     console.error("Error rendering product page:", error);
@@ -1847,13 +1852,11 @@ let search = async (req, res) => {
 };
 
 
-let sort =async (req, res) => {
+let sort = async (req, res) => {
   const { sortType } = req.params;
-  console.log(sortType);
+  let products = await Product.find({});
+  let sortedProducts;
 
-  // Sort products based on sortType
-  let products = await Product.find({})
-  let sortedProducts = ""
   switch (sortType) {
       case 'price_asc':
           sortedProducts = products.slice().sort((a, b) => a.price - b.price);
@@ -1862,16 +1865,16 @@ let sort =async (req, res) => {
           sortedProducts = products.slice().sort((a, b) => b.price - a.price);
           break;
       case 'newness':
-          sortedProducts = products.slice().sort((a, b) => new Date(a.dateAdded) - new Date(b.dateAdded));
+          sortedProducts = products.slice().sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
           break;
       default:
-          sortedProducts = products; // Default to original order if sortType is invalid
+          sortedProducts = products;
   }
 
-  // Return sorted products as JSON response
-  const category =await Category.find()
-  res.render("user/categorywise",{product:sortedProducts,category,layout:false})
+  const category = await Category.find();
+  res.render("user/categorywise", { products: sortedProducts, category, layout: false });
 }
+
 
 let teamfilter = async (req, res) => {
   const clubName = req.params.clubname;
@@ -1880,7 +1883,7 @@ let teamfilter = async (req, res) => {
     console.log(String(clubName).toLowerCase());
     try {
       const products = await Product.find({ name: { $regex: String(clubName), $options: 'i' } });
-      res.render("user/productss", { product: products, layout: false });
+      res.render("user/productss", { products, layout: false });
     } catch (error) {
       console.error('Error searching for products:', error);
       res.status(500).json({ error: 'Internal server error' });

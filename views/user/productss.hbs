@@ -1,41 +1,35 @@
-				{{#each product}}
-<a href="productdetail?id={{this._id}}" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6" style="text-decoration: none;">
-				<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 col-6 isotope-item {{this.category}}">
-					<!-- Block2 -->
-					<div class="block2">
-						<div class="block2-pic hov-img0">
-							<img src={{this.image.[0]}} style="height: 18rem;" alt="IMG-PRODUCT">
-
-							{{!-- <a href="add-to-cart/{{this._id}}" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">
-								Add to cart
-							</a> --}}
-						</div>
-
-						<div class="block2-txt flex-w flex-t p-t-14">
-							<div class="block2-txt-child1 flex-col-l ">
-								
-									{{this.name}}
-							
-									<span class="cl3 mr-1">
-									{{this.variant}}
-								</span>
-								<div class="d-flex justify-content-between align-content-between">
-								<span class="stext-105 cl3 mr-1">
-								₹{{this.price}}
-								</span>
-								<span class="stext-105 cl3 " style="text-decoration: line-through;">
-									₹{{this.mrp}}
-								</span>
-								
-								</div>
-								<span class="badge rounded-pill badge-danger mt-1 p-2">{{this.tags}}</span>
-							</div>
-						<div class="block2-txt-child2 flex-r p-t-3">
-        			<a  style="cursor: pointer;" class=" dis-block pos-relative " onclick="addToWishlist('{{../userId}}', '{{this._id}}')">
-                    <img class="icon-heart1 dis-block trans-04" src="images/icons/icon-heart-02.png" alt="ICON">
-                    <img class="icon-heart2 dis-block trans-04 ab-t-l" src="images/icons/icon-heart-01.png" alt="ICON">
-       				 </a>
-    				</div>
-						</div>
-					</div>
-				</div></a>{{/each}}
+{{#each products}}
+    <div class="col-6 col-md-4 col-lg-3">
+        <div class="card h-100 border-0 shadow-sm">
+            <a href="productdetail?id={{this._id}}" class="text-decoration-none">
+                <img src="{{this.image.[0]}}" class="card-img-top img-fluid" alt="Product Image">
+            </a>
+            <div class="card-body d-flex flex-column justify-content-between">
+                <div>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <h5 class="card-title text-truncate">{{this.name}}</h5>
+                        <a href="#" onclick="addToWishlist('{{../userId}}', '{{this._id}}')" class="text-muted">
+                            {{#if this.isWishlisted}}
+                            <i class="fa fa-heart" aria-hidden="true"></i>
+                            {{else}}
+                            <i class="fa fa-heart-o" aria-hidden="true"></i>
+                            {{/if}}
+                        </a>
+                    </div>
+                    <p class="card-text text-muted small">{{this.variant}}</p>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <div>
+                        <span class="fw-bold">₹{{this.price}}</span>
+                        <span class="text-muted text-decoration-line-through small">₹{{this.mrp}}</span>
+                    </div>
+                </div>
+                {{#if this.tags}}
+                <div class="mt-2">
+                    <span class="badge bg-danger text-light">{{this.tags}}</span>
+                </div>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+    {{/each}}

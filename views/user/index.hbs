@@ -200,13 +200,6 @@
         return response.json();
     })
     .then(data => {
-        Swal.fire({
-            text: data.message,
-            icon: data.icon,
-            timer: 2000,
-            showConfirmButton: false
-        });
-
         // Toggle the wishlist icon
         const wishlistIcon = document.querySelector(`[onclick="addToWishlist('${userId}', '${productId}')"] i`);
         if (wishlistIcon) {

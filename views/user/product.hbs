@@ -103,7 +103,7 @@
 </div>
 
 
-<div class="row g-4">
+<div class="row g-4 productbox">
     {{#each products}}
     <div class="col-6 col-md-4 col-lg-3">
         <div class="card h-100 border-0 shadow-sm">
@@ -172,34 +172,31 @@
 	<script src="vendor/select2/select2.min.js"></script>
 	<script>
 	document.getElementById('sortPriceAsc').addEventListener('click', async () => {
+    console.log("Sorting by Price Ascending");
     await sortProducts('price_asc');
 });
 
 document.getElementById('sortPriceDescs').addEventListener('click', async () => {
+    console.log("Sorting by Price Descending");
     await sortProducts('price_desc');
 });
 
 document.getElementById('sortNewness').addEventListener('click', async () => {
+    console.log("Sorting by Newness");
     await sortProducts('newness');
 });
 
+
 async function sortProducts(sortType) {
     try {
-		 const allProducts = document.querySelectorAll('.isotope-item');
-            allProducts.forEach(function(product) {
-                product.style.display = 'none';
-            });
-        const response = await axios.get(`/sort/${sortType}`); // Adjust the endpoint URL as per your server routes
-         const products = response.data;
-		 console.log(products);
-			document.querySelector('.row.isotope-grid').innerHTML = response.data;
-			const isotopeGrid = document.querySelector('.row.isotope-grid');
-			isotopeGrid.style.height = '';
-
+        const response = await axios.get(`/sort/${sortType}`);
+        const productsHTML = response.data;
+        document.querySelector('.productbox').innerHTML = productsHTML;
     } catch (error) {
         console.error('Error sorting products:', error);
     }
 }
+
 
 
 
@@ -289,12 +286,7 @@ function addToWishlist(userId, productId) {
         return response.json();
     })
     .then(data => {
-        Swal.fire({
-            text: data.message,
-            icon: data.icon,
-            timer: 2000,
-            showConfirmButton: false
-        });
+
 
         // Toggle the wishlist icon
         const wishlistIcon = document.querySelector(`[onclick="addToWishlist('${userId}', '${productId}')"] i`);
