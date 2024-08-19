@@ -241,55 +241,70 @@ let loginPostPage = async (req, res) => {
 
 
 let homePage = async (req, res) => {
-  console.log("Home page");
-  await Visit.findOneAndUpdate({}, { $inc: { count: 1 } }, { upsert: true });
+  try {
+    console.log("Home page");
+    await Visit.findOneAndUpdate({}, { $inc: { count: 1 } }, { upsert: true });
 
-  let userName, userId;
-  if (req.cookies.jwt) {
-    let tokenExtracted = await verifyUser(req.cookies.jwt);
-    userName = tokenExtracted.userName;
-    userId = tokenExtracted.userId;
-  }
-
-  const products = await Product.aggregate([{ $sort: { salecount: -1 } }, { $limit: 20 }]);
-  const category = await Category.find();
-  const banner = await Banner.find();
-  
-  let itemsLength = 0;
-  let wishItemsLength = 0;
-  let wishlistedProductIds = [];
-
-  if (userId) {
-    const cartd = await Cart.findOne({ user: userId });
-    const wishlistd = await Wishlist.findOne({ user: userId });
-
-    if (cartd && cartd.items) {
-      itemsLength = cartd.items.length;
+    let userName, userId;
+    if (req.cookies.jwt) {
+      let tokenExtracted = await verifyUser(req.cookies.jwt);
+      userName = tokenExtracted.userName;
+      userId = tokenExtracted.userId;
     }
 
-    if (wishlistd && wishlistd.products) {
-      wishItemsLength = wishlistd.products.length;
-      wishlistedProductIds = wishlistd.products.map(p => p.toString()); // Convert ObjectId to string
+    // Fetch top 20 products sorted by salecount
+    const products = await Product.aggregate([
+      { $sort: { salecount: -1 } },
+      { $limit: 20 }
+    ]);
+
+    // Fetch categories and banners
+    const category = await Category.find();
+    const banner = await Banner.find();
+    
+    let itemsLength = 0;
+    let wishItemsLength = 0;
+    let wishlistedProductIds = [];
+
+    if (userId) {
+      // Fetch user's cart and wishlist
+      const cartd = await Cart.findOne({ user: userId });
+      const wishlistd = await Wishlist.findOne({ user: userId });
+
+      if (cartd && cartd.items) {
+        itemsLength = cartd.items.length;
+      }
+
+      if (wishlistd && wishlistd.products) {
+        wishItemsLength = wishlistd.products.length;
+        wishlistedProductIds = wishlistd.products.map(p => p.toString()); // Convert ObjectId to string
+      }
     }
+
+    // Add `isWishlisted` flag to each product
+    products.forEach(product => {
+      product.isWishlisted = wishlistedProductIds.includes(product._id.toString());
+    });
+
+    // Render the homepage with the necessary data
+    res.render("user/index", {
+      cartln: itemsLength,
+      wishln: wishItemsLength,
+      userId,
+      userName,
+      category,
+      banner,
+      user: !!userName,
+      home: true,
+      data: products,
+    });
+
+  } catch (error) {
+    console.error('Error loading home page:', error);
+    res.status(500).send('Internal Server Error');
   }
-
-  // Add `isWishlisted` flag to each product
-  products.forEach(product => {
-    product.isWishlisted = wishlistedProductIds.includes(product._id.toString());
-  });
-
-  res.render("user/index", {
-    cartln: itemsLength,
-    wishln: wishItemsLength,
-    userId,
-    userName,
-    category,
-    banner,
-    user: !!userName,
-    home: true,
-    data: products,
-  });
 };
+
 
 
 
