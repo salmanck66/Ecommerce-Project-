@@ -295,8 +295,7 @@
 			});
 		});
 		function addToWishlist(userId, productId) {
-    console.log("call")
-    fetch('add-to-wishlist', {
+    fetch('/add-to-wishlist', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -304,33 +303,26 @@
         body: JSON.stringify({ userId, productId })
     })
     .then(response => {
-		console.log(response)
         if (!response.ok) {
             throw new Error('Failed to add/remove product to/from wishlist');
         }
-		if(response.redirected)
-		{
-			window.location.href = "/login";
-		}
-		
-        return response.json(); // parse JSON response
+        if (response.redirected) {
+            window.location.href = "/login";
+        }
+        return response.json();
     })
     .then(data => {
-        // Check if the message indicates the product was added or removed
-        const message = data.message;
-        const icon = data.icon; // assuming you send an icon type in the response
-        
-        Swal.fire({
-            text: message,
-            icon: icon, // use the icon type received from the server
-            timer: 2000,
-            showConfirmButton: false
-        });
+        // Toggle the wishlist icon
+        const wishlistIcon = document.querySelector(`[onclick="addToWishlist('${userId}', '${productId}')"] i`);
+        if (wishlistIcon) {
+            wishlistIcon.classList.toggle('fa-heart');
+            wishlistIcon.classList.toggle('fa-heart-o');
+        }
     })
     .catch(error => {
         console.error('Error:', error);
     });
-		}
+}
 
 		/*---------------------------------------------*/
 

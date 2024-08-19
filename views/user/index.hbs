@@ -183,6 +183,7 @@
 			});
 		})
 		function addToWishlist(userId, productId) {
+			event.preventDefault();
     fetch('/add-to-wishlist', {
         method: 'POST',
         headers: {
