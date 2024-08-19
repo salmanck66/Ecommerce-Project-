@@ -433,40 +433,47 @@ let about = async (req, res) => {
 //   });
 // };
 
-let product = async (req, res) => {
+const product = async (req, res) => {
   try {
-    let userName;
-    let userId;
+    let userName = '';
+    let userId = '';
     let itemsLength = 0;
-    let WishitemsLength = 0;
+    let wishItemsLength = 0;
 
     if (req.cookies.jwt) {
-      let tokenExracted = await verifyUser(req.cookies.jwt); //NOW IT HAVE USER NAME AND ID ALSO THE ROLE (ITS COME FROM MIDDLE AUTH JWET)
-      userName = tokenExracted.userName;
-      userId = tokenExracted.userId;
-      userName = tokenExracted.userName;
+      const tokenExtracted = await verifyUser(req.cookies.jwt); // Verifying the JWT token to extract user details
+      userName = tokenExtracted.userName;
+      userId = tokenExtracted.userId;
 
-      const cartd = await Cart.findOne({ user: userId });
-      const wishlistd = await Wishlist.findOne({ user: userId });
+      const cartData = await Cart.findOne({ user: userId });
+      const wishlistData = await Wishlist.findOne({ user: userId });
 
-      if (cartd) {
-        itemsLength = cartd.items.length;
+      if (cartData) {
+        itemsLength = cartData.items.length;
       }
-      if (wishlistd) {
-        WishitemsLength = wishlistd.products.length;
+      if (wishlistData) {
+        wishItemsLength = wishlistData.products.length;
       }
     }
 
-    console.log("product page");
-    const category = await Category.find({});
-    const product = await Product.find({});
+    console.log("Rendering product page");
+    const categories = await Category.find({});
+    const products = await Product.find({});
 
-    res.render("user/product", { userName, category, product, userId, cartln: itemsLength || 0, wishln: WishitemsLength || 0 });
+    res.render("user/product", {
+      userName,
+      userId,
+      category:categories,
+      products,
+      cartLength: itemsLength,
+      wishLength: wishItemsLength,
+    });
   } catch (error) {
-    console.log(error);
+    console.error("Error rendering product page:", error);
     res.status(500).send("Internal Server Error");
   }
 };
+
 
 
 
