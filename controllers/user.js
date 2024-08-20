@@ -1856,6 +1856,12 @@ let sort = async (req, res) => {
   const { sortType } = req.params;
   let products = await Product.find({});
   let sortedProducts;
+  let userName, userId;
+    if (req.cookies.jwt) {
+      let tokenExtracted = await verifyUser(req.cookies.jwt);
+      userName = tokenExtracted.userName;
+      userId = tokenExtracted.userId;
+    }
 
   switch (sortType) {
       case 'price_asc':
@@ -1872,7 +1878,7 @@ let sort = async (req, res) => {
   }
 
   const category = await Category.find();
-  res.render("user/categorywise", { products: sortedProducts, category, layout: false });
+  res.render("user/categorywise", {userId, products: sortedProducts, category, layout: false });
 }
 
 
