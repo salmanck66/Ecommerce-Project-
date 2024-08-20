@@ -1630,12 +1630,12 @@ let showCategoryProducts =async (req, res) => {
   try {
     if(categoryName === "all")
     {
-      const product = await Product.find();
+      const products = await Product.find();
       res.render("user/productbycat", { product,layout:false})
     }
-    const product = await Product.find({ category : categoryName});
+    const products = await Product.find({ category : categoryName});
     console.log(product)
-    res.render("user/productbycat", { product,layout:false})
+    res.render("user/categorywise", { products,layout:false})
   } catch (error) {
     console.log(error)
   }
@@ -1662,37 +1662,48 @@ let showCategoryProducts =async (req, res) => {
 let showcatprod = async (req, res) => {
   try {
     const name = req.query.id;
-    const product = await Product.find({ category: name });
+    const products = await Product.find({ category: name });
     const category = await Category.find();
-    
-    // Extract user information if user is signed in
-    let userId, userName;
+    let userName, userId;
+    if (req.cookies.jwt) {
+      let tokenExtracted = await verifyUser(req.cookies.jwt);
+      userName = tokenExtracted.userName;
+      userId = tokenExtracted.userId;
+    }
+
     let itemsLength = 0;
     let WishitemsLength = 0;
+    let wishlistedProductIds = [];
     if (req.cookies.jwt) {
       let tokenExracted = await verifyUser(req.cookies.jwt);
       userId = tokenExracted.userId;
       userName = tokenExracted.userName;
       
       // Fetch user's cart and wishlist if user is signed in
-      const cartd = await Cart.find({ user: userId });
-      const wishlistd = await Wishlist.find({ user: userId });
+      const cartd = await Cart.findOne({ user: userId });
+      const wishlistd = await Wishlist.findOne({ user: userId });
 
-      // Calculate cart and wishlist lengths
-      if (cartd[0]) {
-        itemsLength = cartd[0].items.length;
+      if (cartd && cartd.items) {
+        itemsLength = cartd.items.length;
       }
-      if (wishlistd[0]) {
-        WishitemsLength = wishlistd[0].products.length;
+
+      if (wishlistd && wishlistd.products) {
+        wishItemsLength = wishlistd.products.length;
+        wishlistedProductIds = wishlistd.products.map(p => p.toString()); // Convert ObjectId to string
       }
+
+      products.forEach(product => {
+        product.isWishlisted = wishlistedProductIds.includes(product._id.toString());
+      });
+  
     }
 
     res.render("user/categorywise", {
-      product,
+      products,
       category,
       cartln: itemsLength || 0,
       wishln: WishitemsLength || 0,
-      userName
+      userName,userId
     });
   } catch (error) {
     console.log(error);
@@ -1884,12 +1895,18 @@ let sort = async (req, res) => {
 
 let teamfilter = async (req, res) => {
   const clubName = req.params.clubname;
+  let userName, userId;
+  if (req.cookies.jwt) {
+    let tokenExtracted = await verifyUser(req.cookies.jwt);
+    userName = tokenExtracted.userName;
+    userId = tokenExtracted.userId;
+  }
 
   if (clubName) {
     console.log(String(clubName).toLowerCase());
     try {
       const products = await Product.find({ name: { $regex: String(clubName), $options: 'i' } });
-      res.render("user/productss", { products, layout: false });
+      res.render("user/categorywise", { userId,products, layout: false });
     } catch (error) {
       console.error('Error searching for products:', error);
       res.status(500).json({ error: 'Internal server error' });

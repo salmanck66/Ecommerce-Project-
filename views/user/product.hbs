@@ -22,13 +22,6 @@
 
 <div class="d-flex justify-content-end w-100" >
 
-
-
-
-
-
-
-
 <div class="dropdown d-lg-none mr-1">
      <button class="btn btn-secondary dropdown-toggle" type="button" id="soccerClubsDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
         Categories
@@ -197,11 +190,6 @@ async function sortProducts(sortType) {
     }
 }
 
-
-
-
-
-
 		$(".js-select2").each(function(){
 			$(this).select2({
 				minimumResultsForSearch: 20,
@@ -332,43 +320,56 @@ function addToWishlist(userId, productId) {
 document.querySelectorAll('.category-button').forEach(button => {
     button.addEventListener('click', async () => {
         const category = button.getAttribute('data-category');
-		console.log(category)
+        console.log(`Category selected: ${category}`);
+
         try {
-            const allProducts = document.querySelectorAll('.isotope-item');
-            allProducts.forEach(function(product) {
-                product.style.display = 'none';
-            });
-
+            // Fetch the products for the selected category
             const response = await axios.get(`/category/${category}`);
-            const products = response.data;
-			console.log(products);
-			document.querySelector('.row.isotope-grid').innerHTML = response.data;
-			const isotopeGrid = document.querySelector('.row.isotope-grid');
-			isotopeGrid.style.height = '';
+            console.log('Products received:', response.data);
 
-            // Select the products container
-           
+            // Update the productbox with the new products
+            document.querySelector('.productbox').innerHTML = response.data;
+
+            // Reinitialize Isotope (if used) after updating the DOM
+            const productBox = document.querySelector('.productbox');
+            if (window.Isotope) {
+                new Isotope(productBox, {
+                    itemSelector: '.col-6',
+                    layoutMode: 'fitRows'
+                });
+            }
+
+            // Optionally, force layout recalculation
+            window.dispatchEvent(new Event('resize'));
         } catch (error) {
             console.error('Error fetching category products:', error);
         }
     });
-});
+})
 document.querySelectorAll('.dropdown-item').forEach(item => {
     item.addEventListener('click', async () => {
         const clubClassName = item.classList[1]; // Extract the second class name which represents the club
-		console.log(clubClassName)
         try {
-            const response = await axios.get(`/clubs/${clubClassName}`); // Send a GET request to the server
-			document.querySelector('.row.isotope-grid').innerHTML = response.data;
-			const isotopeGrid = document.querySelector('.row.isotope-grid');
-			isotopeGrid.style.height = '';
+            const response = await axios.get(`/clubs/${clubClassName}`); 
+            document.querySelector('.productbox').innerHTML = response.data;
 
-            // Handle the received data as needed
+            // If using Isotope or any grid layout system, reinitialize or trigger layout recalculation here:
+            const productBox = document.querySelector('.productbox');
+            if (window.Isotope) {
+                new Isotope(productBox, {
+                    itemSelector: '.col-6', // Update selector to match your item class
+                    layoutMode: 'fitRows'
+                });
+            }
+
+            // If not using Isotope, make sure Bootstrap grid is correctly applied:
+            window.dispatchEvent(new Event('resize')); // Trigger a window resize event to force layout recalculation
         } catch (error) {
             console.error('Error fetching club data:', error);
         }
     });
 });
+
 </script>
 
 
