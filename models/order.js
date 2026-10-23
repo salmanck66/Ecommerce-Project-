@@ -45,6 +45,9 @@ const orderSchema = new mongoose.Schema({
         enum: ['COD', 'Online'], // Add other payment methods as needed
         required: true
     },
+    // Razorpay references for online payments (set only after signature verification)
+    razorpayOrderId: String,
+    razorpayPaymentId: String,
     orderDate: {
         type: Date,
         default: Date.now

@@ -1,7 +1,10 @@
-const cloudinary=require('cloudinary').v2;    
-cloudinary.config({ 
-  cloud_name: process.env.cloud_name || 'dzpolmsmy', 
-  api_key: process.env.api_key || 147881859985753, 
-  api_secret: process.env.api_secret || "0jVc1d0Hh_VB5zs2bp7NyjItRFE"
+const cloudinary = require('cloudinary').v2;
+
+// Credentials come only from the environment — never hard-code them.
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
-module.exports= cloudinary;
+
+module.exports = cloudinary;

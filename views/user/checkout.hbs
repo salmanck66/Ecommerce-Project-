@@ -339,7 +339,15 @@
                 currency: "INR",
                 order_id: data.order_id,
                 handler: function (response) {
-                document.getElementById('payment-form').submit();
+                    // Pass Razorpay's signed response to the server, which verifies it before creating the order
+                    var form = document.getElementById('payment-form');
+                    ['razorpay_order_id', 'razorpay_payment_id', 'razorpay_signature'].forEach(function (key) {
+                        var input = document.createElement('input');
+                        input.type = 'hidden'; input.name = key; input.value = response[key];
+                        form.appendChild(input);
+                    });
+                    document.getElementById('Online').checked = true;
+                    form.submit();
                 }
             };
             var razorpayObject = new Razorpay(options);

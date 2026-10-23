@@ -1,6 +1,6 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
-const dotenv = require('dotenv')
 const path = require('path');
 const session = require('express-session');
 const userRouter = require('./routes/user');
@@ -54,10 +54,9 @@ mongoose.connect(process.env.CONNECTION_STRING,{
   console.log(err);
 })
 
-console.log('Connection String:', process.env.CONNECTION_STRING);
 
 
-app.listen(process.env.PORT,()=>
-{
-    console.log("Sever is listening");
-})
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
+});

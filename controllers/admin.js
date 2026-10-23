@@ -18,7 +18,7 @@ const Subsribers = require('../models/subscription');
 const Userhelpers = require('../helpers/userhelper');
 const { signUser, verifyUser,verifyAdmin } = require("../middleware/jwt");
 global.config = config
-const { createObjectCsvWriter } = require('csv-writer');
+const { createObjectCsvStringifier } = require('csv-writer');
 const fs = require('fs');
 const { log } = require('console');
 const moment = require('moment');
@@ -1096,44 +1096,38 @@ let orderstatus = async (req, res) => {
 
 const downloadcsv = async (req, res) => {
   try {
-    console.log("reqingg");
-      // Get the start and end dates from the query parameters
-      const startDate = req.query.startDate;
-      const endDate = req.query.endDate;
-      console.log(startDate,endDate)
+    const { startDate, endDate } = req.query;
+    const from = new Date(startDate);
+    const to = new Date(endDate);
+    if (isNaN(from) || isNaN(to)) {
+      return res.status(400).send('Invalid date range');
+    }
+    to.setHours(23, 59, 59, 999); // include the whole end day
 
-      // Fetch sales data from the database between the specified dates
-      const salesData = await Order.find({
-          orderDate: { $gte: startDate, $lte: endDate }
-      }, { orderId: 1, totalAmount: 1, orderDate: 1, paymentMethod: 1 });
-      console.log(salesData);
-      // Convert the data to CSV format
-      const csvWriter = createObjectCsvWriter({
-          path: 'public/salesdata.csv', // Adjusted path
-          header: [
-              { id: 'orderId', title: 'Order ID' },
-              { id: 'totalAmount', title: 'Total Amount' },
-              { id: 'orderDate', title: 'Order Date' },
-              { id: 'paymentMethod', title: 'Payment Method' }
-          ]
-      });
-      await csvWriter.writeRecords(salesData);
+    const salesData = await Order.find(
+      { orderDate: { $gte: from, $lte: to } },
+      { orderId: 1, totalAmount: 1, orderDate: 1, paymentMethod: 1 }
+    ).lean();
 
-      // Stream the file to the client for download
-      const file = `public/salesdata.csv`;
-      res.download(file, 'public/salesdata.csv', (err) => {
-          if (err) {
-              console.error(err);
-              res.status(500).send('Internal Server Error');
-          }
-          // No need to unlink the file as it's served statically from the public directory
-      });
+    // Build the CSV in memory and stream it to the admin.
+    // (Previously this was written to public/, which made it downloadable by anyone.)
+    const csv = createObjectCsvStringifier({
+      header: [
+        { id: 'orderId', title: 'Order ID' },
+        { id: 'totalAmount', title: 'Total Amount' },
+        { id: 'orderDate', title: 'Order Date' },
+        { id: 'paymentMethod', title: 'Payment Method' },
+      ],
+    });
+    const rows = salesData.map((o) => ({ ...o, orderDate: new Date(o.orderDate).toISOString() }));
+
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    res.setHeader('Content-Disposition', `attachment; filename="sales-${startDate}-to-${endDate}.csv"`);
+    res.send(csv.getHeaderString() + csv.stringifyRecords(rows));
   } catch (err) {
-      console.error(err);
-      res.status(500).send('Internal Server Error');
+    console.error('Error exporting sales CSV:', err);
+    res.status(500).send('Internal Server Error');
   }
-}
-
-
+};
 
 module.exports = {promomail,subscribers,orderstatus,downloadcsv,outadmin,sign,loginRequestOTP,loginotp,orderview,updatebannerpost,updatebanner,deletebanner,addbanner,editCoupon,updatecoupon,deletecoupon,addCoupon,updatesubcategory,subcategoryeditpage,categoryeditpage,editproduct,deleteprod,deletesubcat,updatecategory,producteditpage,updateProduct,addSubcategory,deletecat,postcategory,postaddproduct,homePage,logIn,Forget,order,productm,addproduct,coupon,categories,banner,payments,settings,profile,placeorder}

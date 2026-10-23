@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const { signUser, verifyUser } = require("../middleware/jwt");
 const  Userhelpers = require("../helpers/userhelper");
 const { default: mongoose } = require("mongoose");
@@ -716,33 +717,36 @@ let fcheckout = async (req, res) => {
     if(cart.items.length === 0){
         return res.redirect('/cart')
     }
-      const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-          user: process.env.EMAIL_USER,
-          pass: process.env.APP_SPECIFIC_PASSWORD // Use the generated app-specific password here
+    const paymentMethod = req.body.paymentMethod;
+    let razorpayOrderId, razorpayPaymentId;
+    if (paymentMethod === 'Online') {
+      // Never trust the browser's word that a payment happened: verify Razorpay's
+      // signature and confirm the paid order matches this cart's total.
+      ({ razorpay_order_id: razorpayOrderId, razorpay_payment_id: razorpayPaymentId } = req.body);
+      const expected = crypto
+        .createHmac('sha256', process.env.RZPAY_KEY_SECRET)
+        .update(`${razorpayOrderId}|${razorpayPaymentId}`)
+        .digest('hex');
+      const signature = String(req.body.razorpay_signature || '');
+      const valid =
+        razorpayOrderId && razorpayPaymentId &&
+        signature.length === expected.length &&
+        crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected));
+      if (!valid) {
+        return res.status(400).json({ error: 'Payment could not be verified.' });
       }
-  });
+      const rzpOrder = await Userhelpers.razorpayInstanceHelp.orders.fetch(razorpayOrderId);
+      if (rzpOrder.amount !== Math.round(cart.carttotal * 100)) {
+        return res.status(400).json({ error: 'Payment amount does not match your cart.' });
+      }
+      // One Razorpay payment can only ever create one order
+      if (await Order.exists({ razorpayOrderId })) {
+        return res.status(409).json({ error: 'This payment has already been used.' });
+      }
+    } else if (paymentMethod !== 'COD') {
+      return res.status(400).json({ error: 'Invalid payment method.' });
+    }
 
-
-    const mailOptions = {
-      from: process.env.EMAIL_USER, // Sender email address
-      to: req.body.email, // Receiver email address (customer's email)
-      subject: 'Order Confirmation', // Email subject
-      text: `Your order has been successfully placed, Your Order ID Is ${orderNumber}. Thank you for shopping with us !` // Email body
-    };
-
-    transporter.sendMail(mailOptions); // Send the email
-
-    // Send email to jcclubotp@gmail.com
-    const adminMailOptions = {
-      from: process.env.EMAIL_USER, // Sender email address
-      to: 'jcclubotp@gmail.com', // Receiver email address (your email)
-      subject: 'New Order Notification', // Email subject
-      text: `A new order has been placed. ${orderNumber}` // Email body
-    };
-
-    transporter.sendMail(adminMailOptions); // Send the email to admin
     
     
 
@@ -754,8 +758,7 @@ let fcheckout = async (req, res) => {
       }
       const size = item.size;
       if (!product.stock[size] || product.stock[size] < item.quantity) {
-        res.status(200).json("Product Has Gone Out of Stock");
-        return res.redirect('cart')
+        return res.redirect('/cart');
       }
       // Deduct quantity from stock for the specific size
       product.stock[size] -= item.quantity;
@@ -780,13 +783,44 @@ let fcheckout = async (req, res) => {
         state: req.body.state,
         zip: req.body.zip
       },
-      paymentMethod: req.body.paymentMethod
+      paymentMethod,
+      razorpayOrderId,
+      razorpayPaymentId,
     });
 
     // await Cart.findOneAndDelete({ user: userId });
 
     // Save the new order to the database
     const savedOrder = await newOrder.save();
+
+    // Notify customer and admin only once the order actually exists
+      const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.APP_SPECIFIC_PASSWORD // Use the generated app-specific password here
+      }
+  });
+
+
+    const mailOptions = {
+      from: process.env.EMAIL_USER, // Sender email address
+      to: req.body.email, // Receiver email address (customer's email)
+      subject: 'Order Confirmation', // Email subject
+      text: `Your order has been successfully placed, Your Order ID Is ${orderNumber}. Thank you for shopping with us !` // Email body
+    };
+
+    transporter.sendMail(mailOptions).catch((e) => console.error('Mail error:', e.message)); // Send the email
+
+    // Send email to jcclubotp@gmail.com
+    const adminMailOptions = {
+      from: process.env.EMAIL_USER, // Sender email address
+      to: 'jcclubotp@gmail.com', // Receiver email address (your email)
+      subject: 'New Order Notification', // Email subject
+      text: `A new order has been placed. ${orderNumber}` // Email body
+    };
+
+    transporter.sendMail(adminMailOptions).catch((e) => console.error('Mail error:', e.message)); // Send the email to admin
 
     // Save shipping address to user's profile if checkbox is checked
     if (req.body.saveadress) {
@@ -1549,47 +1583,34 @@ const delwish = async (req, res) => {
   }
 }
 
-let paymetController = async(req,res)=>{
+let paymetController = async (req, res) => {
   try {
-    console.log("payment logging");
-      const amount = req.body.amount*100
-      const options = {
-          amount: amount,
-          currency: 'INR',
-          receipt: 'razorUser@gmail.com'
-      }
-      console.log(req.body);
+    const { userId } = await verifyUser(req.cookies.jwt);
+    const cart = await Cart.findOne({ user: userId });
+    if (!cart || cart.items.length === 0) {
+      return res.status(400).send({ success: false, msg: 'Your cart is empty' });
+    }
 
+    // The amount is always taken from the server-side cart, never from the browser
+    const amount = Math.round(cart.carttotal * 100);
+    const order = await Userhelpers.razorpayInstanceHelp.orders.create({
+      amount,
+      currency: 'INR',
+      receipt: `cart_${String(userId).slice(-8)}_${Date.now()}`,
+    });
 
-     await Userhelpers.razorpayInstanceHelp.orders.create(options, 
-          (err, order)=>{
-              if(!err){
-                  res.status(200).send({
-                      success:true,
-                      msg:'Order Created',
-                      order_id:order.id,
-                      amount:amount,
-                      key_id:process.env.RZPAY_KEY,
-                      product_name:"product",
-                      description:"description",
-                      contact:"8567345632",
-                      name: "Sandeep Sharma",
-                      email: "sandeep@gmail.com"
-                  });
-                  console.log("created");
-              }
-              
-              else{
-                  res.status(400).send({success:false,msg:'Something went wrong!'});
-                  console.log("not created");
-              }
-          }
-      );
-
+    res.status(200).send({
+      success: true,
+      order_id: order.id,
+      amount,
+      key_id: process.env.RZPAY_KEY,
+    });
   } catch (error) {
-      console.log(error.message);
+    console.error('Error creating Razorpay order:', error.message);
+    res.status(500).send({ success: false, msg: 'Could not start payment, please try again' });
   }
 }
+
 
 const loginRequestOTP = async (req, res) => {
   console.log("Requesting OTP");

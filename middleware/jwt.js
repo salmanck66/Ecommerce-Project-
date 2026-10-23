@@ -63,7 +63,6 @@ module.exports = {
               if (error) {
                   console.error("some problems occured during jwt verification", error);
                   reject(error)
-                  return res.redirect('/admin');
               } else {
                   // console.log("DECODED TOKEN DETAILS FROM REQUEST " ,decodedToken);
                   console.log("SUCCESSFULLY DECODED TOKEN DETAILS FROM USER REQUEST  *FROM MIDDLEWARE JWT* ");
